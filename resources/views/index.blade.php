@@ -324,19 +324,19 @@
   <section class="summer-collection container mt-5">
       <div class="image-gallery">
           <div class="img1">
-              <img src="{{ asset('ahsan.jpg') }}" alt="Summer 1">
+              <img src="{{ asset('assets/images/main/ahsan.jpg') }}" alt="Summer 1">
           </div>
           <div class="img2">
-              <img src="{{ asset('ahsan.jpg') }}" alt="Summer 2">
+              <img src="{{ asset('assets/images/main/ahsan.jpg') }}" alt="Summer 2">
           </div>
           <div class="img3">
-              <img src="{{ asset('ahsan.jpg') }}" alt="Summer 3">
+              <img src="{{ asset('assets/images/main/ahsan.jpg') }}" alt="Summer 3">
           </div>
           <div class="img4">
-              <img src="{{ asset('ahsan.jpg') }}" alt="Summer 4">
+              <img src="{{ asset('assets/images/main/ahsan.jpg') }}" alt="Summer 4">
           </div>
           <div class="img5">
-              <img src="{{ asset('ahsan.jpg') }}" alt="Summer 5">
+              <img src="{{ asset('assets/images/main/ahsan.jpg') }}" alt="Summer 5">
           </div>
       </div>
       <div class="text-content">
