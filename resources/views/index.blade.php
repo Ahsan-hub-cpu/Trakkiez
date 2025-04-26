@@ -341,7 +341,7 @@
       </div>
       <div class="text-content">
           <h3>ALL NEW SUMMER COLLECTION</h3>
-          <h1>Upto 50% OFF</h1>
+          <h1>Upto 20% OFF</h1>
           <p>Hurry up! Don’t miss the opportunity to get amazing designs and premium quality stuff for this latest summer collection.</p>
           <button onclick="window.location.href='{{ route('shop.index', ['filter' => 'summer-collection']) }}'">NEW SUMMER COLLECTION</button>
       </div>
