@@ -1,11 +1,6 @@
-@php
-    $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-    $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
-@endphp
-
 <table class="cart-totals">
     <tbody>
-        @if(Session()->has('discounts'))
+        @if(session()->has('discounts'))
             @php
                 $discountData = session()->get('discounts');
                 $discount = (float) $discountData['discount'];
@@ -16,10 +11,10 @@
             @endphp
             <tr>
                 <th>Subtotal</th>
-                <td>PKR {{ number_format($cartSubtotal, 2) }}</td>
+                <td>PKR {{ number_format($subtotal, 2) }}</td>
             </tr>
             <tr>
-                <th>Discount {{ Session::get("coupon")["code"] }}</th>
+                <th>Discount {{ session()->get('coupon')['code'] }}</th>
                 <td>-PKR {{ number_format($discount, 2) }}</td>
             </tr>
             <tr>
@@ -28,7 +23,13 @@
             </tr>
             <tr>
                 <th>SHIPPING</th>
-                <td class="text-right">PKR {{ number_format($shippingCost, 2) }}</td>
+                <td class="text-right">
+                    @if($shippingCost == 0)
+                        Free
+                    @else
+                        PKR {{ number_format($shippingCost, 2) }}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>VAT</th>
@@ -39,21 +40,23 @@
                 <td>PKR {{ number_format($finalTotal, 2) }}</td>
             </tr>
         @else
-            @php
-                $cartTotal = (float) str_replace(',', '', Cart::instance('cart')->total());
-                $finalTotal = $cartTotal + $shippingCost;
-            @endphp
             <tr>
                 <th>Subtotal</th>
-                <td>PKR {{ number_format($cartSubtotal, 2) }}</td>
+                <td>PKR {{ number_format($subtotal, 2) }}</td>
             </tr>
             <tr>
                 <th>SHIPPING</th>
-                <td class="text-right">PKR {{ number_format($shippingCost, 2) }}</td>
+                <td class="text-right">
+                    @if($shippingCost == 0)
+                        Free
+                    @else
+                        PKR {{ number_format($shippingCost, 2) }}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>VAT</th>
-                <td>PKR {{ number_format(Cart::instance('cart')->tax(), 2) }}</td>
+                <td>PKR {{ number_format($tax, 2) }}</td>
             </tr>
             <tr class="cart-total">
                 <th>Total</th>

@@ -8,6 +8,18 @@
     .table-striped th:nth-child(2), .table-striped td:nth-child(2) {
         width: 250px;   
     }
+    .table-striped th:nth-child(10), .table-striped td:nth-child(10) {
+        width: 100px;   
+    }
+    .size-chart-images, .gallery-images {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    .size-chart-images img, .gallery-images img {
+        max-width: 50px;
+        height: auto;
+    }
 </style>
 <div class="main-content-inner">                            
     <div class="main-content-wrap">
@@ -52,15 +64,17 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Price</th>
-                            <th>SalePrice</th>
+                            <th>Sale Price</th>
                             <th>SKU</th>
                             <th>Category</th>
                             <th>Subcategory</th>
                             <th>Brand</th>
                             <th>Size</th>
+                            <th>Size Chart</th>
                             <th>Featured</th>
                             <th>Stock</th>
                             <th>Quantity</th>
+                            <th>Gallery</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -69,16 +83,22 @@
                         <tr>
                             <td>{{$product->id}}</td>
                             <td>
-                                <div>
-                                    <img src="{{asset('uploads/products/thumbnails')}}/{{$product->image}}" alt="" class="image">
+                                <div class="flex items-center">
+                                    <div class="mr-3">
+                                        @if($product->image && file_exists(base_path('uploads/products/thumbnails/' . $product->image)))
+                                            <img src="{{asset('uploads/products/thumbnails/' . $product->image)}}" alt="{{$product->name}}" class="image">
+                                        @else
+                                            <span>Main Image Missing: {{$product->image ?? 'Not set'}}</span>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <a href="#" class="body-title-2">{{$product->name}}</a>
+                                        <div class="text-tiny mt-3">{{$product->slug}}</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <a href="#" class="body-title-2">{{$product->name}}</a>
-                                    <div class="text-tiny mt-3">{{$product->slug}}</div>
-                                </div>  
                             </td>
                             <td>PKR {{$product->regular_price}}</td>
-                            <td>PKR {{$product->sale_price}}</td>
+                            <td>PKR {{$product->sale_price ?? 'N/A'}}</td>
                             <td>{{$product->SKU}}</td>
                             <td>{{$product->category->name}}</td>
                             <td>
@@ -87,7 +107,7 @@
                                 @else
                                     N/A
                                 @endif
-                            </td> <!-- Display Subcategory name -->
+                            </td>
                             <td>{{$product->brand->name}}</td>
                             <td>
                                 @foreach($product->productVariations as $variation)
@@ -96,24 +116,53 @@
                                     </div>
                                 @endforeach
                             </td>
-                            <td>{{$product->featured == 0 ? "No":"Yes"}}</td>
+                            <td>
+                                @if($product->size_chart)
+                                    <div class="size-chart-images">
+                                        @foreach(explode(',', $product->size_chart) as $chart)
+                                            @if(file_exists(base_path('uploads/products/thumbnails/' . $chart)))
+                                                <img src="{{asset('uploads/products/thumbnails/' . $chart)}}" alt="Size Chart" class="image">
+                                            @else
+                                                <span>Chart Missing: {{$chart}}</span>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                            <td>{{$product->featured == 0 ? "No" : "Yes"}}</td>
                             <td>{{$product->stock_status}}</td>
                             <td>{{$product->quantity}}</td>
                             <td>
-                                <div class="list-icon-function">
-                                    <a href="{{route('admin.product.edit',['id'=>$product->id])}}">
-                                    <div class="item edit">
-                                        <i class="icon-edit-3"></i>
+                                @if($product->images)
+                                    <div class="gallery-images">
+                                        @foreach(explode(',', $product->images) as $img)
+                                            @if(file_exists(base_path('uploads/products/thumbnails/' . $img)))
+                                                <img src="{{asset('uploads/products/thumbnails/' . $img)}}" alt="Gallery Image" class="image">
+                                            @else
+                                                <span>Gallery Image Missing: {{$img}}</span>
+                                            @endif
+                                        @endforeach
                                     </div>
-                                     </a>
-
-                                     <form action="{{route('admin.product.delete',['id'=>$product->id])}}" method="POST">
-                                     @csrf
-                                     @method('DELETE')
-                                     <div class="item text-danger delete">
-                                         <i class="icon-trash-2"></i>
-                                     </div>
-                                     </form>
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                            <td>
+                                <div class="list-icon-function">
+                                    <a href="{{route('admin.product.edit', ['id' => $product->id])}}">
+                                        <div class="item edit">
+                                            <i class="icon-edit-3"></i>
+                                        </div>
+                                    </a>
+                                    <form action="{{route('admin.product.delete', ['id' => $product->id])}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <div class="item text-danger delete">
+                                            <i class="icon-trash-2"></i>
+                                        </div>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -134,7 +183,7 @@
 @push('scripts')
     <script>
         $(function(){
-            $(".delete").on('click',function(e){
+            $(".delete").on('click', function(e){
                 e.preventDefault();
                 var selectedForm = $(this).closest('form');
                 swal({

@@ -30,37 +30,37 @@
         @csrf
         @method('PUT')
         <input type="hidden" name="id" value = "{{$slide->id}}" />
-        <fieldset class="name">
-            <div class="body-title">Tagline <span class="tf-color-1">*</span></div>
-            <input class="flex-grow" type="text" placeholder="Tagline" name="tagline" value="{{ $slide->tagline }}" required> 
-        </fieldset>
-        @error('tagline')
-            <span class="alert alert-danger text-center">{{$message}}</span>
-            @enderror
+        <!--<fieldset class="name">-->
+        <!--    <div class="body-title">Tagline <span class="tf-color-1">*</span></div>-->
+        <!--    <input class="flex-grow" type="text" placeholder="Tagline" name="tagline" value="{{ $slide->tagline }}" required> -->
+        <!--</fieldset>-->
+        <!--@error('tagline')-->
+        <!--    <span class="alert alert-danger text-center">{{$message}}</span>-->
+        <!--    @enderror-->
 
-        <fieldset class="name">
-            <div class="body-title">Title <span class="tf-color-1">*</span></div>
-            <input class="flex-grow" type="text" placeholder="Title" name="title" value="{{ $slide->title }}" required>
-        </fieldset>
-        @error('title')
-            <span class="alert alert-danger text-center">{{$message}}</span>
-            @enderror
+        <!--<fieldset class="name">-->
+        <!--    <div class="body-title">Title <span class="tf-color-1">*</span></div>-->
+        <!--    <input class="flex-grow" type="text" placeholder="Title" name="title" value="{{ $slide->title }}" required>-->
+        <!--</fieldset>-->
+        <!--@error('title')-->
+        <!--    <span class="alert alert-danger text-center">{{$message}}</span>-->
+        <!--    @enderror-->
 
-        <fieldset class="name">
-            <div class="body-title">Subtitle <span class="tf-color-1">*</span></div>
-            <input class="flex-grow" type="text" placeholder="Subtitle" name="subtitle" value="{{ $slide->subtitle }}" required>
-        </fieldset>
-        @error('subtitle')
-            <span class="alert alert-danger text-center">{{$message}}</span>
-            @enderror
+        <!--<fieldset class="name">-->
+        <!--    <div class="body-title">Subtitle <span class="tf-color-1">*</span></div>-->
+        <!--    <input class="flex-grow" type="text" placeholder="Subtitle" name="subtitle" value="{{ $slide->subtitle }}" required>-->
+        <!--</fieldset>-->
+        <!--@error('subtitle')-->
+        <!--    <span class="alert alert-danger text-center">{{$message}}</span>-->
+        <!--    @enderror-->
 
-        <fieldset class="name">
-            <div class="body-title">Link <span class="tf-color-1">*</span></div>
-            <input class="flex-grow" type="text" placeholder="Link" name="link" value="{{ $slide->link }}" required>
-        </fieldset>
-        @error('link')
-            <span class="alert alert-danger text-center">{{$message}}</span>
-            @enderror
+        <!--<fieldset class="name">-->
+        <!--    <div class="body-title">Link <span class="tf-color-1">*</span></div>-->
+        <!--    <input class="flex-grow" type="text" placeholder="Link" name="link" value="{{ $slide->link }}" required>-->
+        <!--</fieldset>-->
+        <!--@error('link')-->
+        <!--    <span class="alert alert-danger text-center">{{$message}}</span>-->
+        <!--    @enderror-->
 
         <fieldset>
             <div class="body-title">Upload images <span class="tf-color-1">*</span></div>

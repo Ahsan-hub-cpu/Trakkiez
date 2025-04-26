@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\Category;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+       view()->composer('*', function ($view) {
+
+            if (str_starts_with($view->getName(), 'admin.')) {
+                return;
+            }
+
+            $categories = Category::with('subcategories')->whereIn('name', ['Men', 'Women'])->get();
+            $view->with('categories', $categories);
+        });
     }
 }

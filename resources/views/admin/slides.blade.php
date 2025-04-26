@@ -52,10 +52,10 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Image</th>
-                                                    <th>Tagline</th>
-                                                    <th>Title</th>
-                                                    <th>Subtitle</th>
-                                                    <th>Link</th>
+                                                    <!--<th>Tagline</th>-->
+                                                    <!--<th>Title</th>-->
+                                                    <!--<th>Subtitle</th>-->
+                                                    <!--<th>Link</th>-->
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -65,13 +65,13 @@
                                                     <td>{{$slide->id}}</td>
                                                     <td >
                                                         <div class="image">
-                                                            <img src="{{asset('uploads/slides')}}/{{$slide->image}}" alt="" class="{{$slide->title}}">
+                                                           <img src="{{ url('uploads/slides/'.trim($slide->image, '/')) }}" alt="Slide Image" alt="" class="{{$slide->title}}">
                                                         </div>
                                                     </td>
-                                                    <td>{{$slide->tagline}}</td>
-                                                    <td>{{$slide->title}}</td>
-                                                    <td>{{$slide->subtitle}}</td>
-                                                    <td>{{$slide->link}}</td>
+                                                    <!--<td>{{$slide->tagline}}</td>-->
+                                                    <!--<td>{{$slide->title}}</td>-->
+                                                    <!--<td>{{$slide->subtitle}}</td>-->
+                                                    <!--<td>{{$slide->link}}</td>-->
                                                     <td>
                                                         <div class="list-icon-function">
                                                             <a href="{{route('admin.slide.edit',['id'=>$slide->id])}}">

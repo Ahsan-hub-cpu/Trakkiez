@@ -11,35 +11,35 @@
     transition: all 0.3s ease;
     border-radius: 4px;
     padding: 8px 12px;
-}
+  }
 
-.size-btn.active {
+  .size-btn.active {
     background: #ff9800;
     color: white;
     border-color: #ff9800;
-}
+  }
 
-.size-btn.sold-out {
+  .size-btn.sold-out {
     opacity: 0.6;
     cursor: not-allowed;
     position: relative;
-}
+  }
 
-.size-btn.sold-out::after {
+  .size-btn.sold-out::after {
     content: "______";
     position: absolute;
     top: 30%;
     left: 30%;
     transform: translate(-50%, -50%);
     font-size: 1.2em;
-}
+  }
 
-.sold-out-text {
+  .sold-out-text {
     font-size: 0.7em;
     margin-left: 4px;
     color: #dc3545;
-}
-  /* Style for sold-out labels */
+  }
+
   .sold-out-label {
     position: absolute;
     bottom: 10px;
@@ -52,6 +52,7 @@
     border-radius: 5px;
     z-index: 10;
   }
+
   .pc__sold-out {
     position: absolute;
     top: 10px;
@@ -63,12 +64,152 @@
     border-radius: 3px;
     z-index: 10;
   }
-  /* Style for quantity error message */
+
   .qty-error {
     color: red;
     font-size: 0.8rem;
     margin-top: 4px;
   }
+
+  .size-chart-btn {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 8px 16px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .size-chart-btn:hover {
+    background-color: #333333;
+  }
+
+  .lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 80%;
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .lightbox-images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  .lightbox-image {
+    max-width: 100%;
+    max-height: 30vh;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  .close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #000;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .close:hover {
+    color: #ccc;
+  }
+
+  @media (max-width: 768px) {
+    .size-chart-btn {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      margin-left: 5px;
+      margin-bottom: 1rem;
+    }
+
+    .lightbox-content {
+      max-width: 95%;
+      max-height: 85%;
+      padding: 15px;
+    }
+
+    .lightbox-images {
+      flex-direction: column;
+      align-items: center;
+      max-height: 70vh;
+    }
+
+    .lightbox-image {
+      max-height: 35vh;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .size-chart-btn {
+      padding: 5px 10px;
+      font-size: 0.75rem;
+    }
+
+    .lightbox-content {
+      max-width: 98%;
+      max-height: 90%;
+      padding: 10px;
+    }
+
+    .lightbox-image {
+      max-height: 30vh;
+    }
+  }
+ @media (max-width: 768px) {
+  .gap-2 {
+    gap: 0.5rem !important;
+    margin-bottom: 1rem;
+  }
+}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .text-success {
+    color: black !important;
+}
+.gap-2 {
+    gap: 0.5rem !important;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
 </style>
 
 <main class="pt-90">
@@ -156,58 +297,55 @@
         @if($product->quantity <= 0)
           <span class="btn btn-secondary mb-3">Sold Out</span>
         @else
-          @if(Cart::instance("cart")->content()->where('id', $product->id)->count() > 0)
-            <a href="{{ route('cart.index') }}" class="btn btn-warning mb-3">Go to Cart</a>
-          @else
-            <form name="addtocart-form" method="POST" action="{{ route('cart.add') }}">
-              @csrf
-              <div class="product-single__options">
-              <label>Size:</label>
-              <div class="size-selector d-flex flex-wrap gap-2">
-                    @if($product->productVariations && $product->productVariations->count() > 0)
-                    @foreach($product->productVariations as $variation)
-                      <button type="button" 
-                        class="size-btn btn btn-outline-secondary {{ $variation->quantity <= 0 ? 'sold-out' : '' }}"
-                        data-size-id="{{ $variation->size->id }}"
-                        data-quantity="{{ $variation->quantity }}"
-                        {{ $variation->quantity <= 0 ? 'disabled' : '' }}>
-                    {{ $variation->size->name }}
-                    @if($variation->quantity <= 0)
-                        <span class="sold-out-text">(Sold Out)</span>
-                    @endif
-                </button>
-            @endforeach
-        @else
-            <div class="text-muted">No sizes available</div>
-        @endif
-    </div>
-    <input type="hidden" name="size_id" id="selected_size" value="">
-    <!-- @error('size_id')
-        <div class="text-danger mt-1">{{ $message }}</div>
-    @enderror -->
-</div>
-
-              <div class="product-single__addtocart">
-                <div class="qty-control position-relative">
-                  <input type="number" name="quantity" value="1" min="1" max="{{ $product->quantity }}" class="qty-control__number text-center">
-                  <div class="qty-control__reduce">-</div>
-                  <div class="qty-control__increase">+</div>
-                </div>
-                <div class="qty-error">
-                  @error('quantity')
-                    <span class="text-danger">{{ $message }}</span>
-                  @enderror
-                </div>
-                <input type="hidden" name="id" value="{{ $product->id }}" />
-                <input type="hidden" name="name" value="{{ $product->name }}" />
-                <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}" />
-                <button type="submit" class="btn btn-primary btn-addtocart" data-aside="cartDrawer">Add to Cart</button>
+          <form name="addtocart-form" method="POST" action="{{ route('cart.add') }}">
+            @csrf
+            <div class="product-single__options">
+              <div class="d-flex align-items-center">
+                <label>Size:</label>
+                @if($product->size_chart)
+                  <button type="button" class="size-chart-btn" onclick="openLightbox()">View Size Chart</button>
+                @endif
               </div>
-            </form>
-          @endif
-        @endif
+              <div class="size-selector d-flex flex-wrap gap-2">
+                @if($product->productVariations && $product->productVariations->count() > 0)
+                  @foreach($product->productVariations as $variation)
+                    <button type="button" 
+                      class="size-btn btn btn-outline-secondary {{ $variation->quantity <= 0 ? 'sold-out' : '' }}"
+                      data-size-id="{{ $variation->size->id }}"
+                      data-quantity="{{ $variation->quantity }}"
+                      {{ $variation->quantity <= 0 ? 'disabled' : '' }}>
+                      {{ $variation->size->name }}
+                      @if($variation->quantity <= 0)
+                        <span class="sold-out-text">(Sold Out)</span>
+                      @endif
+                    </button>
+                  @endforeach
+                @else
+                  <div class="text-muted">No sizes available</div>
+                @endif
+              </div>
+              <input type="hidden" name="size_id" id="selected_size" value="">
+            </div>
 
-        
+            <div class="product-single__addtocart">
+              <div class="qty-control position-relative">
+                <input type="number" name="quantity" value="1" min="1" max="{{ $product->quantity }}" class="qty-control__number text-center">
+                <div class="qty-control__reduce">-</div>
+                <div class="qty-control__increase">+</div>
+              </div>
+              <div class="qty-error">
+                @error('quantity')
+                  <span class="text-danger">{{ $message }}</span>
+                @enderror
+              </div>
+              <input type="hidden" name="id" value="{{ $product->id }}" />
+              <input type="hidden" name="name" value="{{ $product->name }}" />
+              <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}" />
+              <button type="submit" class="btn btn-primary btn-addtocart" data-aside="cartDrawer">Add to Cart</button>
+              <span class="cart-status text-success ms-2" aria-live="polite"></span>
+            </div>
+          </form>
+        @endif
         <div class="product-single__addtolinks">
           @if(Cart::instance("wishlist")->content()->where('id', $product->id)->count() > 0)
             <form method="POST" action="{{ route('wishlist.remove', ['rowId' => Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId]) }}" id="from">
@@ -251,25 +389,35 @@
             </div>
           </div>
         </div>
-      </div>
-      <!-- Product Details Tabs -->
-      <div class="product-single__details-tab">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <a class="nav-link nav-link_underscore active" id="tab-description-tab" data-bs-toggle="tab" href="#tab-description" role="tab" aria-controls="tab-description" aria-selected="true">Description</a>
-          </li>
-        </ul>
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="tab-description" role="tabpanel" aria-labelledby="tab-description-tab">
-            <div class="product-single__description">
-              {{ $product->description }}
+        <div class="product-single__details-tab">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="nav-link nav-link_underscore active" id="tab-description-tab" data-bs-toggle="tab" href="#tab-description" role="tab" aria-controls="tab-description" aria-selected="true">Description</a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="tab-description" role="tabpanel" aria-labelledby="tab-description-tab">
+              <div class="product-single__description">
+                {{ $product->description }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      @if($product->size_chart)
+        <div id="size-chart-lightbox" class="lightbox">
+          <div class="lightbox-content">
+            <span class="close" onclick="closeLightbox()">×</span>
+            <div class="lightbox-images">
+              @foreach(explode(',', $product->size_chart) as $chartImage)
+                <img class="lightbox-image" src="{{ asset('uploads/products/' . $chartImage) }}" alt="Size Chart">
+              @endforeach
+            </div>
+          </div>
+        </div>
+      @endif
   </section>
-  <!-- Related Products Carousel -->
   <section class="products-carousel container">
     <h2 class="h3 text-uppercase mb-4 pb-xl-2 mb-xl-4">Related <strong>Products</strong></h2>
     <div id="related_products" class="position-relative">
@@ -311,7 +459,7 @@
             <div class="swiper-slide product-card" style="position: relative;">
               <div class="pc__img-wrapper">
                 <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">
-                  <img loading="lazy" src="{{ asset('uploads/products/' . $rproduct->image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
+                  <img loading="lazy" src="{{ asset('Uploads/products/' . $rproduct->image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
                   @foreach(explode(',', $rproduct->images) as $gimg)
                     <img loading="lazy" src="{{ asset('uploads/products/' . $gimg) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img pc__img-second">
                   @endforeach
@@ -329,6 +477,7 @@
                       <input type="hidden" name="name" value="{{ $rproduct->name }}" />
                       <input type="hidden" name="quantity" value="1"/>
                       <input type="hidden" name="price" value="{{ $rproduct->sale_price == '' ? $rproduct->regular_price : $rproduct->sale_price }}" />
+                      <button type="submit" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-primary mb-3">Add to Cart</button>
                     </form>
                   @endif
                 @endif
@@ -369,7 +518,6 @@
         </svg>
       </div>
       <div class="products-pagination mt-4 mb-5 d-flex align-items-center justify-content-center"></div>
-      
     </div>
   </section>
 </main>
@@ -377,119 +525,135 @@
 
 @push('scripts')
 <script>
-    var globalMaxQuantity = {{ $product -> quantity }} ;
-$(document).ready(function(){
-  $('#size').on('change', function() {
-      var selectedOption = $(this).find('option:selected');
-      var availableQuantity = selectedOption.data('quantity');
-      if(availableQuantity === undefined || availableQuantity === null) {
-          availableQuantity = globalMaxQuantity;
-      }
-
-      $('input.qty-control__number').attr('max', availableQuantity);   
-      var currentVal = parseInt($('input.qty-control__number').val());
-      if(currentVal > availableQuantity){
-          $('input.qty-control__number').val(availableQuantity);
-          $('.qty-error').text("Only " + availableQuantity + " items are available.");
-      } else {
-          $('.qty-error').text('');
-      }
-  });
-
-  $('.qty-control__increase').on('click', function(){
-      var $input = $(this).siblings('input.qty-control__number');
-      var currentVal = parseInt($input.val());
-      var maxVal = parseInt($input.attr('max'));
-      var $error = $(this).closest('.qty-control').siblings('.qty-error');
-      if(currentVal < maxVal){
-          $input.val(currentVal);
-          $error.text('');
-      } else {
-          $error.text("Only " + maxVal + " items are available.");
-      }
-  });
-  
-  $('.qty-control__reduce').on('click', function(){
-      var $input = $(this).siblings('input.qty-control__number');
-      var currentVal = parseInt($input.val());
-      var $error = $(this).closest('.qty-control').siblings('.qty-error');
-      if(currentVal > 1){
-          $input.val(currentVal);
-          $error.text('');
-      }
-  });
-  
-  $('input.qty-control__number').on('change', function(){
-      var $input = $(this);
-      var currentVal = parseInt($input.val());
-      var maxVal = parseInt($input.attr('max'));
-      var $error = $input.closest('.qty-control').siblings('.qty-error');
-      if(currentVal > maxVal){
-          $error.text("Only " + maxVal + " items are available.");
-          $input.val(maxVal);
-      } else {
-          $error.text('');
-      }
-      if(currentVal < 1 || isNaN(currentVal)){
-          $input.val(1);
-      }
-  });
-
+$(document).ready(function() {
   let selectedSize = null;
-    const quantityInput = $('input.qty-control__number');
-    const qtyError = $('.qty-error');
+  const quantityInput = $('input.qty-control__number');
+  const qtyError = $('.qty-error');
+  const addToCartBtn = $('.btn-addtocart');
+  const cartStatus = $('.cart-status');
 
-    $('.size-btn').on('click', function() {
-        const btn = $(this);
-        if(btn.hasClass('sold-out') || btn.prop('disabled')) return;
-        
-        // Update selected size
-        $('.size-btn').removeClass('active');
-        btn.addClass('active');
-        selectedSize = {
-            id: btn.data('size-id'),
-            quantity: btn.data('quantity')
-        };
-        
-        // Update hidden input and quantity limits
-        $('#selected_size').val(selectedSize.id);
-        quantityInput.attr('max', selectedSize.quantity);
-        if(quantityInput.val() > selectedSize.quantity) {
-            quantityInput.val(1);
-            qtyError.text('');
-        }
-    });
+  $('.size-btn').on('click', function() {
+    const btn = $(this);
+    if (btn.hasClass('sold-out') || btn.prop('disabled')) return;
+    $('.size-btn').removeClass('active');
+    btn.addClass('active');
+    selectedSize = {
+      id: btn.data('size-id'),
+      quantity: btn.data('quantity')
+    };
+    $('#selected_size').val(selectedSize.id);
+    quantityInput.attr('max', selectedSize.quantity);
+    if (parseInt(quantityInput.val()) > selectedSize.quantity) {
+      quantityInput.val(1);
+      qtyError.text('');
+    }
+    updateCartStatus(selectedSize.id);
+  });
 
+  $('.qty-control__increase').on('click', function() {
+    if (!selectedSize) {
+      qtyError.text('Please select a size first');
+      return;
+    }
+    const currentVal = parseInt(quantityInput.val()) || 1;
+    if (currentVal < selectedSize.quantity) {
+      quantityInput.val(currentVal + 1);
+      qtyError.text('');
+    } else {
+      qtyError.text(`Only ${selectedSize.quantity} items available`);
+    }
+  });
 
-    $('.qty-control__increase').on('click', function(){
-        if(!selectedSize) {
-            qtyError.text('Please select a size first');
-            return;
-        }
-        
-        const currentVal = parseInt(quantityInput.val());
-        if(currentVal < selectedSize.quantity) {
-            quantityInput.val(currentVal);
-            qtyError.text('');
+  $('.qty-control__reduce').on('click', function() {
+    const currentVal = parseInt(quantityInput.val()) || 1;
+    if (currentVal > 1) {
+      quantityInput.val(currentVal - 1);
+      qtyError.text('');
+    }
+  });
+
+  quantityInput.on('input', function() {
+    const currentVal = parseInt(quantityInput.val());
+    const maxVal = parseInt(quantityInput.attr('max'));
+    if (currentVal > maxVal) {
+      qtyError.text(`Only ${maxVal} items available`);
+      quantityInput.val(maxVal);
+    } else if (currentVal < 1 || isNaN(currentVal)) {
+      quantityInput.val(1);
+      qtyError.text('');
+    } else {
+      qtyError.text('');
+    }
+  });
+
+  $('form[name="addtocart-form"]').on('submit', function(e) {
+    e.preventDefault();
+    if (!selectedSize) {
+      qtyError.text('Please select a size');
+      return;
+    }
+    const form = $(this);
+    const formData = form.serialize();
+    $.ajax({
+      url: form.attr('action'),
+      method: 'POST',
+      data: formData,
+      headers: {
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      },
+      success: function(response) {
+        if (response.success) {
+          const cartQuantity = response.cartQuantity || 1;
+          cartStatus.text(`${cartQuantity} in cart already`).show();
+          qtyError.text('');
+          quantityInput.val(1);
         } else {
-            qtyError.text(`Only ${selectedSize.quantity} items available`);
+          qtyError.text(response.message || 'Failed to add to cart');
         }
-    });
-
-    $('.qty-control__reduce').on('click', function(){
-        const currentVal = parseInt(quantityInput.val());
-        if(currentVal > 1) {
-            quantityInput.val(currentVal);
-            qtyError.text('');
-        }
-    });
-
-    $('form[name="addtocart-form"]').on('submit', function(e) {
-        if(!selectedSize) {
-            e.preventDefault();
-            qtyError.text('Please select a size');
-        }
+      },
+      error: function(xhr) {
+        qtyError.text(xhr.responseJSON?.message || 'An error occurred while adding to cart');
+      }
     });
   });
+
+  function updateCartStatus(sizeId) {
+    $.ajax({
+      url: '{{ route('cart.checkQuantity') }}',
+      method: 'GET',
+      data: { product_id: {{ $product->id }}, size_id: sizeId },
+      success: function(response) {
+        if (response.cartQuantity > 0) {
+          cartStatus.text(`${response.cartQuantity} in cart already`).show();
+        } else {
+          cartStatus.text('').hide();
+        }
+      },
+      error: function() {
+        cartStatus.text('').hide();
+      }
+    });
+  }
+});
+
+function openLightbox() {
+  const lightbox = document.getElementById('size-chart-lightbox');
+  lightbox.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('size-chart-lightbox');
+  lightbox.style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+document.addEventListener('click', function(event) {
+  const lightbox = document.getElementById('size-chart-lightbox');
+  const lightboxContent = document.querySelector('.lightbox-content');
+  if (event.target === lightbox) {
+    closeLightbox();
+  }
+});
 </script>
 @endpush

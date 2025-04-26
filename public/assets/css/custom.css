@@ -1,0 +1,257 @@
+.footer-middle {
+    padding-top: 2.25rem;
+    padding-bottom: 2.25rem;
+}
+.text-right{
+    text-align: right;
+}
+/*.pt-90 {*/
+/*    padding-top: 90px !important;*/
+/*}*/
+.my-account__address-list {
+    display: flex;
+    gap: 1.625rem;
+}
+
+.form-floating>.form-control,
+.form-floating>.form-select {
+    height: 48px;
+}
+body {
+    background-color: #f2f2f2 !important;
+    background-image: none !important;
+}
+
+
+/* Reset default margins and paddings for parent containers */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+/* Parent container to center content */
+.trakkiez-main-banner-section {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.trakkiez-banner-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center children horizontally */
+}
+
+/* Banner Slider */
+.banner-slider {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Maintain 1280x720 aspect ratio */
+    overflow: hidden;
+}
+
+/* Enforce 720px height and full width for desktop/laptop */
+@media screen and (min-width: 1025px) {
+    .banner-slider {
+        height: 720px;
+        max-width: none; /* Remove max-width constraint */
+        margin: 0; /* Remove centering */
+    }
+}
+
+/* Responsive height for smaller screens */
+@media screen and (max-width: 1024px) {
+    .banner-slider {
+        height: auto; /* Let aspect-ratio control height */
+        max-width: 100%; /* Full width on mobile, as already set */
+    }
+}
+
+.banner-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    transform: scale(1.1);
+}
+
+.banner-slide.active {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 1;
+}
+
+.trakkiez-banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Maintain aspect ratio */
+    display: block;
+}
+
+/* Static Content Box Below Banner */
+.static-content-box {
+    width: 100%;
+    max-width: 1280px; /* Match banner width */
+    margin: 20px auto; /* Center horizontally */
+    padding: 30px;
+    background: #f8f8f8; /* Light background for elegance */
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Explicitly center in laptop view */
+@media screen and (min-width: 1025px) {
+    .static-content-box {
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+}
+
+.static-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.static-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+}
+
+.static-button {
+    background: #333; /* Dark, elegant button */
+    color: #fff;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: background 0.3s;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
+}
+
+.static-button:hover {
+    background: #555; /* Slightly lighter on hover */
+}
+
+/* Slider Dots */
+.slider-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 5;
+}
+
+.slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.slider-dot.active {
+    background: #ffcc00; /* Golden active dot */
+    transform: scale(1.2);
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1024px) {
+    .static-content-box {
+        padding: 20px;
+        margin: 15px auto;
+    }
+
+    .static-title {
+        font-size: 1.8rem;
+    }
+
+    .static-subtitle {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .banner-slider {
+        max-width: 100%; /* Full width on mobile */
+    }
+
+    .static-content-box {
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    .static-title {
+        font-size: 1.5rem;
+    }
+
+    .static-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .static-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .slider-dots {
+        bottom: 10px;
+    }
+
+    .slider-dot {
+        width: 8px;
+        height: 8px;
+    }
+}
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+    margin-top:1rem;
+}
+@media (max-width: 768px) {
+.qty-control__increase {
+    padding-right: 1rem;
+    margin-top: -0.8rem;
+}
+.qty-control__reduce {
+    padding-left: 1.25rem;
+     margin-top: -0.8rem;
+}
+}
+@media (max-width: 575.98px) {
+    .product-single__details-tab > .nav-tabs .nav-link {
+        width: max-content;
+        margin-top: -8rem;
+        margin-left: -1rem;
+    }
+}
+@media (max-width: 768px) {
+.checkout-form .billing-info__wrapper .form-floating > label,
+.checkout-form .billing-info__wrapper .form-label-fixed > 
+.form-label {
+    color: #767676;
+    margin-top: -2rem;
+}
+}

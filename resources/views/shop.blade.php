@@ -5,63 +5,63 @@
   .filled-heart { color: orange; }
   .slideshow-bg { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
   .slideshow-bg__img { width: 100%; height: 100%; object-fit: contain; }
-  .category-header {
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #f8f9fa;
-  }
-  .category-link {
-    padding: 8px 12px;
-    display: inline-block;
-    transition: all 0.3s ease;
-  }
-  .category-link:hover {
-    background-color: #ff6f61;
-    color: #fff !important;
-  }
-  .subcategories {
-    display: none;
-    position: absolute; 
-    top: 100%;
-    left: 0;
-    min-width: 200px;
-    z-index: 1000;
-    border-radius: 8px;
-    background-color: #fff; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  }
-  .list-inline-item:hover .subcategories {
-    display: block;
-  }
-  .subcategories li {
-    margin: 5px 0;
-  }
-  .subcategories a:hover {
-    color: #ff6f61 !important;
-  }
-  .hover-bg:hover {
-    background-color: #f8f9fa;
-    color: #ff6f61 !important;
-  }
+  /*.category-header {*/
+  /*  border-bottom: 1px solid #e0e0e0;*/
+  /*  background-color: #f8f9fa;*/
+  /*}*/
+  /*.category-link {*/
+  /*  padding: 8px 12px;*/
+  /*  display: inline-block;*/
+  /*  transition: all 0.3s ease;*/
+  /*}*/
+  /*.category-link:hover {*/
+  /*  background-color: #ff6f61;*/
+  /*  color: #fff !important;*/
+  /*}*/
+  /*.subcategories {*/
+  /*  display: none;*/
+  /*  position: absolute; */
+  /*  top: 100%;*/
+  /*  left: 0;*/
+  /*  min-width: 200px;*/
+  /*  z-index: 1000;*/
+  /*  border-radius: 8px;*/
+  /*  background-color: #fff; */
+  /*  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  /*}*/
+  /*.list-inline-item:hover .subcategories {*/
+  /*  display: block;*/
+  /*}*/
+  /*.subcategories li {*/
+  /*  margin: 5px 0;*/
+  /*}*/
+  /*.subcategories a:hover {*/
+  /*  color: #ff6f61 !important;*/
+  /*}*/
+  /*.hover-bg:hover {*/
+  /*  background-color: #f8f9fa;*/
+  /*  color: #ff6f61 !important;*/
+  /*}*/
  
-  .category-header .list-inline {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .category-header .list-inline-item {
-    display: flex;
-    align-items: center;
-    margin: 0 10px; 
-  }
-  .category-header .list-inline-item a {
-    display: inline-block;
-    padding: 10px 15px;
-  }
-  .category-header .category-link, 
-  .category-header .list-inline-item a {
-    text-align: center;
-    margin-bottom: 0;
-  }
+  /*.category-header .list-inline {*/
+  /*  display: flex;*/
+  /*  justify-content: center;*/
+  /*  flex-wrap: wrap;*/
+  /*}*/
+  /*.category-header .list-inline-item {*/
+  /*  display: flex;*/
+  /*  align-items: center;*/
+  /*  margin: 0 10px; */
+  /*}*/
+  /*.category-header .list-inline-item a {*/
+  /*  display: inline-block;*/
+  /*  padding: 10px 15px;*/
+  /*}*/
+  /*.category-header .category-link, */
+  /*.category-header .list-inline-item a {*/
+  /*  text-align: center;*/
+  /*  margin-bottom: 0;*/
+  /*}*/
   
   .product-card { 
     background: transparent; 
@@ -139,48 +139,220 @@
     border-radius: 5px;
     z-index: 10;
   }
+  /* .trakkiez-category-header {*/
+  /*  position: relative;*/
+  /*  background: white;*/
+  /*  box-shadow: 0 2px 4px rgba(0,0,0,0.05);*/
+  /*  border-bottom: 1px solid #e0e0e0;*/
+  /*}*/
+  /*.trakkiez-category-list {*/
+  /*  display: flex;*/
+  /*  align-items: center;*/
+  /*  justify-content: center;*/
+  /*  padding: 0;*/
+  /*  margin: 0;*/
+  /*  list-style: none;*/
+  /*}*/
+  
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+   
+  /*} .trakkiez-category-header {*/
+  /*    overflow-x: auto;*/
+  /*    -webkit-overflow-scrolling: touch;*/
+  /*    scrollbar-width: none;*/
+  /*    -ms-overflow-style: none;*/
+  /*  }*/
+  /*  .trakkiez-category-header::-webkit-scrollbar {*/
+  /*    display: none;*/
+  /*  }*/
+  /*  .trakkiez-category-list {*/
+  /*    flex-wrap: nowrap;*/
+  /*    justify-content: flex-start;*/
+  /*    padding: 0 15px;*/
+  /*    width: auto;*/
+  /*    min-width: min-content;*/
+  /*  }*/
+  /*  .trakkiez-category-item {*/
+  /*    flex: 0 0 auto;*/
+  /*    position: relative;*/
+  /*  }*/
+  /*  .trakkiez-subcategories {*/
+  /*    position: absolute;*/
+  /*    top: 100%;*/
+  /*    left: 0;*/
+  /*    min-width: 200px;*/
+  /*    background: white;*/
+  /*    box-shadow: 0 4px 12px rgba(0,0,0,0.1);*/
+  /*    border-radius: 8px;*/
+  /*    z-index: 1000;*/
+  /*    margin-top: 5px;*/
+  /*  }*/
+  /*  .trakkiez-category-link[data-has-dropdown].active::after {*/
+  /*    transform: rotate(-135deg);*/
+  /*  }*/
+  /*}*/
+
+  /* Desktop Styles */
+  /*@media (min-width: 769px) {*/
+  /*  .trakkiez-category-list {*/
+  /*    flex-wrap: wrap;*/
+  /*    gap: 10px;*/
+  /*  }*/
+  /*}*/
+
+  /*.trakkiez-category-item {*/
+  /*  position: relative;*/
+  /*  margin: 0 5px;*/
+  /*}*/
+  /*.trakkiez-category-link {*/
+  /*  display: flex;*/
+  /*  align-items: center;*/
+  /*  padding: 12px 20px;*/
+  /*  color: #333;*/
+  /*  text-decoration: none;*/
+  /*  border-radius: 4px;*/
+  /*  transition: all 0.3s ease;*/
+  /*  font-weight: 500;*/
+  /*  position: relative;*/
+  /*  cursor: pointer;*/
+  /*  white-space: nowrap;*/
+  /*}*/
+  /*.trakkiez-category-link:hover {*/
+  /*  background-color: #ff6f61;*/
+  /*  color: #fff;*/
+  /*}*/
+  /*.trakkiez-subcategories {*/
+  /*  display: none;*/
+  /*  position: absolute;*/
+  /*  top: 100%;*/
+  /*  left: 0;*/
+  /*  min-width: 200px;*/
+  /*  background: white;*/
+  /*  box-shadow: 0 4px 12px rgba(0,0,0,0.1);*/
+  /*  border-radius: 8px;*/
+  /*  z-index: 1000;*/
+  /*  padding: 8px 0;*/
+  /*  opacity: 0;*/
+  /*  visibility: hidden;*/
+  /*  transition: all 0.3s ease;*/
+  /*}*/
+  /*.trakkiez-subcategories.active {*/
+  /*  display: block;*/
+  /*  opacity: 1;*/
+  /*  visibility: visible;*/
+  /*}*/
+  /*.trakkiez-subcategory-link {*/
+  /*  display: block;*/
+  /*  padding: 10px 20px;*/
+  /*  color: #555;*/
+  /*  text-decoration: none;*/
+  /*  transition: all 0.2s ease;*/
+  /*  font-size: 0.95em;*/
+  /*  white-space: nowrap;*/
+  /*}*/
+  /*.trakkiez-subcategory-link:hover {*/
+  /*  background-color: #f8f9fa;*/
+  /*  color: #ff6f61;*/
+  /*  padding-left: 25px;*/
+  /*}*/
+  
+  /* Arrow indicator for dropdown */
+  /*.trakkiez-category-link[data-has-dropdown]::after {*/
+  /*  content: '';*/
+  /*  display: inline-block;*/
+  /*  width: 6px;*/
+  /*  height: 6px;*/
+  /*  border-right: 2px solid #666;*/
+  /*  border-bottom: 2px solid #666;*/
+  /*  margin-left: 8px;*/
+  /*  transform: rotate(45deg);*/
+  /*  transition: transform 0.2s ease;*/
+  /*  position: relative;*/
+  /*  top: -2px;*/
+  /*}*/
+  /*.trakkiez-category-link[data-has-dropdown].active::after {*/
+  /*  transform: rotate(-135deg);*/
+  /*  top: 0;*/
+  /*  border-color: #fff;*/
+  /*}*/
+  /* Container styles */
+  /*.container {*/
+  /*  max-width: 1200px;*/
+  /*  margin: 0 auto;*/
+  /*  padding: 0 30px;*/
+  /*}*/
+  /* Animation for dropdown */
+  /*@keyframes fadeInUp {*/
+  /*  from {*/
+  /*    opacity: 0;*/
+  /*    transform: translate(-50%, 10px);*/
+  /*  }*/
+  /*  to {*/
+  /*    opacity: 1;*/
+  /*    transform: translate(-50%, 0);*/
+  /*  }*/
+  /*}*/
+  /*.trakkiez-category-item:hover .trakkiez-subcategories {*/
+  /*  animation: fadeInUp 0.3s ease forwards;*/
+  /*}*/
+
+  /*@media (max-width: 768px) {*/
+  /*  @keyframes fadeInUp {*/
+  /*    from {*/
+  /*      opacity: 0;*/
+  /*      transform: translate(-50%, 10px);*/
+  /*    }*/
+  /*    to {*/
+  /*      opacity: 1;*/
+  /*      transform: translate(-50%, 0);*/
+  /*    }*/
+  /*  }*/
 </style>
 
-<div class="category-header bg-light py-3 shadow-sm mb-4">
-  <div class="container">
-    <ul class="list-inline mb-0 d-flex justify-content-center flex-wrap">
-      @foreach ($categories as $category)
-        <li class="list-inline-item position-relative mx-2">
-          <a href="#" class="text-dark text-decoration-none fw-medium category-link px-3 py-2 rounded">
-            {{ $category->name }}
-          </a>
-          @if ($category->subCategories->count() > 0)
-            <ul class="subcategories list-unstyled position-absolute bg-white p-3 shadow-sm rounded mt-2">
-              @foreach ($category->subCategories as $subCategory)
-                <li>
-                  <a href="{{ route('shop.index', ['subcategory' => $subCategory->id]) }}" class="text-dark text-decoration-none d-block px-2 py-1 rounded hover-bg">
-                    {{ $subCategory->name }}
-                  </a>
-                </li>
-              @endforeach
-            </ul>
-          @endif
-        </li>
-      @endforeach
-
-      <li class="list-inline-item mx-2">
-        <a href="{{ route('shop.index', ['filter' => 'hot-deals']) }}" class="text-dark text-decoration-none fw-medium px-3 py-2 rounded">
-          Hot Deals
-        </a>
-      </li>
-      <li class="list-inline-item mx-2">
-        <a href="{{ route('shop.index', ['filter' => 'featured']) }}" class="text-dark text-decoration-none fw-medium px-3 py-2 rounded">
-          Featured Products
-        </a>
-      </li>
-      <li class="list-inline-item mx-2">
-        <a href="{{ route('shop.index', ['filter' => 'new-arrivals']) }}" class="text-dark text-decoration-none fw-medium px-3 py-2 rounded">
-          New Arrivals
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
+<!--<div class="trakkiez-category-header bg-light py-3 shadow-sm mb-4">-->
+<!--        <div class="container">-->
+<!--        <ul class="trakkiez-category-list">-->
+<!--            @foreach ($categories as $category)-->
+<!--            <li class="trakkiez-category-item">-->
+<!--                <a href="#" class="trakkiez-category-link" -->
+<!--                   @if($category->subCategories->count() > 0) data-has-dropdown="true" @endif-->
+<!--                   data-category="{{ $category->id }}">-->
+<!--                  {{ $category->name }}-->
+<!--                </a>-->
+<!--                @if ($category->subCategories->count() > 0)-->
+<!--                <ul class="trakkiez-subcategories" id="subcategories-{{ $category->id }}">-->
+<!--                    @foreach ($category->subCategories as $subCategory)-->
+<!--                      <li>-->
+<!--                        <a href="{{ route('shop.index', ['subcategory' => $subCategory->id]) }}" -->
+<!--                           class="trakkiez-subcategory-link">-->
+<!--                          {{ $subCategory->name }}-->
+<!--                        </a>-->
+<!--                      </li>-->
+<!--                    @endforeach-->
+<!--                  </ul>-->
+<!--                @endif-->
+<!--              </li>-->
+<!--            @endforeach-->
+      
+<!--            <li class="trakkiez-category-item">-->
+<!--                <a href="{{ route('shop.index', ['filter' => 'hot-deals']) }}" class="trakkiez-category-link">-->
+<!--                Hot Deals-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li class="trakkiez-category-item">-->
+<!--                <a href="{{ route('shop.index', ['filter' => 'featured']) }}" class="trakkiez-category-link">-->
+<!--                Featured Products-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li class="trakkiez-category-item">-->
+<!--                <a href="{{ route('shop.index', ['filter' => 'new-arrivals']) }}" class="trakkiez-category-link">-->
+<!--                New Arrivals-->
+<!--              </a>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--        </div>-->
+<!--      </div>-->
 
 <div class="container mb-4">
   <div class="row">
@@ -252,7 +424,7 @@
                         <img loading="lazy" src="{{ asset('uploads/products/' . $hoverImage) }}" 
                             width="330" height="400" 
                             alt="{{ $product->name }}" 
-                            class="pc__img pc__img-second">
+                            class="secondary-img">
                     @endif
                 </a>
             </a>
@@ -359,43 +531,97 @@
 @endsection
 
 @push('scripts')
-<script>
+      <script>
 $(function(){
+    const categoryLinks = document.querySelectorAll('.trakkiez-category-link[data-has-dropdown]');
+    let activeDropdown = null;
+    let activeLink = null;
 
-  $('#size-filter').on('change', function() {
-    updateUrl('size', $(this).val());
-  });
-  
-
-  $('#sort-by').on('change', function() {
-    updateUrl('sort', $(this).val());
-  });
-  
-
-  $('#apply-price-filter-modal').on('click', function() {
-    var priceFrom = $('#price-from-modal').val();
-    var priceTo = $('#price-to-modal').val();
-    var url = new URL(window.location.href);
-    var searchParams = new URLSearchParams(url.search);
-    
-    if (priceFrom) {
-      searchParams.set('price_from', priceFrom);
-    } else {
-      searchParams.delete('price_from');
+    function closeAllDropdowns() {
+        document.querySelectorAll('.trakkiez-subcategories').forEach(dropdown => {
+            dropdown.classList.remove('active');
+        });
+        document.querySelectorAll('.trakkiez-category-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        activeDropdown = null;
+        activeLink = null;
     }
-    
-    if (priceTo) {
-      searchParams.set('price_to', priceTo);
-    } else {
-      searchParams.delete('price_to');
-    }
-    
-    url.search = searchParams.toString();
-    window.location.href = url.toString();
-  });
-  
-  
-  function updateUrl(key, value) {
+
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const categoryId = this.getAttribute('data-category');
+            const dropdown = document.getElementById(`subcategories-${categoryId}`);
+            
+            if (activeDropdown === dropdown) {
+                closeAllDropdowns();
+            } else {
+                closeAllDropdowns();
+                dropdown.classList.add('active');
+                this.classList.add('active');
+                activeDropdown = dropdown;
+                activeLink = this;
+
+                // Center the category item
+                const container = document.querySelector('.trakkiez-category-header');
+                const item = this.closest('.trakkiez-category-item');
+                const containerWidth = container.offsetWidth;
+                const itemWidth = item.offsetWidth;
+                const scrollLeft = item.offsetLeft - (containerWidth / 2) + (itemWidth / 2);
+                
+                container.scrollTo({
+                    left: scrollLeft,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.trakkiez-category-item')) {
+            closeAllDropdowns();
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAllDropdowns();
+        }
+    });
+
+    // Your existing scripts
+    $('#size-filter').on('change', function() {
+        updateUrl('size', $(this).val());
+    });
+
+    $('#sort-by').on('change', function() {
+        updateUrl('sort', $(this).val());
+    });
+
+    $('#apply-price-filter-modal').on('click', function() {
+        var priceFrom = $('#price-from-modal').val();
+        var priceTo = $('#price-to-modal').val();
+        var url = new URL(window.location.href);
+        var searchParams = new URLSearchParams(url.search);
+        
+        if (priceFrom) {
+            searchParams.set('price_from', priceFrom);
+        } else {
+            searchParams.delete('price_from');
+        }
+        
+        if (priceTo) {
+            searchParams.set('price_to', priceTo);
+        } else {
+            searchParams.delete('price_to');
+        }
+        
+        url.search = searchParams.toString();
+        window.location.href = url.toString();
+    });
+
+        function updateUrl(key, value) {
     var url = new URL(window.location.href);
     var searchParams = new URLSearchParams(url.search);
     if (value) {
@@ -407,5 +633,5 @@ $(function(){
     window.location.href = url.toString();
   }
 });
-</script>
+      </script>
 @endpush

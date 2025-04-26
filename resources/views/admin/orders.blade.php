@@ -8,6 +8,9 @@
     .table-striped  th:nth-child(2), .table-striped  td:nth-child(2) {
         width: 250px;   
     }
+      .table-transaction>tbody>tr:nth-of-type(odd) {
+        --bs-table-accent-bg: #fff !important;
+    }  
 </style>
 <div class="main-content-inner">                            
     <div class="main-content-wrap">

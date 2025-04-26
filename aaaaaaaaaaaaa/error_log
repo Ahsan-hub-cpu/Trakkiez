@@ -1,0 +1,142 @@
+[12-Mar-2025 22:20:15 UTC] PHP Warning:  require(/home/trakqdrr/public_html/vendor/autoload.php): Failed to open stream: No such file or directory in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:20:15 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/trakqdrr/public_html/vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/trakqdrr/public_html/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:20:37 UTC] PHP Warning:  require(/home/trakqdrr/public_html/vendor/autoload.php): Failed to open stream: No such file or directory in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:20:37 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/trakqdrr/public_html/vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/trakqdrr/public_html/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:20:39 UTC] PHP Warning:  require(/home/trakqdrr/public_html/vendor/autoload.php): Failed to open stream: No such file or directory in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:20:39 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/trakqdrr/public_html/vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/trakqdrr/public_html/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:20:40 UTC] PHP Warning:  require(/home/trakqdrr/public_html/vendor/autoload.php): Failed to open stream: No such file or directory in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:20:40 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/trakqdrr/public_html/vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/trakqdrr/public_html/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:20:40 UTC] PHP Warning:  require(/home/trakqdrr/public_html/vendor/autoload.php): Failed to open stream: No such file or directory in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:20:40 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/trakqdrr/public_html/vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/trakqdrr/public_html/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:21:48 UTC] PHP Warning:  require(/home/trakqdrr/public_html/vendor/autoload.php): Failed to open stream: No such file or directory in /home/trakqdrr/public_html/index.php on line 13
+[12-Mar-2025 22:21:48 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/trakqdrr/public_html/vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/trakqdrr/public_html/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/trakqdrr/public_html/index.php on line 13
+[15-Mar-2025 19:04:43 UTC] PHP Fatal error:  Trait "App\Http\Controllers\Intervention\Image\Facades\Image" not found in /home/trakqdrr/public_html/app/Http/Controllers/AdminController.php on line 23
+[15-Mar-2025 19:04:52 UTC] PHP Fatal error:  Trait "App\Http\Controllers\Intervention\Image\Facades\Image" not found in /home/trakqdrr/public_html/app/Http/Controllers/AdminController.php on line 23
+[15-Mar-2025 19:05:08 UTC] PHP Fatal error:  Trait "App\Http\Controllers\Intervention\Image\Facades\Image" not found in /home/trakqdrr/public_html/app/Http/Controllers/AdminController.php on line 23
+[15-Mar-2025 19:05:12 UTC] PHP Fatal error:  Trait "App\Http\Controllers\Intervention\Image\Facades\Image" not found in /home/trakqdrr/public_html/app/Http/Controllers/AdminController.php on line 23
+[15-Mar-2025 19:05:15 UTC] PHP Fatal error:  Trait "App\Http\Controllers\Intervention\Image\Facades\Image" not found in /home/trakqdrr/public_html/app/Http/Controllers/AdminController.php on line 23
+[15-Mar-2025 19:05:21 UTC] PHP Fatal error:  Trait "App\Http\Controllers\Intervention\Image\Facades\Image" not found in /home/trakqdrr/public_html/app/Http/Controllers/AdminController.php on line 23
+[15-Mar-2025 19:05:28 UTC] PHP Fatal error:  Trait "App\Http\Controllers\Intervention\Image\Facades\Image" not found in /home/trakqdrr/public_html/app/Http/Controllers/AdminController.php on line 23
+[15-Mar-2025 19:05:31 UTC] PHP Fatal error:  Trait "App\Http\Controllers\Intervention\Image\Facades\Image" not found in /home/trakqdrr/public_html/app/Http/Controllers/AdminController.php on line 23
+[24-Apr-2025 01:51:12 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/SubCategory.php on line 4
+[24-Apr-2025 01:55:35 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/SubCategory.php on line 4
+[24-Apr-2025 01:55:41 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/SubCategory.php on line 4
+[24-Apr-2025 01:55:42 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/SubCategory.php on line 4
+[24-Apr-2025 01:55:46 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/SubCategory.php on line 4
+[24-Apr-2025 01:55:47 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/SubCategory.php on line 4
+[24-Apr-2025 01:55:50 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/SubCategory.php on line 4
+[24-Apr-2025 01:55:51 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/SubCategory.php on line 4
+[24-Apr-2025 01:55:52 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/SubCategory.php on line 4
+[24-Apr-2025 02:03:21 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/Category.php on line 4
+[24-Apr-2025 02:03:24 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/Category.php on line 4
+[24-Apr-2025 02:03:25 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/Category.php on line 4
+[24-Apr-2025 02:03:29 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/Category.php on line 4
+[24-Apr-2025 02:04:03 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/trakqdrr/public_html/app/Models/Category.php on line 4
+[24-Apr-2025 23:18:49 UTC] PHP Fatal error:  Uncaught ReflectionException: Class "view" does not exist in /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php:944
+Stack trace:
+#0 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(944): ReflectionClass->__construct()
+#1 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(819): Illuminate\Container\Container->build()
+#2 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1051): Illuminate\Container\Container->resolve()
+#3 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(755): Illuminate\Foundation\Application->resolve()
+#4 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1033): Illuminate\Container\Container->make()
+#5 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(1565): Illuminate\Foundation\Application->make()
+#6 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(239): Illuminate\Container\Container->offsetGet()
+#7 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(210): Illuminate\Support\Facades\Facade::resolveFacadeInstance()
+#8 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#9 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/RegisterErrorViewPaths.php(17): Illuminate\Support\Facades\Facade::__callStatic()
+#10 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(915): Illuminate\Foundation\Exceptions\RegisterErrorViewPaths->__invoke()
+#11 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(890): Illuminate\Foundation\Exceptions\Handler->registerErrorViewPaths()
+#12 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(815): Illuminate\Foundation\Exceptions\Handler->renderHttpException()
+#13 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(706): Illuminate\Foundation\Exceptions\Handler->prepareResponse()
+#14 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(594): Illuminate\Foundation\Exceptions\Handler->renderExceptionResponse()
+#15 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(225): Illuminate\Foundation\Exceptions\Handler->render()
+#16 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(202): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse()
+#17 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(290): Illuminate\Foundation\Bootstrap\HandleExceptions->handleException()
+#18 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->Illuminate\Foundation\Bootstrap\{closure}()
+#19 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [view] does not exist. in /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php:946
+Stack trace:
+#0 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(819): Illuminate\Container\Container->build()
+#1 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1051): Illuminate\Container\Container->resolve()
+#2 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(755): Illuminate\Foundation\Application->resolve()
+#3 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1033): Illuminate\Container\Container->make()
+#4 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(1565): Illuminate\Foundation\Application->make()
+#5 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(239): Illuminate\Container\Container->offsetGet()
+#6 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(210): Illuminate\Support\Facades\Facade::resolveFacadeInstance()
+#7 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#8 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/RegisterErrorViewPaths.php(17): Illuminate\Support\Facades\Facade::__callStatic()
+#9 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(915): Illuminate\Foundation\Exceptions\RegisterErrorViewPaths->__invoke()
+#10 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(890): Illuminate\Foundation\Exceptions\Handler->registerErrorViewPaths()
+#11 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(815): Illuminate\Foundation\Exceptions\Handler->renderHttpException()
+#12 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(706): Illuminate\Foundation\Exceptions\Handler->prepareResponse()
+#13 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(594): Illuminate\Foundation\Exceptions\Handler->renderExceptionResponse()
+#14 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(225): Illuminate\Foundation\Exceptions\Handler->render()
+#15 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(202): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse()
+#16 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(290): Illuminate\Foundation\Bootstrap\HandleExceptions->handleException()
+#17 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->Illuminate\Foundation\Bootstrap\{closure}()
+#18 {main}
+  thrown in /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 946
+[24-Apr-2025 23:18:52 UTC] PHP Fatal error:  Uncaught ReflectionException: Class "view" does not exist in /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php:944
+Stack trace:
+#0 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(944): ReflectionClass->__construct()
+#1 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(819): Illuminate\Container\Container->build()
+#2 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1051): Illuminate\Container\Container->resolve()
+#3 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(755): Illuminate\Foundation\Application->resolve()
+#4 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1033): Illuminate\Container\Container->make()
+#5 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(1565): Illuminate\Foundation\Application->make()
+#6 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(239): Illuminate\Container\Container->offsetGet()
+#7 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(210): Illuminate\Support\Facades\Facade::resolveFacadeInstance()
+#8 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#9 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/RegisterErrorViewPaths.php(17): Illuminate\Support\Facades\Facade::__callStatic()
+#10 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(915): Illuminate\Foundation\Exceptions\RegisterErrorViewPaths->__invoke()
+#11 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(890): Illuminate\Foundation\Exceptions\Handler->registerErrorViewPaths()
+#12 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(815): Illuminate\Foundation\Exceptions\Handler->renderHttpException()
+#13 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(706): Illuminate\Foundation\Exceptions\Handler->prepareResponse()
+#14 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(594): Illuminate\Foundation\Exceptions\Handler->renderExceptionResponse()
+#15 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(225): Illuminate\Foundation\Exceptions\Handler->render()
+#16 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(202): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse()
+#17 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(290): Illuminate\Foundation\Bootstrap\HandleExceptions->handleException()
+#18 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->Illuminate\Foundation\Bootstrap\{closure}()
+#19 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [view] does not exist. in /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php:946
+Stack trace:
+#0 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(819): Illuminate\Container\Container->build()
+#1 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1051): Illuminate\Container\Container->resolve()
+#2 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(755): Illuminate\Foundation\Application->resolve()
+#3 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1033): Illuminate\Container\Container->make()
+#4 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php(1565): Illuminate\Foundation\Application->make()
+#5 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(239): Illuminate\Container\Container->offsetGet()
+#6 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(210): Illuminate\Support\Facades\Facade::resolveFacadeInstance()
+#7 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#8 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/RegisterErrorViewPaths.php(17): Illuminate\Support\Facades\Facade::__callStatic()
+#9 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(915): Illuminate\Foundation\Exceptions\RegisterErrorViewPaths->__invoke()
+#10 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(890): Illuminate\Foundation\Exceptions\Handler->registerErrorViewPaths()
+#11 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(815): Illuminate\Foundation\Exceptions\Handler->renderHttpException()
+#12 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(706): Illuminate\Foundation\Exceptions\Handler->prepareResponse()
+#13 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(594): Illuminate\Foundation\Exceptions\Handler->renderExceptionResponse()
+#14 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(225): Illuminate\Foundation\Exceptions\Handler->render()
+#15 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(202): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse()
+#16 /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(290): Illuminate\Foundation\Bootstrap\HandleExceptions->handleException()
+#17 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->Illuminate\Foundation\Bootstrap\{closure}()
+#18 {main}
+  thrown in /home/trakqdrr/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 946

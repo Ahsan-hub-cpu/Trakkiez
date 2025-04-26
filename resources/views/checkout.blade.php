@@ -47,7 +47,7 @@
                 </span>
             </a>
         </div>
-        <form name="checkout-form" action="{{ route('cart.place.order') }}" method="POST">
+        <form name="checkout-form" action="{{ route('cart.placeOrder') }}" method="POST">
             @csrf
             <div class="checkout-form">
                 <div class="billing-info__wrapper">
@@ -71,7 +71,7 @@
                                             <p>{{ $address->email }}</p>
                                             <p>{{ $address->name }}</p>
                                             <p>{{ $address->address }}</p>
-                                            <p>{{ $address->landmark }}</p>
+                                            <!--<p>{{ $address->landmark }}</p>-->
                                             <p>{{ $address->city }}, {{ $address->state }}, {{ $address->country }}</p>
                                             <p>{{ $address->zip }}</p>
                                             <p>Phone: {{ $address->phone }}</p>                                        
@@ -109,7 +109,7 @@
                             <div class="col-md-4">
                                 <div class="form-floating my-3">
                                     <input type="text" class="form-control" id="zip" name="zip" value="{{ old('zip') }}">
-                                    <label for="zip">Pincode *</label>
+                                    <label for="zip">Postal Code *</label>
                                     <span class="text-danger">@error('zip') {{ $message }} @enderror</span>
                                 </div>
                             </div>                        
@@ -146,13 +146,13 @@
                                 </div>
                             </div>    
 
-                            <div class="col-md-12">
-                                <div class="form-floating my-3">
-                                    <input type="text" class="form-control" id="landmark" name="landmark" value="{{ old('landmark') }}">
-                                    <label for="landmark">Landmark *</label>
-                                    <span class="text-danger">@error('landmark') {{ $message }} @enderror</span>
-                                </div>
-                            </div>                                         
+                            <!--<div class="col-md-12">-->
+                            <!--    <div class="form-floating my-3">-->
+                            <!--        <input type="text" class="form-control" id="landmark" name="landmark" value="{{ old('landmark') }}">-->
+                            <!--        <label for="landmark">Landmark *</label>-->
+                            <!--        <span class="text-danger">@error('landmark') {{ $message }} @enderror</span>-->
+                            <!--    </div>-->
+                            <!--</div>                                         -->
                         </div> 
                     @endif                   
                 </div>
@@ -160,7 +160,7 @@
                 @php
                     // Calculate cart subtotal and shipping cost conditionally.
                     $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-                    $shippingCost = ($cartSubtotal > 7000) ? 0 : 250;
+                    $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
                 @endphp
 
                 <div class="checkout__totals-wrapper">

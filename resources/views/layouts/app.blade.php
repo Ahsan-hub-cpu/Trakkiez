@@ -1,25 +1,322 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta name="author" content="surfside media" />
-  <link rel="shortcut icon" href="{{asset('assets/images/favicon.icon')}}" type="image/x-icon">
-  <link rel="preconnect" href="https://fonts.gstatic.com/">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
-    rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Allura&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{asset('assets/css/plugins/swiper.min.css')}}" type="text/css" />
-  <link rel="stylesheet" href="{{asset('assets/css/style.css')}}" type="text/css" />
-  <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}" type="text/css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <!-- Title for browser and search engines -->
+    <title>Trakkiez - @yield('title', 'Welcome')</title>
 
+    <!-- SEO Meta Tags -->
+    <meta name="author" content="Trakkiez">
+    <meta name="description" content="Trakkiez - Your one-stop shop for stylish fashion, premium clothing, and trendy accessories.">
+    <meta name="keywords" content="Trakkiez, online fashion store, stylish clothing, trendy fashion, men fashion, women fashion, accessories">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://trakkiez.com">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Trakkiez - Trendy Fashion Online">
+    <meta property="og:description" content="Shop premium fashion clothing and accessories at Trakkiez.">
+    <meta property="og:image" content="{{ asset('assets/images/og-image.jpg') }}">
+    <meta property="og:url" content="https://trakkiez.com">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Trakkiez - Trendy Fashion Online">
+    <meta name="twitter:description" content="Shop premium fashion clothing and accessories at Trakkiez.">
+    <meta name="twitter:image" content="{{ asset('assets/images/og-image.jpg') }}">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{ asset('assets/images/apple-touch-icon.png') }}">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Trakkiez",
+        "url": "https://trakkiez.com",
+        "logo": "https://trakkiez.com/assets/images/logo.png"
+    }
+    </script>
+
+    <!-- Fonts and Styles -->
+    <link rel="preconnect" href="https://fonts.gstatic.com/">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/swiper.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" type="text/css">
+   <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}?v={{ time() }}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+       <link rel="stylesheet" href="{{ asset('assets/css/plugins/swiper.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />-->
+
+ 
+
+
+    <style>
+        /* Reset and Common Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Desktop Header Styles */
+        @media (min-width: 769px) {
+            body {
+                padding-top: 0 !important;
+            }
+
+            .header {
+                position: relative !important;
+                background-color: black !important;
+            }
+
+            .header-desk {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 0;
+            }
+
+            .navigation {
+                margin-left: 80px !important;
+            }
+
+            .logo__image {
+                max-width: 220px;
+            }
+
+            .top-bar {
+                position: relative !important;
+                width: 100%;
+                z-index: 999;
+            }
+        }
+
+        /* Mobile Styles - Only apply below 768px */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 0 !important;
+            }
+
+            .header-mobile {
+                margin-top: 35px !important;
+                position: relative !important;
+            }
+
+            .top-bar {
+              
+              display:none;
+            }
+
+            .banner-section,
+            .banner-slider,
+            .banner-wrapper {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+        }
+
+        /* Banner and Content Styles */
+        .trakkiez-main-banner-section {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .banner-slider {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .trakkiez-banner-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Preserve existing styles */
+        .header-desk_type_1 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navigation__list {
+            display: flex;
+            justify-content:space-between;
+            align-items: center;
+            margin: 0 80px;
+            padding: 0;
+            
+        }
+
+        .header-tools {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Reset default margins and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Top banner styles */
+        .free-shipping-banner {
+            width: 100%;
+            text-align: center;
+            background: #f5f5f5;
+            padding: 5px 0;
+            margin: 0;
+            position: relative;
+            z-index: 1000;
+        }
+
+        /* Header container */
+        .header-container {
+            width: 100%;
+            position: relative;
+            background: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Logo container */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+            margin: 0;
+        }
+
+        /* Banner section */
+        .banner-section {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        .banner-slider {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        @media (max-width: 768px) {
+            /* Mobile specific resets */
+            body {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .header-mobile {
+                position: relative;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                background: #000;
+                z-index: 999;
+            }
+
+            /* Force immediate layout calculation */
+            .banner-section {
+                transform: translateZ(0);
+                -webkit-transform: translateZ(0);
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+            }
+
+            /* Ensure no unwanted margins */
+            .navigation,
+            .mobile-nav,
+            .banner-slider,
+            .banner-section {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Fix for any floating elements */
+            .clearfix::after {
+                content: "";
+                clear: both;
+                display: table;
+            }
+        }
+
+        /* Critical mobile fixes - highest priority */
+        @media (max-width: 768px) {
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow-x: hidden !important;
+                min-height: 100% !important;
+                width: 100% !important;
+                position: relative !important;
+            }
+
+            .header-mobile {
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                z-index: 1000 !important;
+                background: #000 !important;
+            }
+
+            .banner-section,
+            .banner-slider,
+            .banner-wrapper {
+                position: relative !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                top: 0 !important;
+            }
+
+            .navigation,
+            .mobile-nav {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Remove any fixed positioning that might cause issues */
+            .fixed-top,
+            .sticky-top {
+                position: relative !important;
+                top: auto !important;
+            }
+
+            /* Force proper stacking context */
+            * {
+                transform: translateZ(0) !important;
+                -webkit-transform: translateZ(0) !important;
+                backface-visibility: hidden !important;
+                -webkit-backface-visibility: hidden !important;
+            }
+        }
+    </style>
 </head>
 <body class="gradient-bg">
   <svg class="d-none">
@@ -247,6 +544,7 @@
   </svg>
   <style>
 
+    /* Header Styling */
     #header {
       padding-top: 8px;
       padding-bottom: 8px;
@@ -361,23 +659,22 @@ body {
   padding-top: 80px;
 }
 
+
 .fab-container {
-  position: fixed;         
-  top: 95%;               
-  right: 1470px;        
-  transform: translateY(-50%);
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
   display: inline-block;
   width: 40px;
   height: 40px;
-  vertical-align: middle;
   transition: opacity 0.3s ease;
-  z-index: 1000;          
+  z-index: 1000;
   opacity: 1 !important;
   visibility: visible !important;
 }
 
 .fab-button {
-  background-color: #ff6b6b;
+  background-color: #ff5f57;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -385,20 +682,21 @@ body {
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: 18px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  font-size: 24px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   cursor: pointer;
+  margin-left: 2px;
   position: relative;
   z-index: 2;
 }
 
 .fab-icons {
   position: absolute;
-  bottom: 100%;          
-  left: 50%;              
+  bottom: 100%;
+  left: 50%;
   transform: translateX(-50%);
-  display: none;         
-  flex-direction: column; 
+  display: none;
+  flex-direction: column;
   gap: 8px;
   opacity: 1;
   pointer-events: auto;
@@ -416,7 +714,7 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: none;          
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -425,6 +723,7 @@ body {
   color: #fff;
   box-shadow: 0 4px 6px rgba(0,0,0,0.3);
   transition: transform 0.2s ease;
+  position: relative;
 }
 
 .fab-icon:hover {
@@ -437,18 +736,16 @@ body {
 
 .fab-icon.phone {
   background-color: #0084FF;
-  width: 40px;
-  height: 40px;
   font-size: 14px;
   margin-bottom: 10px;
 }
 
 .fab-icon .tooltip {
-  visibility: hidden;       
-  opacity: 0;                 
+  visibility: hidden;
+  opacity: 0;
   position: absolute;
-  top: 50%;                    
-  left: 110%;                
+  top: 50%;
+  left: 110%;
   transform: translateY(-50%);
   background-color: rgba(0, 0, 0, 0.8);
   color: #fff;
@@ -457,37 +754,65 @@ body {
   white-space: nowrap;
   font-size: 14px;
   transition: opacity 0.3s;
-  pointer-events: none;      
+  pointer-events: none;
 }
-
 
 .fab-icon:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }
 
+/* ðŸ"§ Media Queries for Better Responsiveness */
+@media (max-width: 768px) {
+  .fab-container {
+    bottom: 15px;
+    left: 15px;
+  }
 
-.fab-button {
+  .fab-button,
+  .fab-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
 
-  position: relative;
-  width: 40px;
-  height: 40px;
-  background-color: #ff5f57; 
-  border-radius: 50%;
-  color: #fff;
-  font-size: 24px;
-  text-align: center;
-  line-height: 50px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  cursor: pointer;
-  margin-left: 2px;
+  .fab-icon.phone {
+    font-size: 12px;
+  }
+
+  .fab-icon .tooltip {
+    font-size: 12px;
+    left: 105%;
+  }
+}
+
+@media (max-width: 480px) {
+  .fab-container {
+    bottom: 50px;
+    left: 10px;
+  }
+
+  .fab-button,
+  .fab-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+
+  .fab-icon.phone {
+    font-size: 11px;
+  }
+
+  .fab-icon .tooltip {
+    font-size: 11px;
+  }
 }
 
 .top-bar {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f5f5; 
+  background-color: #dfd5d5; 
   padding: 8px 0;
   font-size: 14px;
   text-align: center;
@@ -501,6 +826,9 @@ body {
 }
 
 @media (max-width: 768px) {
+    body {
+  padding-top: 0px;
+}
   .top-bar {
     position: fixed;
     top: 0;
@@ -514,7 +842,49 @@ body {
   .header-mobile {
     margin-top: 35px; /* Same as the top bar height */
   }
+
 }
+
+    /* Ensure banner section has no unwanted margins */
+    .trakkiez-main-banner-section {
+      margin: 0;
+      padding: 0;
+    }
+
+    .banner-slider {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Update header mobile styles */
+    .header-mobile {
+      position: relative;
+      z-index: 1000;
+      background: black;
+    }
+
+    /* Ensure proper stacking */
+    .top-bar {
+      position: relative;
+      z-index: 1001;
+    }
+    .navbar {
+      min-height: auto !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .navbar .container {
+      
+      margin: 0 !important;
+    }
+
+    .search-field {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+
   </style>
    
    <div class="top-bar">
@@ -525,12 +895,11 @@ body {
 
   <div class="header-mobile header_sticky">
     <div class="container d-flex align-items-center h-100">
-      <a class="mobile-nav-activator d-block position-relative" href="#">
+      <button class="navbar-toggler border-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">
         <svg class="nav-icon" width="25" height="18" viewBox="0 0 25 18" xmlns="http://www.w3.org/2000/svg">
           <use href="#icon_nav" />
         </svg>
-        <button class="btn-close-lg position-absolute top-0 start-0 w-100"></button>
-      </a>
+      </button>
 
       <div class="logo">
         <a href="{{route('home.index')}}">
@@ -539,88 +908,115 @@ body {
       </div>
 
       <a href="{{route('cart.index')}}" class="header-tools__item header-tools__cart">
-            <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <use href="#icon_cart" />
-            </svg>
-            @if(Cart::instance('cart')->content()->count()>0)
-            <span class="cart-amount d-block position-absolute js-cart-items-count">{{Cart::instance('cart')->content()->count()}}</span>
-            @endif
-          </a>
+        <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <use href="#icon_cart" />
+        </svg>
+        @if(Cart::instance('cart')->content()->count()>0)
+        <span class="cart-amount d-block position-absolute js-cart-items-count">{{Cart::instance('cart')->content()->count()}}</span>
+        @endif
+      </a>
     </div>
 
-    <nav
-      class="header-mobile__navigation navigation d-flex flex-column w-100 position-absolute top-100 bg-body overflow-auto">
+  <!-- Main navbar wrapper -->
+ <!-- Mobile Navbar -->
+  <nav class="navbar navbar-expand-lg d-lg-none">
+    <div class="container d-flex justify-content-between align-items-center">
+
+      <!-- Hamburger Button -->
+      <!--<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">-->
+      <!--  <span class="navbar-toggler-icon"></span>-->
+      <!--</button>-->
+
+      <!-- Cart Icon (example) -->
+      <!--<div class="cart-icon">-->
+      <!--  <i class="fa fa-shopping-cart"></i>-->
+      <!--</div>-->
+    </div>
+
+    <!-- Collapsible Mobile Nav -->
+    <div class="collapse navbar-collapse flex-column bg-body shadow-sm z-3 position-absolute top-100 start-0 w-100" id="mobileNav" style="max-height: 90vh; overflow-y: auto;">
+
+      <!-- Search Section -->
       <div class="container">
-        <form action="#" method="GET" class="search-field position-relative mt-4 mb-3">
+        <form action="#" method="GET" class="search-field position-relative">
           <div class="position-relative">
-            <input class="search-field__input w-100 border rounded-1" type="text" name="search-keyword"
-              placeholder="Search products" />
-            <button class="btn-icon search-popup__submit pb-0 me-2" type="submit">
-              <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <use href="ahsan.html" />
+            <input class="form-control w-100 border rounded-1" type="text" name="search-keyword" placeholder="Search products" />
+            
+            <!-- Submit Button -->
+            <button class="btn position-absolute top-0 end-0 mt-1 me-4" type="submit">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M14.4121 13.292L18.7071 17.5859L17.2931 18.9999L13.0001 14.7059C11.6841 15.7289 10.0121 16.3339 8.24906 16.3339C3.70906 16.3339 0.0000610352 12.6249 0.0000610352 8.0849C0.0000610352 3.5449 3.70906 -0.164093 8.24906 -0.164093C12.7891 -0.164093 16.4981 3.5449 16.4981 8.0849C16.4981 9.8479 15.8921 11.5199 14.8701 12.8359L14.4121 13.292Z" fill="#000"/>
               </svg>
             </button>
-            <button class="btn-icon btn-close-lg search-popup__reset pb-0 me-2" type="reset"></button>
-          </div>
 
-          <div class="position-absolute start-0 top-100 m-0 w-100">
-            <div class="search-result"></div>
+            <!-- Reset Button -->
+            <button class="btn position-absolute top-0 end-0 mt-1 me-1" type="reset">
+              <i class="fa fa-times"></i>
+            </button>
           </div>
         </form>
       </div>
 
-      
-
+      <!-- Navigation Links -->
       <div class="container">
-        <div class="overflow-hidden">
-          <ul class="navigation__list list-unstyled position-relative">
-            <li class="navigation__item">
-              <a href = "{{route('home.index')}}" class="navigation__link">Home</a>
-            </li>
-            <li class="navigation__item">
-              <a href="{{route('shop.index')}}" class="navigation__link">Shop</a>
-            </li>
-            <li class="navigation__item">
-              <a href="{{route('cart.index')}}" class="navigation__link">Cart</a>
-            </li>
-            <li class="navigation__item">
-              <a href="{{ route('about.us') }}" class="navigation__link">About</a>
-            </li>
-            <li class="navigation__item">
-              <a href="{{route('home.contact')}}" class="navigation__link">Contact</a>
-            </li>
-          </ul>
+        <ul class="list-unstyled mb-4">
+          <li class="mb-2"><a href="{{ route('home.index') }}" class="nav-link">Home</a></li>
+          <li class="mb-2"><a href="{{ route('shop.index') }}" class="nav-link">Shop</a></li>
+ @foreach($categories as $category)
+    <li class="mb-2">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#{{ $category->slug }}" aria-expanded="false">
+            {{ $category->name }}
+        </a>
+        <div class="collapse" id="{{ $category->slug }}">
+            <ul class="list-unstyled ps-3">
+                @foreach($category->subcategories as $subcategory)
+                    <li class="mb-2">
+                        <a href="{{ route('home.subcategory', [
+                            'category_slug' => $category->slug,
+                            'subcategory_id' => $subcategory->id
+                        ]) }}" class="nav-link">
+                            {{ $subcategory->name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
         </div>
+    </li>
+@endforeach
+          <li class="mb-2"><a href="{{ route('cart.index') }}" class="nav-link">Cart</a></li>
+          <li class="mb-2"><a href="{{ route('about.us') }}" class="nav-link">About</a></li>
+          <li class="mb-2"><a href="{{ route('home.contact') }}" class="nav-link">Contact</a></li>
+        </ul>
       </div>
 
-      <ul class="container social-links list-unstyled d-flex flex-wrap mb-0">
-  <li>
-    <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="footer__social-link d-block ps-0">
-      <svg class="svg-icon svg-icon_facebook" width="9" height="15" viewBox="0 0 9 15" xmlns="http://www.w3.org/2000/svg">
-        <use href="#icon_facebook" />
-      </svg>
-    </a>
-  </li>
-
-  <li>
-    <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="footer__social-link d-block">
-      <svg class="svg-icon svg-icon_instagram" width="14" height="13" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
-        <use href="#icon_instagram" />
-      </svg>
-    </a>
-  </li>
-
-
-  <li>
-    <a href="https://www.tiktok.com/@trakkiezwear?_t=ZS-8t3QFgCyjjE&_r=1" class="footer__social-link d-block">
-      <i class="fa-brands fa-tiktok"></i>
-    </a>
-  </li>
-</ul>
+      <!-- Social Icons -->
+      <div class="container pb-4">
+        <ul class="list-unstyled d-flex gap-3">
+          <li>
+            <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="text-decoration-none">
+              <svg class="svg-icon" width="9" height="15" viewBox="0 0 9 15" xmlns="http://www.w3.org/2000/svg">
+                <use href="#icon_facebook" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="text-decoration-none">
+              <svg class="svg-icon" width="14" height="13" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                <use href="#icon_instagram" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.tiktok.com/@trakkiezwear?_t=ZS-8t3QFgCyjjE&_r=1" class="text-decoration-none">
+              <i class="fab fa-tiktok"></i>
+            </a>
+          </li>
+        </ul>
       </div>
-    </nav>
+
+    </div>
+  </nav>
+
   </div>
 
 
@@ -633,25 +1029,40 @@ body {
         </a>
       </div>
 
-      <nav class="navigation">
-        <ul class="navigation__list list-unstyled d-flex">
-          <li class="navigation__item">
-            <a href="{{route('home.index')}}" class="navigation__link">Home</a>
-          </li>
-          <li class="navigation__item">
-            <a href="{{route('shop.index')}}" class="navigation__link">Shop</a>
-          </li>
-          <li class="navigation__item">
-            <a href="{{route('cart.index')}}" class="navigation__link">Cart</a>
-          </li>
-          <li class="navigation__item">
-            <a href="{{ route('about.us') }}" class="navigation__link">About</a>
-          </li>
-          <li class="navigation__item">
-            <a href="{{route('home.contact')}}" class="navigation__link">Contact</a>
-          </li>
-        </ul>
-      </nav>
+<nav class="navigation" style="margin-left: 80px;">
+    <ul class="navigation__list list-unstyled d-flex align-items-center">
+        <li class="navigation__item">
+            <a href="{{ route('home.index') }}" class="navigation__link">Home</a>
+        </li>
+        <li class="navigation__item">
+            <a href="{{ route('shop.index') }}" class="navigation__link">Shop</a>
+        </li>
+        @foreach($categories as $category)
+            <li class="navigation__item dropdown">
+                <a href="#" class="navigation__link dropdown-toggle" id="{{ $category->slug }}Dropdown" 
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ $category->name }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="{{ $category->slug }}Dropdown">
+                    @foreach($category->subcategories as $subcategory)
+                        <li>
+                            <a class="dropdown-item" 
+                               href="{{ route('home.subcategory', [
+                                   'category_slug' => $category->slug,
+                                   'subcategory_id' => $subcategory->id
+                               ]) }}">
+                                {{ $subcategory->name }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </li>
+        @endforeach
+        <li class="navigation__item">
+            <a href="{{ route('home.contact') }}" class="navigation__link">Contact</a>
+        </li>
+    </ul>
+</nav>
 
       <div class="header-tools d-flex align-items-center">
         <div class="header-tools__item hover-container">
@@ -742,13 +1153,12 @@ body {
             </a>
           </div>
           <p class="m-0"><strong class="fw-medium">trakkiezstore@gmail.com</strong></p>
-          <p class="m-0"><strong class="fw-medium">03114515165</strong></p>
-          <p><strong class="fw-medium">03249485029</strong></p>
+          <p><strong class="fw-medium">+923249485029</strong></p>
 
           <ul class="social-links list-unstyled d-flex flex-wrap mb-0">
             <li>
               <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="footer__social-link d-block">
-                <svg class="svg-icon svg-icon_facebook" width="9" height="15" viewBox="0 0 9 15"
+                <svg class="svg-icon svg-icon_facebook" width="9" height="15"
                   xmlns="http://www.w3.org/2000/svg">
                   <use href="#icon_facebook" />
                 </svg>
@@ -756,7 +1166,7 @@ body {
             </li>
             <li>
               <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="footer__social-link d-block">
-                <svg class="svg-icon svg-icon_instagram" width="14" height="13" viewBox="0 0 14 13"
+                <svg class="svg-icon svg-icon_instagram" width="14" height="13"
                   xmlns="http://www.w3.org/2000/svg">
                   <use href="#icon_instagram" />
                 </svg>
@@ -788,7 +1198,7 @@ body {
       </div>
     </div>
 
-<div class="footer-bottom">
+<div class="footer-bottom" style="padding-bottom: 4rem">
   <div class="container d-md-flex align-items-center">
     <span class="me-auto d-flex align-items-center">
       Â©2025 Trakkiez Store
@@ -869,7 +1279,7 @@ body {
     </div>
   </footer>
 
-  <div id="scrollTop" class="visually-hidden end-0"></div>
+  <div id="" class="visually-hidden end-0"></div>
   <div class="page-overlay"></div>
 
   <script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script>
@@ -943,5 +1353,116 @@ body {
     });
   </script>
   @stack("scripts")
+  <script>
+    // Mobile menu functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileNav = document.getElementById('mobileNav');
+      const navLinks = mobileNav.querySelectorAll('.navigation__link');
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      
+      // Close menu when clicking a link
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          const bsCollapse = new bootstrap.Collapse(mobileNav);
+          bsCollapse.hide();
+        });
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!mobileNav.contains(e.target) && !navbarToggler.contains(e.target) && mobileNav.classList.contains('show')) {
+          const bsCollapse = new bootstrap.Collapse(mobileNav);
+          bsCollapse.hide();
+        }
+      });
+    });
+
+    // Existing fab button code
+    const fabButton = document.getElementById('fabButton');
+    const fabIcons = document.getElementById('fabIcons');
+
+    // Fix initial mobile layout
+    document.addEventListener('DOMContentLoaded', function() {
+      // Force layout recalculation
+      function fixMobileLayout() {
+        // Reset any unwanted margins or spacing
+        document.body.style.margin = '0';
+        document.body.style.padding = '0';
+        
+        // Force layout recalculation for header and banner
+        const header = document.querySelector('.header-mobile');
+        const banner = document.querySelector('.banner-section');
+        
+        if (header) {
+          header.style.position = 'relative';
+          header.style.margin = '0';
+          header.style.padding = '0';
+        }
+        
+        if (banner) {
+          banner.style.margin = '0';
+          banner.style.padding = '0';
+          // Force reflow
+          banner.style.display = 'none';
+          banner.offsetHeight; // Force reflow
+          banner.style.display = '';
+        }
+
+        // Fix any scroll position issues
+        // window.scrollTo(0, 0);
+      }
+
+      // Run on page load
+      fixMobileLayout();
+
+      // Run after images load
+      window.addEventListener('load', fixMobileLayout);
+
+      // Run after any dynamic content loads
+      setTimeout(fixMobileLayout, 100);
+      setTimeout(fixMobileLayout, 500);
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function forceLayoutFix() {
+            // Force immediate layout recalculation
+            document.documentElement.style.setProperty('margin', '0', 'important');
+            document.documentElement.style.setProperty('padding', '0', 'important');
+            document.body.style.setProperty('margin', '0', 'important');
+            document.body.style.setProperty('padding', '0', 'important');
+
+            const elements = [
+                '.header-mobile',
+                '.banner-section',
+                '.banner-slider',
+                '.navigation',
+                '.mobile-nav'
+            ].forEach(selector => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.style.setProperty('margin', '0', 'important');
+                    element.style.setProperty('padding', '0', 'important');
+                    element.style.setProperty('position', 'relative', 'important');
+                    element.style.setProperty('width', '100%', 'important');
+                }
+            });
+
+            // Force reflow
+            // document.body.offsetHeight;
+            // window.scrollTo(0, 0);
+        }
+
+        // Run fixes at multiple points
+        forceLayoutFix();
+        window.addEventListener('load', forceLayoutFix);
+        window.addEventListener('resize', forceLayoutFix);
+        
+        // Run multiple times to ensure it catches any dynamic content
+        [0, 100, 300, 500, 1000].forEach(timeout => {
+            setTimeout(forceLayoutFix, timeout);
+        });
+    });
+</script>
 </body>
 </html>

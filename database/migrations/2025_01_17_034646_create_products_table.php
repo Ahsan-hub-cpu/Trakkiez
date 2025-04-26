@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('short_description')->nullable();
-            $table->string('description')->nullable();
+            $table->longText('description')->nullable(); // ✅ Changed from string to longText
             $table->decimal('regular_price');
             $table->decimal('sale_price')->nullable();
             $table->string('SKU');
@@ -25,13 +25,14 @@ return new class extends Migration
             $table->unsignedInteger('quantity')->default(10);
             $table->string('image')->nullable();
             $table->text('images')->nullable();
+            $table->string('size_chart')->nullable(); // ✅ New field for Size Chart image
             $table->bigInteger('category_id')->unsigned()->nullable();
             $table->bigInteger('brand_id')->unsigned()->nullable();
             $table->unsignedBigInteger('subcategory_id')->nullable();
             $table->timestamps();
+
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
-
         });
     }
 

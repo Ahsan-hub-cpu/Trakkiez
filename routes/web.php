@@ -19,14 +19,23 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/shop',[ShopController::class,'index'])->name('shop.index');
 Route::get('/shop/{product_slug}',[ShopController::class,'product_details'])->name("shop.product.details");
 Route::post('/filter-products', [ShopController::class, 'filterProducts'])->name('shop.filter');
+Route::get('/category/{category_slug}', [HomeController::class, 'category'])->name('home.category');
+Route::get('/category/{category_slug}/{subcategory_id}', [HomeController::class, 'subcategory'])->name('home.subcategory');
+
 
 //CART
-Route::get('/cart',[CartController::class,'index'])->name('cart.index');
-Route::post('/cart/store', [CartController::class, 'addToCart'])->name('cart.add');
-Route::put('/cart/increase-qunatity/{rowId}',[CartController::class,'increase_item_quantity'])->name('cart.qty.increase');
-Route::put('/cart/reduce-qunatity/{rowId}',[CartController::class,'reduce_item_quantity'])->name('cart.qty.reduce');
-Route::delete('/cart/remove/{rowId}',[CartController::class,'remove_item_from_cart'])->name('cart.remove');
-Route::delete('/cart/clear',[CartController::class,'empty_cart'])->name('cart.empty');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/increase-quantity/{rowId}', [CartController::class, 'increase_item_quantity'])->name('cart.qty.increase');
+Route::post('/cart/reduce-quantity/{rowId}', [CartController::class, 'reduce_item_quantity'])->name('cart.qty.reduce');
+Route::delete('/cart/remove/{rowId}', [CartController::class, 'remove_item_from_cart'])->name('cart.remove');
+Route::delete('/cart/clear', [CartController::class, 'empty_cart'])->name('cart.empty');
+Route::get('/cart/check-quantity', [CartController::class, 'checkQuantity'])->name('cart.checkQuantity');
+Route::post('/cart/apply-coupon', [CartController::class, 'apply_coupon_code'])->name('cart.applyCoupon');
+Route::post('/cart/remove-coupon', [CartController::class, 'remove_coupon_code'])->name('cart.removeCoupon');
+Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+Route::post('/cart/place-order', [CartController::class, 'place_order'])->name('cart.placeOrder');
+Route::get('/cart/confirmation', [CartController::class, 'confirmation'])->name('cart.confirmation');
 
 //Wishlist
 Route::post('/wishlist/add',[WishlistController::class,'add_to_wishlist'])->name('wishlist.add');
@@ -36,12 +45,12 @@ Route::delete('/wishlist/clear',[WishlistController::class,'empty_wishlist'])->n
 Route::post('/wishlist/move-to-cart/{rowId}',[WishlistController::class,'move_to_cart'])->name('wishlist.move.to.cart');
 
 //coupon
-Route::post('/cart/apply-coupon',[CartController::class,'apply_coupon_code'])->name('cart.coupon.apply');
-Route::delete('/cart/remove-coupon',[CartController::class,'remove_coupon_code'])->name('cart.coupon.remove');
+// Route::post('/cart/apply-coupon',[CartController::class,'apply_coupon_code'])->name('cart.coupon.apply');
+// Route::delete('/cart/remove-coupon',[CartController::class,'remove_coupon_code'])->name('cart.coupon.remove');
 
-Route::get('/checkout',[CartController::class,'checkout'])->name('cart.checkout');
-Route::post('/place-order',[CartController::class,'place_order'])->name('cart.place.order');
-Route::get('/order-confirmation',[CartController::class,'confirmation'])->name('cart.confirmation');
+// Route::get('/checkout',[CartController::class,'checkout'])->name('cart.checkout');
+// Route::post('/place-order',[CartController::class,'place_order'])->name('cart.place.order');
+// Route::get('/order-confirmation',[CartController::class,'confirmation'])->name('cart.confirmation');
 
 Route::get('/contact-us',[HomeController::class,'contact'])->name('home.contact');
 Route::post('/contact/store',[HomeController::class,'contact_store'])->name('home.contact.store');
@@ -64,10 +73,12 @@ Route::get('/return-policy', function () {
 
 
 
-Route::put('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
+// Route::put('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
 
 
 Route::get('/search',[HomeController::class,'search'])->name('home.search');
+
+
 
     Route::get('/account-dashboard',[UserController::class,'index'])->name('user.index');
     Route::get('/account-orders',[UserController::class,'orders'])->name('user.orders');

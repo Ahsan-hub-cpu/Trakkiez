@@ -1,46 +1,48 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    public function category(){
-        return $this->belongsTo(Category::class,'category_id');
+    protected $fillable = [
+        'name', 'slug', 'short_description', 'description', 'regular_price',
+        'sale_price', 'SKU', 'stock_status', 'featured', 'quantity',
+        'image', 'images', 'size_chart', 'category_id', 'brand_id', 'subcategory_id'
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function brand(){
-        return $this->belongsTo(Brand::class,'brand_id');
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
     }
 
-    public function categories() {
-        return $this->belongsTo(Category::class);
+    public function subcategory()
+    {
+        return $this->belongsTo(SubCategory::class, 'subcategory_id');
     }
 
-    public function brands() {
-        return $this->belongsTo(Brand::class);
-    }
-
-    public function productVariations() {
+    public function productVariations()
+    {
         return $this->hasMany(Product_Variations::class);
     }
-    public function sizes() {
+
+    public function sizes()
+    {
         return $this->belongsToMany(Sizes::class, 'product_variations', 'product_id', 'size_id');
     }
 
-    public function subcategory() {
-        return $this->belongsTo(Subcategory::class);
+    public function isOutOfStock()
+    {
+        return $this->quantity <= 0;
     }
 
-    public function isOutOfStock()
-{
-    return $this->quantity <= 0;
-}
-public function getTotalQuantityAttribute()
-{
-    return $this->productVariations->sum('quantity');
-}
-
-    
+    public function getTotalQuantityAttribute()
+    {
+        return $this->productVariations->sum('quantity');
+    }
 }

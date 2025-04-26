@@ -65,7 +65,7 @@
                         <tbody>
                         @php
                             // Set the fixed shipping cost conditionally based on cart subtotal.
-                            $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
+                            $cartSubtotal = (float) str_replace(',', '', \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->subtotal());
                             $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
                         @endphp
                             @foreach ($cartItems as $cartItem)
@@ -104,8 +104,9 @@
                                     <td>
                                         <div class="qty-control position-relative">
                                             <input type="number" name="quantity" 
-                                                   value="{{ $cartItem->qty }}" 
+                                                   value="{{ \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->get($cartItem->rowId)->qty }}" 
                                                    min="1" 
+                                                   readonly
                                                    class="qty-control__number text-center" 
                                                    data-rowid="{{ $cartItem->rowId }}"
                                                    data-max="{{ $cartItem->options->available_quantity }}"
@@ -116,7 +117,7 @@
                                         <span class="text-danger stock-error" id="stock-error-{{ $cartItem->rowId }}"></span>
                                     </td>
                                     <td>
-                                        <span class="shopping-cart__subtotal" id="subtotal-{{ $cartItem->rowId }}">PKR {{ $cartItem->subtotal() }}</span>
+                                        <span class="shopping-cart__subtotal" id="subtotal-{{ $cartItem->rowId }}">PKR {{ \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->get($cartItem->rowId)->subtotal() }}</span>
                                     </td>
                                     <td>
                                         <form method="POST" action="{{ route('cart.remove', ['rowId' => $cartItem->rowId]) }}">
@@ -136,15 +137,14 @@
                     </table>
                     <div class="cart-table-footer">
                         @if(!Session()->has("coupon"))
-                            <form class="position-relative bg-body" method="POST" action="{{ route('cart.coupon.apply') }}">
+                            <form class="position-relative bg-body" method="POST" action="{{ route('cart.applyCoupon') }}">
                                 @csrf
                                 <input class="form-control" type="text" name="coupon_code" placeholder="Coupon Code">
                                 <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4" type="submit" value="APPLY COUPON">
                             </form>
                         @else
-                            <form class="position-relative bg-body" method="POST" action="{{ route('cart.coupon.remove') }}">
+                            <form class="position-relative bg-body" method="POST" action="{{ route('cart.removeCoupon') }}">
                                 @csrf
-                                @method('DELETE')
                                 <input class="form-control text-success fw-bold" type="text" name="coupon_code" placeholder="Coupon Code" value="{{ session()->get('coupon')['code'] }} Applied!" readonly>
                                 <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4 text-danger" type="submit" value="REMOVE COUPON">
                             </form>
@@ -169,7 +169,7 @@
                             <h3>Cart Totals</h3>
                             @php
                                 // Recalculate cart subtotal and shipping cost for totals
-                                $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
+                                $cartSubtotal = (float) str_replace(',', '', \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->subtotal());
                                 $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
                             @endphp
                             @if(Session()->has('discounts'))
@@ -177,7 +177,7 @@
                                     <tbody>
                                         <tr>
                                             <th>Subtotal</th>
-                                            <td>PKR {{ Cart::instance('cart')->subtotal() }}</td>
+                                            <td>PKR {{ \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->subtotal() }}</td>
                                         </tr>
                                         <tr>
                                             <th>Discount {{ Session::get("coupon")["code"] }}</th>
@@ -210,7 +210,7 @@
                                     <tbody>
                                         <tr>
                                             <th>Subtotal</th>
-                                            <td>PKR {{ Cart::instance('cart')->subtotal() }}</td>
+                                            <td>PKR {{ \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->subtotal() }}</td>
                                         </tr>
                                         <tr>
                                             <th>SHIPPING</th>
@@ -218,11 +218,11 @@
                                         </tr>
                                         <tr>
                                             <th>VAT</th>
-                                            <td>PKR {{ Cart::instance('cart')->tax() }}</td>
+                                            <td>PKR {{ \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->tax() }}</td>
                                         </tr>
                                         <tr class="cart-total">
                                             @php
-                                                $cartTotal = (float) str_replace(',', '', Cart::instance('cart')->total());
+                                                $cartTotal = (float) str_replace(',', '', \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->total());
                                                 $finalTotal = $cartTotal + $shippingCost;
                                             @endphp
                                             <th>Total</th>
@@ -290,32 +290,6 @@ $(document).ready(function(){
         }
     }
 
-    // When quantity is manually changed.
-    $('input.qty-control__number').on('change', function(){
-        var $input = $(this);
-        var rowId = $input.data('rowid');
-        var inputVal = parseInt($input.val());
-        var maxVal = parseInt($input.attr('max'));
-        var $error = $('#stock-error-' + rowId);
-        if(isNaN(inputVal) || inputVal < 1) {
-            inputVal = 1;
-            $input.val(1);
-            $error.text('');
-        }
-        if(inputVal > maxVal) {
-            inputVal = maxVal;
-            $input.val(maxVal);
-            $error.text("Only " + maxVal + " items are available.");
-        } else if(inputVal === maxVal) {
-            $error.text("Only " + maxVal + " items are available.");
-        } else {
-            $error.text('');
-        }
-        $input.data('lastValid', inputVal);
-        updateQuantity(rowId, inputVal);
-        updateButtonState(rowId);
-    });
-
     // When the increase button is clicked.
     $('.qty-control__increase').on('click', function(){
         var rowId = $(this).data('rowid');
@@ -324,9 +298,8 @@ $(document).ready(function(){
         var maxVal = parseInt($input.attr('max'));
         var $error = $('#stock-error-' + rowId);
         if(lastValid < maxVal) {
-            var newQuantity = lastValid + 1;
             $error.text('');
-            updateQuantity(rowId, newQuantity);
+            increaseQuantity(rowId);
         } else {
             $error.text("Only " + maxVal + " items are available.");
         }
@@ -340,9 +313,8 @@ $(document).ready(function(){
         var lastValid = parseInt($input.data('lastValid'));
         var $error = $('#stock-error-' + rowId);
         if(lastValid > 1) {
-            var newQuantity = lastValid - 1;
             $error.text('');
-            updateQuantity(rowId, newQuantity);
+            reduceQuantity(rowId);
         }
         updateButtonState(rowId);
     });
@@ -352,15 +324,13 @@ $(document).ready(function(){
         window.location.href = "{{ route('cart.checkout') }}";
     });
 
-    // AJAX function to update quantity.
-    function updateQuantity(rowId, quantity) {
+    // AJAX function to increase quantity.
+    function increaseQuantity(rowId) {
         $.ajax({
-            url: "{{ route('cart.update.quantity') }}",
-            method: 'PUT',
+            url: "{{ route('cart.qty.increase', ['rowId' => ':rowId']) }}".replace(':rowId', rowId),
+            method: 'POST',
             data: {
-                _token: "{{ csrf_token() }}",
-                rowId: rowId,
-                quantity: quantity
+                _token: "{{ csrf_token() }}"
             },
             success: function(response) {
                 if(response.success) {
@@ -375,6 +345,34 @@ $(document).ready(function(){
                     if(response.newQuantity >= maxVal) {
                         $('#stock-error-' + rowId).text("Only " + maxVal + " items are available.");
                     }
+                    updateButtonState(rowId);
+                } else {
+                    $('#stock-error-' + rowId).text(response.message);
+                }
+            },
+            error: function(xhr) {
+                $('#checkout-error').text('An error occurred. Please try again.');
+            }
+        });
+    }
+
+    // AJAX function to reduce quantity.
+    function reduceQuantity(rowId) {
+        $.ajax({
+            url: "{{ route('cart.qty.reduce', ['rowId' => ':rowId']) }}".replace(':rowId', rowId),
+            method: 'POST',
+            data: {
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if(response.success) {
+                    var $input = $('input.qty-control__number[data-rowid="'+ rowId +'"]');
+                    $input.val(response.newQuantity);
+                    $input.data('lastValid', response.newQuantity);
+                    $('#subtotal-' + rowId).text('PKR ' + response.subtotal);
+                    // Replace the totals HTML with the response from the server.
+                    $('.cart-totals').html(response.totals);
+                    $('#stock-error-' + rowId).text('');
                     updateButtonState(rowId);
                 } else {
                     $('#stock-error-' + rowId).text(response.message);

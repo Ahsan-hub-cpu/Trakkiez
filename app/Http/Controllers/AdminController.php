@@ -25,7 +25,7 @@ class AdminController extends Controller
     
 public function GenerateBrandThumbailImage($img , $imgName){
 
-    $destinationPath = public_path('uploads/brands');
+    $destinationPath = base_path('uploads/brands');
     $img = Image::read($img->path());
     $img->cover(124,124,"top");
     $img->resize(124,124,function($constraint){
@@ -57,7 +57,7 @@ FROM orders");
    sum(if(status='ordered',total,0)) As TotalOrderedAmount,
    sum(if(status='delivered',total,0)) As TotalDeliveredAmount,
    sum(if(status='canceled',total,0)) As TotalCanceledAmount
-   From Orders WHERE YEAR(created_at)=YEAR(NOW()) GROUP BY YEAR(created_at), MONTH(created_at), DATE_FORMAT(created_at, '%b')
+   From orders WHERE YEAR(created_at)=YEAR(NOW()) GROUP BY YEAR(created_at), MONTH(created_at), DATE_FORMAT(created_at, '%b')
    Order By MONTH(created_at)) D On D.MonthNo=M.id");
 
    $AmountM = implode(',',collect($monthlyDatas)->pluck('TotalAmount')->toArray());
@@ -140,7 +140,7 @@ public function delete_brand($id){
 
 public function GenerateCategoryThumbailImage($img , $imgName){
 
-    $destinationPath = public_path('uploads/categories');
+    $destinationPath = base_path('uploads/categories');
     $img = Image::read($img->path());
     $img->cover(124,124,"top");
     $img->resize(124,124,function($constraint){
@@ -269,47 +269,56 @@ public function delete_category($id) {
 // ---- Product Methods ---- //
 
 
-    public function products() {
+  public function products()
+    {
         $products = Product::with(['productVariations.size'])->orderBy('created_at', 'DESC')->paginate(10);
         return view('admin.products', compact('products'));
     }
 
-    public function add_product() {
+    public function add_product()
+    {
         $categories = Category::with('subcategories')->orderBy('name')->get();
         $brands = Brand::select('id', 'name')->orderBy('name')->get();
         $sizes = Sizes::all();
         return view("admin.product-add", compact('categories', 'brands', 'sizes'));
     }
 
-    public function product_store(Request $request) {
+    public function product_store(Request $request)
+    {
         // Validate the data
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'slug' => 'required|unique:products,slug',
-            'category_id' => 'required',
-            'brand_id' => 'required',
-            'short_description' => 'required',
-            'description' => 'required',
-            'regular_price' => 'required',
-            'sale_price' => 'nullable',
-            'SKU' => 'required',
-            'stock_status' => 'required',
-            'featured' => 'required',
-            'quantity' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg,avif|max:4048',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+            'short_description' => 'required|string',
+            'description' => 'required|string',
+            'regular_price' => 'required|numeric|min:0',
+            'sale_price' => 'nullable|numeric|min:0',
+            'SKU' => 'required|string|max:255',
+            'stock_status' => 'required|in:instock,outofstock',
+            'featured' => 'required|boolean',
+            'quantity' => 'required|integer|min:0',
+            'image' => 'required|mimes:png,jpg,jpeg,avif,webp|max:4048',
+            'size_charts' => 'nullable|array',
+            'size_charts.*' => 'mimes:png,jpg,jpeg,avif,webp|max:4048',
             'sizes' => 'required|array',
-            'size_stock' => 'required|array', // Ensure size_stock is an array
-            'subcategory_id' => 'required',
+            'sizes.*' => 'exists:sizes,id',
+            'size_stock' => 'required|array',
+            'subcategory_id' => 'required|exists:sub_categories,id',
+        ], [
+            'size_charts.*.mimes' => 'Each size chart must be an image (PNG, JPG, JPEG, AVIF, or WEBP).',
+            'size_charts.*.max' => 'Each size chart image may not be larger than 4MB.',
         ]);
-    
+
         // Calculate total quantity from sizes
         $totalSizeQuantity = array_sum($request->size_stock);
-    
+
         // Check if global quantity matches total size quantity
         if ($totalSizeQuantity != $request->quantity) {
             return back()->withErrors(['quantity' => 'The global quantity must match the sum of the quantities of each size.']);
         }
-    
+
         // Create the product
         $product = new Product();
         $product->name = $request->name;
@@ -321,55 +330,70 @@ public function delete_category($id) {
         $product->SKU = $request->SKU;
         $product->stock_status = $request->stock_status;
         $product->featured = $request->featured;
-        $product->quantity = $request->quantity; // Global quantity
+        $product->quantity = $request->quantity;
         $product->category_id = $request->category_id;
         $product->subcategory_id = $request->subcategory_id;
-    
-        // Handle image upload (existing logic)
+
+        // Handle main image upload
         $current_timestamp = Carbon::now()->timestamp;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = $current_timestamp . '.' . $image->extension();
+            $imageName = $current_timestamp . '.webp';
             $this->GenerateThumbnailImage($image, $imageName);
             $product->image = $imageName;
         }
-    
-        // Handle gallery images (existing logic)
+
+        // Handle size chart images
+        $size_chart_arr = [];
+        if ($request->hasFile('size_charts')) {
+            $allowedfileExtension = ['jpg', 'png', 'jpeg', 'avif', 'webp'];
+            $files = $request->file('size_charts');
+            foreach ($files as $index => $file) {
+                $extension = $file->getClientOriginalExtension();
+                if (in_array($extension, $allowedfileExtension)) {
+                    $filename = 'chart_' . $current_timestamp . '-' . ($index + 1) . '.webp';
+                    $this->GenerateThumbnailImage($file, $filename);
+                    $size_chart_arr[] = $filename;
+                }
+            }
+            $product->size_chart = implode(',', $size_chart_arr);
+        }
+
+        // Handle gallery images
         $gallery_arr = [];
         if ($request->hasFile('images')) {
-            $allowedfileExtension = ['jpg', 'png', 'jpeg', 'avif'];
+            $allowedfileExtension = ['jpg', 'png', 'jpeg', 'avif', 'webp'];
             $files = $request->file('images');
             foreach ($files as $index => $file) {
                 $extension = $file->getClientOriginalExtension();
                 if (in_array($extension, $allowedfileExtension)) {
-                    $filename = $current_timestamp . "-" . ($index + 1) . "." . $extension;
+                    $filename = $current_timestamp . '-' . ($index + 1) . '.webp';
                     $this->GenerateThumbnailImage($file, $filename);
                     $gallery_arr[] = $filename;
                 }
             }
             $product->images = implode(',', $gallery_arr);
         }
-    
+
         $product->brand_id = $request->brand_id;
         $product->save();
-    
-        // Save product variations (size and stock quantity)
+
+        // Save product variations
         foreach ($request->sizes as $size_id) {
             Product_Variations::create([
                 'product_id' => $product->id,
                 'size_id' => $size_id,
                 'price' => $request->regular_price,
-                'quantity' => $request->size_stock[$size_id], // Quantity from the size_stock array
+                'quantity' => $request->size_stock[$size_id],
             ]);
         }
-    
+
         return redirect()->route('admin.products')->with('status', 'Product added successfully!');
     }
-    
-    
 
-    public function edit_product($id) {
-        $product = Product::find($id);
+    public function edit_product($id)
+    {
+        $product = Product::findOrFail($id);
         $categories = Category::with('subcategories')->orderBy('name')->get();
         $brands = Brand::select('id', 'name')->orderBy('name')->get();
         $sizes = Sizes::all();
@@ -382,35 +406,44 @@ public function delete_category($id) {
 
     public function update_product(Request $request)
     {
+        // Validate the data
         $request->validate([
-            'name' => 'required',
+            'id' => 'required|exists:products,id',
+            'name' => 'required|string|max:255',
             'slug' => 'required|unique:products,slug,' . $request->id,
-            'category_id' => 'required',
-            'subcategory_id' => 'required',
-            'brand_id' => 'required',
-            'short_description' => 'required',
-            'description' => 'required',
-            'regular_price' => 'required',
-            'sale_price' => 'nullable',
-            'SKU' => 'required',
-            'stock_status' => 'required',
-            'featured' => 'required',
-            'quantity' => 'required',
-            'image' => 'nullable|mimes:png,jpg,jpeg|max:2048',
+            'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => 'required|exists:sub_categories,id',
+            'brand_id' => 'required|exists:brands,id',
+            'short_description' => 'required|string',
+            'description' => 'required|string',
+            'regular_price' => 'required|numeric|min:0',
+            'sale_price' => 'nullable|numeric|min:0',
+            'SKU' => 'required|string|max:255',
+            'stock_status' => 'required|in:instock,outofstock',
+            'featured' => 'required|boolean',
+            'quantity' => 'required|integer|min:0',
+            'image' => 'nullable|mimes:png,jpg,jpeg,avif,webp|max:20000',
+            'size_charts' => 'nullable|array',
+            'size_charts.*' => 'mimes:png,jpg,jpeg,avif,webp|max:4048',
+            'remove_size_charts' => 'nullable|boolean',
             'sizes' => 'required|array',
-            'size_stock' => 'required|array', // Ensure size_stock is validated as an array
+            'sizes.*' => 'exists:sizes,id',
+            'size_stock' => 'required|array',
+        ], [
+            'size_charts.*.mimes' => 'Each size chart must be an image (PNG, JPG, JPEG, AVIF, or WEBP).',
+            'size_charts.*.max' => 'Each size chart image may not be larger than 4MB.',
         ]);
-    
+
         $product = Product::findOrFail($request->id);
-    
+
         // Calculate total quantity from sizes
         $totalSizeQuantity = array_sum($request->size_stock);
-    
+
         // Check if global quantity matches total size quantity
         if ($totalSizeQuantity != $request->quantity) {
             return back()->withErrors(['quantity' => 'The global quantity must match the sum of the quantities of each size.']);
         }
-    
+
         // Update product details
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
@@ -421,74 +454,157 @@ public function delete_category($id) {
         $product->SKU = $request->SKU;
         $product->stock_status = $request->stock_status;
         $product->featured = $request->featured;
-        $product->quantity = $request->quantity; // Global quantity
+        $product->quantity = $request->quantity;
         $product->category_id = $request->category_id;
         $product->subcategory_id = $request->subcategory_id;
-    
-        // Handle image upload (existing logic)
+
+        // Handle main image upload
         if ($request->hasFile('image')) {
-            if (File::exists(public_path('uploads/products/' . $product->image))) {
-                File::delete(public_path('uploads/products/' . $product->image));
+            if ($product->image && File::exists(public_path('uploads/products/' . $product->image))) {
+                File::delete(base_path('uploads/products/' . $product->image));
+                File::delete(base_path('uploads/products/thumbnails/' . $product->image));
             }
-    
+
             $image = $request->file('image');
-            $imageName = time() . '.' . $image->extension();
+            $imageName = time() . '.webp';
             $this->GenerateThumbnailImage($image, $imageName);
             $product->image = $imageName;
         }
-    
-        // Handle gallery images (existing logic)
+
+        // Handle size chart images update
+        if ($request->input('remove_size_charts') && $product->size_chart) {
+            foreach (explode(',', $product->size_chart) as $oldChart) {
+                if (File::exists(base_path('uploads/products/' . $oldChart))) {
+                    File::delete(base_path('uploads/products/' . $oldChart));
+                    File::delete(base_path('uploads/products/thumbnails/' . $oldChart));
+                }
+            }
+            $product->size_chart = null;
+        } elseif ($request->hasFile('size_charts')) {
+            if ($product->size_chart) {
+                foreach (explode(',', $product->size_chart) as $oldChart) {
+                    if (File::exists(base_path('uploads/products/' . $oldChart))) {
+                        File::delete(base_path('uploads/products/' . $oldChart));
+                        File::delete(base_path('uploads/products/thumbnails/' . $oldChart));
+                    }
+                }
+            }
+
+            $size_chart_arr = [];
+            foreach ($request->file('size_charts') as $index => $file) {
+                $filename = 'chart_' . time() . '-' . ($index + 1) . '.webp';
+                $this->GenerateThumbnailImage($file, $filename);
+                $size_chart_arr[] = $filename;
+            }
+            $product->size_chart = implode(',', $size_chart_arr);
+        }
+
+        // Handle gallery images update
         if ($request->hasFile('images')) {
+            if ($product->images) {
+                foreach (explode(',', $product->images) as $oldImage) {
+                    if (File::exists(base_path('uploads/products/' . $oldImage))) {
+                        File::delete(base_path('uploads/products/' . $oldImage));
+                        File::delete(base_path('uploads/products/thumbnails/' . $oldImage));
+                    }
+                }
+            }
+
             $gallery_arr = [];
             foreach ($request->file('images') as $index => $file) {
-                $filename = time() . '-' . ($index + 1) . '.' . $file->extension();
+                $filename = time() . '-' . ($index + 1) . '.webp';
                 $this->GenerateThumbnailImage($file, $filename);
                 $gallery_arr[] = $filename;
             }
             $product->images = implode(',', $gallery_arr);
         }
-    
+
+        $product->brand_id = $request->brand_id;
         $product->save();
-    
-        // Update sizes and stock quantities
-        foreach ($request->sizes as $sizeId) {
-            $stockQuantity = $request->size_stock[$sizeId] ?? 0;
-            $product->sizes()->updateExistingPivot($sizeId, ['quantity' => $stockQuantity]);
+
+        // Update product variations
+        Product_Variations::where('product_id', $product->id)->delete();
+        foreach ($request->sizes as $size_id) {
+            Product_Variations::create([
+                'product_id' => $product->id,
+                'size_id' => $size_id,
+                'price' => $request->regular_price,
+                'quantity' => $request->size_stock[$size_id],
+            ]);
         }
-    
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
+
+        return redirect()->route('admin.products')->with('status', 'Product updated successfully!');
     }
-    
-    
-    public function delete_product($id) {
-        $product = Product::find($id);
+
+    public function delete_product($id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Delete main image
+        if ($product->image && File::exists(public_path('uploads/products/' . $product->image))) {
+            File::delete(base_path('uploads/products/' . $product->image));
+            File::delete(base_path('uploads/products/thumbnails/' . $product->image));
+        }
+
+        // Delete size chart images
+        if ($product->size_chart) {
+            foreach (explode(',', $product->size_chart) as $chart) {
+                if (File::exists(base_path('uploads/products/' . $chart))) {
+                    File::delete(base_path('uploads/products/' . $chart));
+                    File::delete(base_path('uploads/products/thumbnails/' . $chart));
+                }
+            }
+        }
+
+        // Delete gallery images
+        if ($product->images) {
+            foreach (explode(',', $product->images) as $image) {
+                if (File::exists(base_path('uploads/products/' . $image))) {
+                    File::delete(base_path('uploads/products/' . $image));
+                    File::delete(base_path('uploads/products/thumbnails/' . $image));
+                }
+            }
+        }
+
         $product->delete();
         return redirect()->route('admin.products')->with('status', 'Product has been deleted successfully!');
     }
 
+    public function getSubcategories($categoryId)
+    {
+        $subcategories = SubCategory::where('category_id', $categoryId)->get();
+        return response()->json(['subcategories' => $subcategories]);
+    }
 
+    public function GenerateThumbnailImage($img, $imgName)
+    {
+        $destinationPath = base_path('uploads/products');
+        $thumbnailPath = base_path('uploads/products/thumbnails');
 
-public function getSubcategories($categoryId)
-{
-    $subcategories = SubCategory::where('category_id', $categoryId)->get();
-    return response()->json(['subcategories' => $subcategories]);
-}
+        // // Ensure directories exist
+        // if (!File::exists($destinationPath)) {
+        //     File::makeDirectory($destinationPath, 0755, true);
+        // }
+        // if (!File::exists($thumbnailPath)) {
+        //     File::makeDirectory($thumbnailPath, 0755, true);
+        // }
 
+        // Process image
+        $image = Image::read($img->path());
+        
+        // Save original image as WebP with compression
+        $image->toWebp(85)->save($destinationPath . '/' . $imgName);
 
-public function GenerateThumbnailImage($img , $imgName){
-    $destinationPathThumbnail = public_path('uploads/products/thumbnails');
-    $destinationPath = public_path('uploads/products');
-    $img = Image::read($img->path());
-    $img->cover(540,689,"top");
-    $img->resize(540,689,function($constraint){
-        $constraint->aspectRatio();
-    })->save($destinationPath.'/'.$imgName);
-
-    $img->resize(104,104,function($constraint){
-        $constraint->aspectRatio();
-    })->save($destinationPathThumbnail.'/'.$imgName);
-}
-
+        // Generate thumbnail
+        $thumbnail = Image::read($img->path());
+        $thumbnail->cover(100, 100, 'center')
+            ->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })
+            ->toWebp(85)
+            ->save($thumbnailPath . '/' . $imgName);
+    }
 
 public function coupons(){
         $coupons = Coupon::orderBy("expiry_date","DESC")->paginate(12);
@@ -599,18 +715,18 @@ public function slide_add(){
 
 public function slide_store(Request $request){
     $request->validate([
-       'tagline' => 'required',
-       'title' => 'required',
-       'subtitle' => 'required',
-       'link' => 'required',
+    //   'tagline' => 'required',
+    //   'title' => 'required',
+    //   'subtitle' => 'required',
+    //   'link' => 'required',
        'status' => 'required',
        'image' => 'required|mimes:png,jpg,jpeg|max:2048'
     ]);
     $slide = new Slide();
-    $slide->tagline = $request->tagline;
-    $slide->title = $request->title;
-    $slide->subtitle = $request->subtitle;
-    $slide->link = $request->link;
+    // $slide->tagline = $request->tagline;
+    // $slide->title = $request->title;
+    // $slide->subtitle = $request->subtitle;
+    // $slide->link = $request->link;
     $slide->status = $request->status;
      $image = $request->file('image');
     $file_extention = $request->file('image')->extension();
@@ -621,14 +737,26 @@ public function slide_store(Request $request){
     return redirect()->route('admin.slides')->with("status","Slide added successfully!");
 }
 
-public function GenerateSlideThumbnailImage($img , $imgName){
-    $destinationPath= public_path('uploads/slides');
-    $img = Image::read($img->path());
-    $img->cover(400,690,"top");
-    $img->resize(400,690,function($constraint){
+public function GenerateSlideThumbnailImage($img, $imgName)
+{
+    $destinationPath = base_path('uploads/slides');
+
+    // Load image from the temporary upload path
+    $image = Image::read($img->path());
+
+    // Cover crop to fit exactly 1550x660, focus on center
+    $image->cover(1280, 720, 'center');
+
+    // Optional: resize again for optimization (usually not needed after cover)
+    $image->resize(1280, 720, function ($constraint) {
         $constraint->aspectRatio();
-    })->save($destinationPath.'/'.$imgName);
+        $constraint->upsize(); // Prevent enlarging smaller images
+    });
+
+    // Save to your destination
+    $image->save($destinationPath . '/' . $imgName);
 }
+
 
 public function slide_edit($id){
     $slide = Slide::find($id);
@@ -639,18 +767,18 @@ public function slide_edit($id){
 
 public function slide_update(Request $request){
     $request->validate([
-        'tagline' => 'required',
-        'title' => 'required',
-        'subtitle' => 'required',
-        'link' => 'required',
+        // 'tagline' => 'required',
+        // 'title' => 'required',
+        // 'subtitle' => 'required',
+        // 'link' => 'required',
         'status' => 'required',
         'image' => 'mimes:png,jpg,jpeg|max:2048'
      ]);
      $slide = Slide::find($request->id);
-     $slide->tagline = $request->tagline;
-     $slide->title = $request->title;
-     $slide->subtitle = $request->subtitle;
-     $slide->link = $request->link;
+    //  $slide->tagline = $request->tagline;
+    //  $slide->title = $request->title;
+    //  $slide->subtitle = $request->subtitle;
+    //  $slide->link = $request->link;
      $slide->status = $request->status;
 
      if($request->hasFile('image'))

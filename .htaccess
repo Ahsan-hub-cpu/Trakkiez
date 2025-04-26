@@ -19,13 +19,17 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 
-    # Serve Static Assets Directly (Fix CSS/JS Not Loading)
-    RewriteCond %{REQUEST_URI} ^/assets/ [OR]
+    # Serve Static Assets Directly (Fix CSS/JS/Images Not Loading)
+    RewriteCond %{REQUEST_URI} ^(.*)\.(png|jpe?g|gif|css|js|webp|svg|woff|woff2|ttf|eot|ico|mp4|mp3)$ [NC]
+    RewriteRule .* - [L]
+
+    # Allow Direct Access to Public Uploads Folder
+    RewriteCond %{REQUEST_URI} ^/uploads/ [OR]
     RewriteCond %{REQUEST_URI} ^/storage/
     RewriteRule .* - [L]
 
-    # Ensure Public Folder Works
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ public/$1 [L]
+    # Uncomment this if Laravel is in a subfolder
+    # RewriteCond %{REQUEST_FILENAME} !-f
+    # RewriteCond %{REQUEST_FILENAME} !-d
+    # RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
