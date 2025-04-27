@@ -13,19 +13,31 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    // Display the homepage (unchanged)
     public function index()
     {
         $slides = Slide::where('status', 1)->take(3)->get();
-        $categories = Category::with(['subcategories', 'products' => function ($query) {
-            $query->inRandomOrder()->take(8);
-        }])->orderBy('name')->get();
-        $manCategory = Category::where('slug', 'men')->with(['products' => function ($query) {
-            $query->inRandomOrder()->take(8);
-        }])->first();
-        $womenCategory = Category::where('slug', 'women')->with(['products' => function ($query) {
-            $query->inRandomOrder()->take(8);
-        }])->first();
+
+        $categories = Category::with([
+            'subcategories',
+            'products' => function ($query) {
+                $query->inRandomOrder()->take(8);
+            }
+        ])->orderBy('name')->get();
+
+        $manCategory = Category::where('slug', 'men')->with([
+            'subcategories',
+            'products' => function ($query) {
+                $query->inRandomOrder()->take(8);
+            }
+        ])->first();
+
+        $womenCategory = Category::where('slug', 'women')->with([
+            'subcategories',
+            'products' => function ($query) {
+                $query->inRandomOrder()->take(8);
+            }
+        ])->first();
+
         $sproducts = Product::whereNotNull('sale_price')->where('sale_price', '<>', '')->inRandomOrder()->take(8)->get();
         $fproducts = Product::where('featured', 1)->take(8)->get();
         $newArrivals = Product::with(['productVariations.size'])
@@ -33,26 +45,65 @@ class HomeController extends Controller
             ->orderBy('created_at', 'DESC')
             ->take(8)
             ->get();
-        return view('index', compact('slides', 'categories', 'manCategory', 'womenCategory', 'sproducts', 'fproducts', 'newArrivals'));
+
+        // Add hover image to each product in newArrivals using $product->images
+        $newArrivals = $newArrivals->map(function ($product) {
+            if (!empty($product->images)) {
+                $galleryImages = explode(',', $product->images);
+                $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+            } else {
+                $product->hover_image = 'default-hover.jpg'; // Fallback image
+            }
+            return $product;
+        });
+
+        // Add hover image to each product in manCategory using $product->images
+        if ($manCategory && $manCategory->products) {
+            $manCategory->products = $manCategory->products->map(function ($product) {
+                if (!empty($product->images)) {
+                    $galleryImages = explode(',', $product->images);
+                    $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+                } else {
+                    $product->hover_image = 'default-hover.jpg'; // Fallback image
+                }
+                return $product;
+            });
+        }
+
+        // Add hover image to each product in womenCategory using $product->images
+        if ($womenCategory && $womenCategory->products) {
+            $womenCategory->products = $womenCategory->products->map(function ($product) {
+                if (!empty($product->images)) {
+                    $galleryImages = explode(',', $product->images);
+                    $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+                } else {
+                    $product->hover_image = 'default-hover.jpg'; // Fallback image
+                }
+                return $product;
+            });
+        }
+
+        $categories->load('subcategories.category');
+
+        $allSubcategories = $categories->flatMap(function ($category) {
+            return $category->subcategories;
+        })->filter()->sortBy('name');
+
+        return view('index', compact('slides', 'categories', 'manCategory', 'womenCategory', 'sproducts', 'fproducts', 'newArrivals', 'allSubcategories'));
     }
 
-    // Display products for a specific category with filters
-public function category($category_slug, Request $request)
+    public function category($category_slug, Request $request)
     {
-        // Fetch category based on its slug
         $category = Category::where('slug', $category_slug)->firstOrFail();
 
-        // Initialize product query for the category
         $productsQuery = $category->products();
 
-        // Size filter
         if ($request->has('size')) {
             $productsQuery->whereHas('sizes', function ($q) use ($request) {
                 $q->where('sizes.id', $request->size);
             });
         }
 
-        // Price range filter
         if ($request->has('price_from') || $request->has('price_to')) {
             $priceFrom = $request->get('price_from', 0);
             $priceTo = $request->get('price_to', null);
@@ -66,7 +117,6 @@ public function category($category_slug, Request $request)
             $productsQuery->whereRaw("IFNULL(sale_price, regular_price) BETWEEN ? AND ?", [$priceFrom, $priceTo]);
         }
 
-        // Sorting
         if ($request->has('sort')) {
             switch ($request->sort) {
                 case 'newest':
@@ -95,26 +145,30 @@ public function category($category_slug, Request $request)
             $productsQuery->orderBy('created_at', 'desc');
         }
 
-        // Fetch sizes for filter dropdown
         $sizes = Sizes::all();
 
-        // Calculate max price for price filter modal
         $maxRegular = Product::max('regular_price');
         $maxSale = Product::whereNotNull('sale_price')->max('sale_price');
         $maxPrice = max($maxRegular, $maxSale);
 
-        // Paginate or get results
-        if ($request->has('size') || $request->has('price_from') || $request->has('price_to') || $request->has('sort')) {
-            $products = $productsQuery->get(); // Use get() when filters are applied, as in ShopController
-        } else {
-            $products = $productsQuery->paginate(16); // Use pagination by default
-        }
+        // Always paginate, even with filters, to ensure $products is a LengthAwarePaginator
+        $products = $productsQuery->paginate(16);
 
-        // Return the category products view
+        // Add hover image to each product using $product->images
+        $products->getCollection()->transform(function ($product) {
+            if (!empty($product->images)) {
+                $galleryImages = explode(',', $product->images);
+                $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+            } else {
+                $product->hover_image = 'default-hover.jpg'; // Fallback image
+            }
+            return $product;
+        });
+
         return view('category', compact('category', 'products', 'sizes', 'maxPrice'));
     }
-    // Display products for a specific subcategory with filters
-  public function subcategory($category_slug, $subcategory_id, Request $request)
+
+    public function subcategory($category_slug, $subcategory_id, Request $request)
     {
         if (!is_numeric($subcategory_id)) {
             abort(404);
@@ -177,17 +231,25 @@ public function category($category_slug, Request $request)
         $maxSale = Product::whereNotNull('sale_price')->max('sale_price');
         $maxPrice = max($maxRegular, $maxSale);
 
-        if ($request->has('size') || $request->has('price_from') || $request->has('price_to') || $request->has('sort')) {
-            $products = $productsQuery->get();
-        } else {
-            $products = $productsQuery->paginate(16);
-        }
+        // Always paginate, even with filters
+        $products = $productsQuery->paginate(16);
+
+        // Add hover image to each product using $product->images
+        $products->getCollection()->transform(function ($product) {
+            if (!empty($product->images)) {
+                $galleryImages = explode(',', $product->images);
+                $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+            } else {
+                $product->hover_image = 'default-hover.jpg'; // Fallback image
+            }
+            return $product;
+        });
 
         $noProductsMessage = $products->isEmpty() ? 'No products found for this subcategory' : null;
 
         return view('subcategory', compact('category', 'subcategory', 'products', 'sizes', 'maxPrice', 'noProductsMessage'));
     }
-    // Other methods (unchanged)
+
     public function contact()
     {
         return view('contact');
@@ -214,6 +276,18 @@ public function category($category_slug, Request $request)
     {
         $query = $request->input('query');
         $results = Product::where('name', 'LIKE', "%{$query}%")->take(8)->get();
+
+        // Add hover image to search results using $product->images
+        $results = $results->map(function ($product) {
+            if (!empty($product->images)) {
+                $galleryImages = explode(',', $product->images);
+                $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+            } else {
+                $product->hover_image = 'default-hover.jpg'; // Fallback image
+            }
+            return $product;
+        });
+
         return response()->json($results);
     }
 }
