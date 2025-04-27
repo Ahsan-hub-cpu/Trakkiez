@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
 <style>
   .section-title {
@@ -14,11 +15,38 @@
       margin-bottom: 2rem;
   }
 
+  .pc__img-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
   .pc__img {
       width: 100%;
       height: auto;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: opacity 0.3s ease;
+  }
+
+  .pc__img-primary {
+    opacity: 1;
+  }
+
+  .pc__img-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+
+  .product-card:hover .pc__img-primary,
+  .product-card.active .pc__img-primary {
+    opacity: 0;
+  }
+
+  .product-card:hover .pc__img-hover,
+  .product-card.active .pc__img-hover {
+    opacity: 1;
   }
 
   .sold-out-badge {
@@ -80,8 +108,9 @@
   .price-input-group .form-control {
       flex: 1;
   }
-    @media (max-width:768px){
-       .section-title {
+
+  @media (max-width:768px){
+    .section-title {
       font-size: 2rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -89,7 +118,11 @@
       margin-bottom: 2rem;
       margin-top: -5rem;
       text-align: center;
-  }
+    }
+    .pc__img {
+      width: 100%;
+      height: auto;
+    }
   }
 
   @media (max-width: 576px) {
@@ -105,6 +138,10 @@
     .price-input-group {
       flex-direction: column;
       gap: 5px;
+    }
+    .pc__img {
+      width: 100%;
+      height: auto;
     }
   }
 </style>
@@ -126,13 +163,15 @@
           </select>
         </div>
         <!-- Price Filter -->
-        <!--<div class="col-md-3 col-sm-6 mb-3">-->
-        <!--  <div class="price-input-group">-->
-        <!--    <input type="number" id="price-from" class="form-control" placeholder="Min Price" value="{{ request('price_from') }}" min="0">-->
-        <!--    <input type="number" id="price-to" class="form-control" placeholder="Max Price" value="{{ request('price_to') }}" min="0">-->
-        <!--  </div>-->
-        <!--  <small class="text-muted d-block mt-1">Highest price: PKR {{ $maxPrice }}</small>-->
-        <!--</div>-->
+        <!--
+        <div class="col-md-3 col-sm-6 mb-3">
+          <div class="price-input-group">
+            <input type="number" id="price-from" class="form-control" placeholder="Min Price" value="{{ request('price_from') }}" min="0">
+            <input type="number" id="price-to" class="form-control" placeholder="Max Price" value="{{ request('price_to') }}" min="0">
+          </div>
+          <small class="text-muted d-block mt-1">Highest price: PKR {{ $maxPrice }}</small>
+        </div>
+        -->
         <!-- Sort Filter -->
         <div class="col-md-3 col-sm-6 mb-3">
           <select id="sort-by" class="form-select">
@@ -178,8 +217,9 @@
         <div class="col-lg-3 col-md-4 col-sm-6">
           <div class="product-card product-card_style3" style="position: relative;">
             <div class="pc__img-wrapper">
-              <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" width="200" height="auto" alt="{{ $product->name }}" class="pc__img">
+              <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" aria-label="View details for {{ $product->name }}">
+                <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" width="200" height="auto" alt="{{ $product->name }}" class="pc__img pc__img-primary">
+                <img loading="lazy" src="{{ asset('uploads/products/' . $product->hover_image) }}" width="200" height="auto" alt="{{ $product->name }} hover" class="pc__img pc__img-hover">
               </a>
               @if($product->quantity <= 0)
                 <div class="sold-out-badge">Sold Out</div>
@@ -235,30 +275,46 @@ $(function(){
     updateUrl('sort', $(this).val());
   });
 
+  // Mobile touch toggle for hover effect
+  $('.product-card').on('click', function(e) {
+    e.preventDefault();
+    $(this).toggleClass('active');
+    console.log('Product card toggled:', $(this).hasClass('active') ? 'Active' : 'Inactive');
+  });
+
+  // Ensure link navigation on second tap
+  $('.product-card a').on('click', function(e) {
+    if ($(this).closest('.product-card').hasClass('active')) {
+      window.location.href = $(this).attr('href');
+    }
+  });
+
   // Price filter inputs
-//   $('#price-from, #price-to').on('change input', function() {
-//     console.log('Price filter changed');
-//     var priceFrom = $('#price-from').val();
-//     var priceTo = $('#price-to').val();
-//     var url = new URL(window.location.href);
-//     var searchParams = new URLSearchParams(url.search);
+  /*
+  $('#price-from, #price-to').on('change input', function() {
+    console.log('Price filter changed');
+    var priceFrom = $('#price-from').val();
+    var priceTo = $('#price-to').val();
+    var url = new URL(window.location.href);
+    var searchParams = new URLSearchParams(url.search);
 
-//     if (priceFrom) {
-//       searchParams.set('price_from', priceFrom);
-//     } else {
-//       searchParams.delete('price_from');
-//     }
+    if (priceFrom) {
+      searchParams.set('price_from', priceFrom);
+    } else {
+      searchParams.delete('price_from');
+    }
 
-//     if (priceTo) {
-//       searchParams.set('price_to', priceTo);
-//     } else {
-//       searchParams.delete('price_to');
-//     }
+    if (priceTo) {
+      searchParams.set('price_to', priceTo);
+    } else {
+      searchParams.delete('price_to');
+    }
 
-//     url.search = searchParams.toString();
-//     console.log('New URL:', url.toString());
-//     window.location.href = url.toString();
-//   });
+    url.search = searchParams.toString();
+    console.log('New URL:', url.toString());
+    window.location.href = url.toString();
+  });
+  */
 
   function updateUrl(key, value) {
     console.log('Updating URL with', key, value);

@@ -54,10 +54,9 @@
    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}?v={{ time() }}" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-       <link rel="stylesheet" href="{{ asset('assets/css/plugins/swiper.min.css') }}" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
     <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />-->
-
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" /> -->
  
 
 
@@ -762,7 +761,7 @@ body {
   opacity: 1;
 }
 
-/* ðŸ"§ Media Queries for Better Responsiveness */
+/* ï¿½"ï¿½ Media Queries for Better Responsiveness */
 @media (max-width: 768px) {
   .fab-container {
     bottom: 15px;
@@ -921,19 +920,8 @@ body {
  <!-- Mobile Navbar -->
   <nav class="navbar navbar-expand-lg d-lg-none">
     <div class="container d-flex justify-content-between align-items-center">
-
-      <!-- Hamburger Button -->
-      <!--<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">-->
-      <!--  <span class="navbar-toggler-icon"></span>-->
-      <!--</button>-->
-
-      <!-- Cart Icon (example) -->
-      <!--<div class="cart-icon">-->
-      <!--  <i class="fa fa-shopping-cart"></i>-->
-      <!--</div>-->
     </div>
 
-    <!-- Collapsible Mobile Nav -->
     <div class="collapse navbar-collapse flex-column bg-body shadow-sm z-3 position-absolute top-100 start-0 w-100" id="mobileNav" style="max-height: 90vh; overflow-y: auto;">
 
       <!-- Search Section -->
@@ -1288,6 +1276,7 @@ body {
   <script src="{{asset('js/sweetalert.min.js')}}"></script> 
   <script src="{{asset('assets/js/plugins/swiper.min.js')}}"></script>
   <script src="{{asset('assets/js/plugins/countdown.js')}}"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script> -->
   <script>
     $(document).ready(function() {
       $("#search-input").on("keyup", function() {
@@ -1354,13 +1343,12 @@ body {
   </script>
   @stack("scripts")
   <script>
-    // Mobile menu functionality
+
     document.addEventListener('DOMContentLoaded', function() {
       const mobileNav = document.getElementById('mobileNav');
       const navLinks = mobileNav.querySelectorAll('.navigation__link');
       const navbarToggler = document.querySelector('.navbar-toggler');
       
-      // Close menu when clicking a link
       navLinks.forEach(link => {
         link.addEventListener('click', () => {
           const bsCollapse = new bootstrap.Collapse(mobileNav);
@@ -1368,7 +1356,6 @@ body {
         });
       });
 
-      // Close menu when clicking outside
       document.addEventListener('click', (e) => {
         if (!mobileNav.contains(e.target) && !navbarToggler.contains(e.target) && mobileNav.classList.contains('show')) {
           const bsCollapse = new bootstrap.Collapse(mobileNav);
@@ -1377,19 +1364,11 @@ body {
       });
     });
 
-    // Existing fab button code
-    const fabButton = document.getElementById('fabButton');
-    const fabIcons = document.getElementById('fabIcons');
-
-    // Fix initial mobile layout
     document.addEventListener('DOMContentLoaded', function() {
-      // Force layout recalculation
       function fixMobileLayout() {
-        // Reset any unwanted margins or spacing
         document.body.style.margin = '0';
         document.body.style.padding = '0';
-        
-        // Force layout recalculation for header and banner
+      
         const header = document.querySelector('.header-mobile');
         const banner = document.querySelector('.banner-section');
         
@@ -1402,17 +1381,13 @@ body {
         if (banner) {
           banner.style.margin = '0';
           banner.style.padding = '0';
-          // Force reflow
           banner.style.display = 'none';
-          banner.offsetHeight; // Force reflow
+          banner.offsetHeight; 
           banner.style.display = '';
         }
 
-        // Fix any scroll position issues
-        // window.scrollTo(0, 0);
       }
 
-      // Run on page load
       fixMobileLayout();
 
       // Run after images load
@@ -1423,6 +1398,14 @@ body {
       setTimeout(fixMobileLayout, 500);
     });
   </script>
+  <script>
+       document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.js-swiper-slider').forEach(function (sliderEl) {
+            const settings = JSON.parse(sliderEl.getAttribute('data-settings'));
+            new Swiper(sliderEl, settings);
+        });
+    });
+    </script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
         function forceLayoutFix() {
@@ -1448,9 +1431,6 @@ body {
                 }
             });
 
-            // Force reflow
-            // document.body.offsetHeight;
-            // window.scrollTo(0, 0);
         }
 
         // Run fixes at multiple points
@@ -1458,11 +1438,11 @@ body {
         window.addEventListener('load', forceLayoutFix);
         window.addEventListener('resize', forceLayoutFix);
         
-        // Run multiple times to ensure it catches any dynamic content
         [0, 100, 300, 500, 1000].forEach(timeout => {
             setTimeout(forceLayoutFix, timeout);
         });
     });
+ 
 </script>
 </body>
 </html>
