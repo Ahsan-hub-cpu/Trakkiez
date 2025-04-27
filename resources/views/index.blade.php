@@ -755,19 +755,19 @@
   <section class="summer-collection container mt-5">
       <div class="image-gallery">
           <div class="img1">
-              <img loading="lazy" src="{{ asset('assets/images/main/h.avif') }}" alt="Summer 1">
+              <img  src="{{ asset('assets/images/main/h.avif') }}" alt="Summer 1">
           </div>
           <div class="img2">
-              <img loading="lazy" src="{{ asset('assets/images/main/g.avif') }}" alt="Summer 2">
+              <img  src="{{ asset('assets/images/main/g.avif') }}" alt="Summer 2">
           </div>
           <div class="img3">
-              <img loading="lazy" src="{{ asset('assets/images/main/b.avif') }}" alt="Summer 3">
+              <img src="{{ asset('assets/images/main/b.avif') }}" alt="Summer 3">
           </div>
           <div class="img4">
-              <img loading="lazy" src="{{ asset('assets/images/main/c.avif') }}" alt="Summer 4">
+              <img  src="{{ asset('assets/images/main/c.avif') }}" alt="Summer 4">
           </div>
           <div class="img5">
-              <img loading="lazy" src="{{ asset('assets/images/main/a.avif') }}" alt="Summer 5">
+              <img  src="{{ asset('assets/images/main/a.avif') }}" alt="Summer 5">
           </div>
       </div>
       <div class="text-content">
@@ -978,7 +978,7 @@
  
   <section class="all-subcategories-section container mt-5">
       <div class="text-center mb-4">
-          <h2 class="section-title">All Subcategories</h2>
+          <h2 class="section-title">Featured</h2>
       </div>
       <div class="row">
           @if($allSubcategories->isNotEmpty())

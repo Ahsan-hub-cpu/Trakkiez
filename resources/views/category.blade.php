@@ -214,8 +214,8 @@
           <div class="product-card product-card_style3" style="position: relative;">
             <div class="pc__img-wrapper">
               <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" aria-label="View details for {{ $product->name }}">
-                <img loading="lazy" src="{{ asset('Uploads/products/' . $product->image) }}" width="200" height="auto" alt="{{ $product->name }}" class="pc__img pc__img-primary">
-                <img loading="lazy" src="{{ asset('Uploads/products/' . $product->hover_image) }}" width="200" height="auto" alt="{{ $product->name }} hover" class="pc__img pc__img-hover">
+                <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" width="200" height="auto" alt="{{ $product->name }}" class="pc__img pc__img-primary">
+                <img loading="lazy" src="{{ asset('uploads/products/' . $product->hover_image) }}" width="200" height="auto" alt="{{ $product->name }} hover" class="pc__img pc__img-hover">
               </a>
               @if($product->quantity <= 0)
                 <div class="sold-out-badge">Sold Out</div>
