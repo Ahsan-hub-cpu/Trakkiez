@@ -987,7 +987,7 @@
                       @php
                           $categorySlug = strtolower($subcategory->category->slug ?? 'unknown-category');
                           $subcategoryName = strtolower(str_replace(' ', '-', $subcategory->name ?? 'unnamed-subcategory'));
-                          $imageName = "{$categorySlug}-{$subcategoryName}.jpg";
+                          $imageName = "{$categorySlug}-{$subcategoryName}.avif";
                           $imagePath = asset('assets/images/subcategories/' . $imageName);
                           $finalImage = file_exists(base_path('assets/images/subcategories/' . $imageName)) ? $imagePath : asset('assets/images/subcategories/default-subcategory.jpg');
                       @endphp

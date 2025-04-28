@@ -581,15 +581,7 @@ public function delete_category($id) {
         $destinationPath = base_path('uploads/products');
         $thumbnailPath = base_path('uploads/products/thumbnails');
 
-        // // Ensure directories exist
-        // if (!File::exists($destinationPath)) {
-        //     File::makeDirectory($destinationPath, 0755, true);
-        // }
-        // if (!File::exists($thumbnailPath)) {
-        //     File::makeDirectory($thumbnailPath, 0755, true);
-        // }
 
-        // Process image
         $image = Image::read($img->path());
         
         // Save original image as WebP with compression
@@ -720,7 +712,7 @@ public function slide_store(Request $request){
     //   'subtitle' => 'required',
     //   'link' => 'required',
        'status' => 'required',
-       'image' => 'required|mimes:png,jpg,jpeg|max:2048'
+       'image' => 'required|mimes:png,jpg,jpeg,avif,webp|max:2048'
     ]);
     $slide = new Slide();
     // $slide->tagline = $request->tagline;
@@ -772,7 +764,7 @@ public function slide_update(Request $request){
         // 'subtitle' => 'required',
         // 'link' => 'required',
         'status' => 'required',
-        'image' => 'mimes:png,jpg,jpeg|max:2048'
+        'image' => 'mimes:png,jpg,jpeg,avif,webp|max:2048'
      ]);
      $slide = Slide::find($request->id);
     //  $slide->tagline = $request->tagline;

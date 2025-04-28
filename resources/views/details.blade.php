@@ -459,7 +459,7 @@
             <div class="swiper-slide product-card" style="position: relative;">
               <div class="pc__img-wrapper">
                 <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">
-                  <img loading="lazy" src="{{ asset('Uploads/products/' . $rproduct->image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
+                  <img loading="lazy" src="{{ asset('uploads/products/' . $rproduct->image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
                   @foreach(explode(',', $rproduct->images) as $gimg)
                     <img loading="lazy" src="{{ asset('uploads/products/' . $gimg) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img pc__img-second">
                   @endforeach
