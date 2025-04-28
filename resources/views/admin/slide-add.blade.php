@@ -28,38 +28,6 @@
             <div class="wg-box">
     <form class="form-new-product form-style-1" action="{{ route('admin.slide.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <!--<fieldset class="name">-->
-        <!--    <div class="body-title">Tagline <span class="tf-color-1">*</span></div>-->
-        <!--    <input class="flex-grow" type="text" placeholder="Tagline" name="tagline" value="{{ old('tagline') }}" required> -->
-        <!--</fieldset>-->
-        <!--@error('tagline')-->
-        <!--    <span class="alert alert-danger text-center">{{$message}}</span>-->
-        <!--    @enderror-->
-
-        <!--<fieldset class="name">-->
-        <!--    <div class="body-title">Title <span class="tf-color-1">*</span></div>-->
-        <!--    <input class="flex-grow" type="text" placeholder="Title" name="title" value="{{ old('title') }}" required>-->
-        <!--</fieldset>-->
-        <!--@error('title')-->
-        <!--    <span class="alert alert-danger text-center">{{$message}}</span>-->
-        <!--    @enderror-->
-
-        <!--<fieldset class="name">-->
-        <!--    <div class="body-title">Subtitle <span class="tf-color-1">*</span></div>-->
-        <!--    <input class="flex-grow" type="text" placeholder="Subtitle" name="subtitle" value="{{ old('subtitle') }}" required>-->
-        <!--</fieldset>-->
-        <!--@error('subtitle')-->
-        <!--    <span class="alert alert-danger text-center">{{$message}}</span>-->
-        <!--    @enderror-->
-
-        <!--<fieldset class="name">-->
-        <!--    <div class="body-title">Link <span class="tf-color-1">*</span></div>-->
-        <!--    <input class="flex-grow" type="text" placeholder="Link" name="link" value="{{ old('link') }}" required>-->
-        <!--</fieldset>-->
-        <!--@error('link')-->
-        <!--    <span class="alert alert-danger text-center">{{$message}}</span>-->
-        <!--    @enderror-->
-
         <fieldset>
             <div class="body-title">Upload images <span class="tf-color-1">*</span></div>
             <div class="upload-image flex-grow">
