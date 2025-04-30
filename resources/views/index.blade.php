@@ -733,7 +733,7 @@
           <div class="banner-slider">
               @foreach($slides as $index => $slide)
                   <div class="banner-slide {{ $index === 0 ? 'active' : '' }}">
-                      <img loading="lazy" src="{{ asset('uploads/slides/' . $slide->image) }}" alt="Banner {{ $index + 1 }}" class="trakkiez-banner-image">
+                      <img src="{{ asset('uploads/slides/' . $slide->image) }}" alt="Banner {{ $index + 1 }}" class="trakkiez-banner-image">
                   </div>
               @endforeach
 
@@ -753,30 +753,35 @@
 
   <!-- Summer Collection -->
   <section class="summer-collection container mt-5">
-      <div class="image-gallery">
-          <div class="img1">
-              <img  src="{{ asset('assets/images/main/h.avif') }}" alt="Summer 1">
-          </div>
-          <div class="img2">
-              <img  src="{{ asset('assets/images/main/g.avif') }}" alt="Summer 2">
-          </div>
-          <div class="img3">
-              <img src="{{ asset('assets/images/main/b.avif') }}" alt="Summer 3">
-          </div>
-          <div class="img4">
-              <img  src="{{ asset('assets/images/main/c.avif') }}" alt="Summer 4">
-          </div>
-          <div class="img5">
-              <img  src="{{ asset('assets/images/main/a.avif') }}" alt="Summer 5">
-          </div>
-      </div>
-      <div class="text-content">
-          <h3>ALL NEW SUMMER COLLECTION</h3>
-          <h1>Upto 20% OFF</h1>
-          <p>Hurry up! Don’t miss the opportunity to get amazing designs and premium quality stuff for this latest summer collection.</p>
-          <button onclick="window.location.href='{{ route('shop.index', ['filter' => 'summer-collection']) }}'">NEW SUMMER COLLECTION</button>
-      </div>
-  </section>
+    <div class="image-gallery">
+        <picture class="img1">
+            <source srcset="assets/images/main/h.avif" type="image/avif">
+            <img src="assets/images/main/h.avif" alt="Summer 1" loading="lazy" width="300" height="400">
+        </picture>
+        <picture class="img2">
+            <source srcset="assets/images/main/g.avif" type="image/avif">
+            <img src="assets/images/main/g.avif" alt="Summer 2" loading="lazy" width="300" height="400">
+        </picture>
+        <picture class="img3">
+            <source srcset="assets/images/main/b.avif" type="image/avif">
+            <img src="assets/images/main/b.avif" alt="Summer 3" loading="lazy" width="300" height="400">
+        </picture>
+        <picture class="img4">
+            <source srcset="assets/images/main/c.avif" type="image/avif">
+            <img src="assets/images/main/c.avif" alt="Summer 4" loading="lazy" width="300" height="400">
+        </picture>
+        <picture class="img5">
+            <source srcset="assets/images/main/a.avif" type="image/avif">
+            <img src="assets/images/main/a.avif" alt="Summer 5" loading="lazy" width="300" height="400">
+        </picture>
+    </div>
+    <div class="text-content">
+        <h3>ALL NEW SUMMER COLLECTION</h3>
+        <h1>Upto 20% OFF</h1>
+        <p>Hurry up! Don’t miss the opportunity to get amazing designs and premium quality stuff for this latest summer collection.</p>
+        <a href="{{ route('shop.index', ['filter' => 'summer-collection']) }}" class="btn">NEW SUMMER COLLECTION</a>
+    </div>
+</section>
 
   
   <section class="new-arrivals container mt-3">
@@ -787,14 +792,14 @@
           <div class="col-12">
               <div class="position-relative">
                   <div class="swiper-container js-swiper-slider" data-settings='{
-                      "autoplay": { "delay": 1500 },
+                      "autoplay": false,
                       "slidesPerView": 3,
                       "slidesPerGroup": 1,
                       "effect": "none",
                       "loop": false,
                       "breakpoints": {
                           "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
-                          "768": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 15 },
+                          "768": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 1 },
                           "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 25 }
                       }
                   }'>
@@ -850,7 +855,7 @@
           <div class="col-12">
               <div class="position-relative">
                   <div class="swiper-container js-swiper-slider" data-settings='{
-                      "autoplay": { "delay": 1500 },
+                      "autoplay": false,
                       "slidesPerView": 3,
                       "slidesPerGroup": 1,
                       "effect": "none",
@@ -917,7 +922,7 @@
           <div class="col-12">
               <div class="position-relative">
                   <div class="swiper-container js-swiper-slider" data-settings='{
-                      "autoplay": { "delay": 1500 },
+                      "autoplay": false,
                       "slidesPerView": 3,
                       "slidesPerGroup": 1,
                       "effect": "none",
@@ -1074,17 +1079,5 @@
                 }
             });
         });
-
-        // Initialize Swiper
-        document.addEventListener('DOMContentLoaded', function () {
-        // Initialize Swiper for each slider
-        document.querySelectorAll('.js-swiper-slider').forEach(function (slider) {
-            // Get settings from the data-settings attribute
-            let settings = JSON.parse(slider.getAttribute('data-settings'));
-
-            // Initialize Swiper with the settings
-            new Swiper(slider, settings);
-        });
-    });
     </script>
 @endsection

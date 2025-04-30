@@ -900,7 +900,7 @@
             <div class="footer-column footer-store-info col-12 mb-4 mb-lg-0">
                 <div class="logo">
                     <a href="{{ route('home.index') }}">
-                        <img src="{{ asset('assets/images/logo.jpg') }}" alt="Trakkiez" class="logo__image d-block" />
+                        <img src="{{ asset('assets/images/logo w.jpg') }}" alt="Trakkiez" class="logo__image d-block" />
                     </a>
                 </div>
                 <p class="m-0"><strong class="fw-medium">trakkiezstore@gmail.com</strong></p>
