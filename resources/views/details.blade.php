@@ -1,6 +1,79 @@
 @extends('layouts.app')
 @section('content')
 <style>
+  #cartModal .modal-content {
+       border-radius: 8px;
+   }
+
+   #cartModal .cart-table {
+       width: 100%;
+       border-collapse: collapse;
+       margin-bottom: 20px;
+   }
+
+   #cartModal .cart-table th,
+   #cartModal .cart-table td {
+       padding: 10px;
+       text-align: left;
+       border-bottom: 1px solid #eee;
+   }
+
+   #cartModal .cart-totals {
+       text-align: right;
+   }
+
+   #cartModal .cart-totals th,
+   #cartModal .cart-totals td {
+       padding: 5px 0;
+   }
+
+   #cartModal .cart-total th,
+   #cartModal .cart-total td {
+       color: green;
+       font-weight: bold;
+       font-size: 18px;
+   }
+
+   #cartModal .shopping-cart__product-item img {
+       border-radius: 4px;
+   }
+
+   @media (max-width: 576px) {
+       #cartModal .modal-dialog {
+           margin: 0.5rem;
+       }
+
+       #cartModal .cart-table th,
+       #cartModal .cart-table td {
+           font-size: 0.9rem;
+           padding: 8px;
+       }
+
+       #cartModal .cart-totals th,
+       #cartModal .cart-totals td {
+           font-size: 0.9rem;
+       }
+
+       #cartModal .cart-total th,
+       #cartModal .cart-total td {
+           font-size: 16px;
+       }
+
+       #cartModal .shopping-cart__product-item {
+           flex-direction: column;
+           align-items: flex-start;
+       }
+
+       #cartModal .shopping-cart__product-item img {
+           width: 60px;
+           height: 60px;
+       }
+
+       #cartModal .shopping-cart__product-item .ms-3 {
+           margin-left: 0 !important;
+           margin-top: 10px;
+       }
+   }
   .filled-heart {
     color: orange;
   }
@@ -526,134 +599,162 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-  let selectedSize = null;
-  const quantityInput = $('input.qty-control__number');
-  const qtyError = $('.qty-error');
-  const addToCartBtn = $('.btn-addtocart');
-  const cartStatus = $('.cart-status');
+       let selectedSize = null;
+       const quantityInput = $('input.qty-control__number');
+       const qtyError = $('.qty-error');
+       const addToCartBtn = $('.btn-addtocart');
+       const cartStatus = $('.cart-status');
 
-  $('.size-btn').on('click', function() {
-    const btn = $(this);
-    if (btn.hasClass('sold-out') || btn.prop('disabled')) return;
-    $('.size-btn').removeClass('active');
-    btn.addClass('active');
-    selectedSize = {
-      id: btn.data('size-id'),
-      quantity: btn.data('quantity')
-    };
-    $('#selected_size').val(selectedSize.id);
-    quantityInput.attr('max', selectedSize.quantity);
-    if (parseInt(quantityInput.val()) > selectedSize.quantity) {
-      quantityInput.val(1);
-      qtyError.text('');
-    }
-    updateCartStatus(selectedSize.id);
-  });
+       $('.size-btn').on('click', function() {
+           const btn = $(this);
+           if (btn.hasClass('sold-out') || btn.prop('disabled')) return;
+           $('.size-btn').removeClass('active');
+           btn.addClass('active');
+           selectedSize = {
+               id: btn.data('size-id'),
+               quantity: btn.data('quantity')
+           };
+           $('#selected_size').val(selectedSize.id);
+           quantityInput.attr('max', selectedSize.quantity);
+           if (parseInt(quantityInput.val()) > selectedSize.quantity) {
+               quantityInput.val(1);
+               qtyError.text('');
+           }
+           updateCartStatus(selectedSize.id);
+       });
 
-  $('.qty-control__increase').on('click', function() {
-    if (!selectedSize) {
-      qtyError.text('Please select a size first');
-      return;
-    }
-    const currentVal = parseInt(quantityInput.val()) || 1;
-    if (currentVal < selectedSize.quantity) {
-      quantityInput.val(currentVal + 1);
-      qtyError.text('');
-    } else {
-      qtyError.text(`Only ${selectedSize.quantity} items available`);
-    }
-  });
+       $('.qty-control__increase').on('click', function() {
+           if (!selectedSize) {
+               qtyError.text('Please select a size first');
+               return;
+           }
+           const currentVal = parseInt(quantityInput.val()) || 1;
+           if (currentVal < selectedSize.quantity) {
+               quantityInput.val(currentVal + 1);
+               qtyError.text('');
+           } else {
+               qtyError.text(`Only ${selectedSize.quantity} items available`);
+           }
+       });
 
-  $('.qty-control__reduce').on('click', function() {
-    const currentVal = parseInt(quantityInput.val()) || 1;
-    if (currentVal > 1) {
-      quantityInput.val(currentVal - 1);
-      qtyError.text('');
-    }
-  });
+       $('.qty-control__reduce').on('click', function() {
+           const currentVal = parseInt(quantityInput.val()) || 1;
+           if (currentVal > 1) {
+               quantityInput.val(currentVal - 1);
+               qtyError.text('');
+           }
+       });
 
-  quantityInput.on('input', function() {
-    const currentVal = parseInt(quantityInput.val());
-    const maxVal = parseInt(quantityInput.attr('max'));
-    if (currentVal > maxVal) {
-      qtyError.text(`Only ${maxVal} items available`);
-      quantityInput.val(maxVal);
-    } else if (currentVal < 1 || isNaN(currentVal)) {
-      quantityInput.val(1);
-      qtyError.text('');
-    } else {
-      qtyError.text('');
-    }
-  });
+       quantityInput.on('input', function() {
+           const currentVal = parseInt(quantityInput.val());
+           const maxVal = parseInt(quantityInput.attr('max'));
+           if (currentVal > maxVal) {
+               qtyError.text(`Only ${maxVal} items available`);
+               quantityInput.val(maxVal);
+           } else if (currentVal < 1 || isNaN(currentVal)) {
+               quantityInput.val(1);
+               qtyError.text('');
+           } else {
+               qtyError.text('');
+           }
+       });
 
-  $('form[name="addtocart-form"]').on('submit', function(e) {
-    e.preventDefault();
-    if (!selectedSize) {
-      qtyError.text('Please select a size');
-      return;
-    }
-    const form = $(this);
-    const formData = form.serialize();
-    $.ajax({
-      url: form.attr('action'),
-      method: 'POST',
-      data: formData,
-      headers: {
-        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-      },
-      success: function(response) {
-        if (response.success) {
-          const cartQuantity = response.cartQuantity || 1;
-          cartStatus.text(`${cartQuantity} in cart already`).show();
-          qtyError.text('');
-          quantityInput.val(1);
-        } else {
-          qtyError.text(response.message || 'Failed to add to cart');
-        }
-      },
-      error: function(xhr) {
-        qtyError.text(xhr.responseJSON?.message || 'An error occurred while adding to cart');
-      }
-    });
-  });
+       $('form[name="addtocart-form"]').on('submit', function(e) {
+           e.preventDefault();
+           if (!selectedSize) {
+               qtyError.text('Please select a size');
+               return;
+           }
+           const form = $(this);
+           const formData = form.serialize();
+           $.ajax({
+               url: form.attr('action'),
+               method: 'POST',
+               data: formData,
+               headers: {
+                   'X-CSRF-TOKEN': '{{ csrf_token() }}'
+               },
+               success: function(response) {
+                   if (response.success) {
+                       const cartQuantity = response.cartQuantity || 1;
+                       cartStatus.text(`${cartQuantity} in cart already`).show();
+                       qtyError.text('');
+                       quantityInput.val(1);
 
-  function updateCartStatus(sizeId) {
-    $.ajax({
-      url: '{{ route('cart.checkQuantity') }}',
-      method: 'GET',
-      data: { product_id: {{ $product->id }}, size_id: sizeId },
-      success: function(response) {
-        if (response.cartQuantity > 0) {
-          cartStatus.text(`${response.cartQuantity} in cart already`).show();
-        } else {
-          cartStatus.text('').hide();
-        }
-      },
-      error: function() {
-        cartStatus.text('').hide();
-      }
-    });
-  }
-});
+                       // Update cart quantity in header
+                       updateCartQuantity();
 
-function openLightbox() {
-  const lightbox = document.getElementById('size-chart-lightbox');
-  lightbox.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-}
+                       // Load cart content into modal
+                       $.ajax({
+                           url: '{{ route('cart.partial') }}',
+                           method: 'GET',
+                           success: function(cartHtml) {
+                               $('#cart-modal-content').html(cartHtml);
+                               $('#cartModal').modal('show');
+                           },
+                           error: function(xhr) {
+                               qtyError.text('Failed to load cart content');
+                           }
+                       });
+                   } else {
+                       qtyError.text(response.message || 'Failed to add to cart');
+                   }
+               },
+               error: function(xhr) {
+                   qtyError.text(xhr.responseJSON?.message || 'An error occurred while adding to cart');
+               }
+           });
+       });
 
-function closeLightbox() {
-  const lightbox = document.getElementById('size-chart-lightbox');
-  lightbox.style.display = 'none';
-  document.body.style.overflow = 'auto';
-}
+       function updateCartStatus(sizeId) {
+           $.ajax({
+               url: '{{ route('cart.checkQuantity') }}',
+               method: 'GET',
+               data: { product_id: {{ $product->id }}, size_id: sizeId },
+               success: function(response) {
+                   if (response.cartQuantity > 0) {
+                       cartStatus.text(`${response.cartQuantity} in cart already`).show();
+                   } else {
+                       cartStatus.text('').hide();
+                   }
+               },
+               error: function() {
+                   cartStatus.text('').hide();
+               }
+           });
+       }
 
-document.addEventListener('click', function(event) {
-  const lightbox = document.getElementById('size-chart-lightbox');
-  const lightboxContent = document.querySelector('.lightbox-content');
-  if (event.target === lightbox) {
-    closeLightbox();
-  }
-});
+       function updateCartQuantity() {
+           $.ajax({
+               url: '{{ route('cart.count') }}',
+               method: 'GET',
+               success: function(response) {
+                   $('.cart-quantity').text(response.count);
+               },
+               error: function() {
+                   $('.cart-quantity').text('0');
+               }
+           });
+       }
+   });
+
+   function openLightbox() {
+       const lightbox = document.getElementById('size-chart-lightbox');
+       lightbox.style.display = 'flex';
+       document.body.style.overflow = 'hidden';
+   }
+
+   function closeLightbox() {
+       const lightbox = document.getElementById('size-chart-lightbox');
+       lightbox.style.display = 'none';
+       document.body.style.overflow = 'auto';
+   }
+
+   document.addEventListener('click', function(event) {
+       const lightbox = document.getElementById('size-chart-lightbox');
+       if (event.target === lightbox) {
+           closeLightbox();
+       }
+   });
 </script>
 @endpush

@@ -36,6 +36,8 @@ Route::post('/cart/remove-coupon', [CartController::class, 'remove_coupon_code']
 Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 Route::post('/cart/place-order', [CartController::class, 'place_order'])->name('cart.placeOrder');
 Route::get('/cart/confirmation', [CartController::class, 'confirmation'])->name('cart.confirmation');
+Route::get('/cart/partial', [CartController::class, 'getCartPartial'])->name('cart.partial');
+Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
 
 //Wishlist
 Route::post('/wishlist/add',[WishlistController::class,'add_to_wishlist'])->name('wishlist.add');

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+<!-- @extends('layouts.app')
 @section('content')
 <style>
     .cart-totals td {
@@ -385,4 +385,4 @@ $(document).ready(function(){
     }
 });
 </script>
-@endpush
+@endpush -->
