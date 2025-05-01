@@ -177,9 +177,9 @@
                             <img class="swiper-lazy pc__img" 
                                 data-src="{{ asset('uploads/products/' . $product->image) }}" 
                                 alt="{{ $product->name }}">
-                            @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
+                            @if($product->first_image && $product->first_image !== 'default-hover.jpg')
                                 <img class="swiper-lazy pc__img-hover" 
-                                    data-src="{{ asset('uploads/products/' . $product->hover_image) }}" 
+                                    data-src="{{ asset('uploads/products/' . $product->first_image) }}" 
                                     alt="{{ $product->name }} Hover">
                             @endif
                             <div class="swiper-lazy-preloader"></div>

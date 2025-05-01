@@ -11,6 +11,17 @@ class Product extends Model
         'image', 'images', 'size_chart', 'category_id', 'brand_id', 'subcategory_id'
     ];
 
+    protected $casts = [
+        'images' => 'array', // Cast JSON text to PHP array
+    ];
+    
+    // Accessor to get first image from `images` array
+    public function getFirstImageAttribute()
+    {
+        return !empty($this->images) && is_array($this->images) ? $this->images[0] : null;
+    }
+    
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
