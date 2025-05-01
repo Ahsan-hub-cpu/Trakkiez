@@ -15,7 +15,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $slides = Slide::where('status', 1)->take(3)->get();
+        $slides = Slide::where('status', 1)->take(4)->get();
 
         $categories = Category::with([
             'subcategories',
@@ -25,16 +25,18 @@ class HomeController extends Controller
         ])->orderBy('name')->get();
 
         $manCategory = Category::where('slug', 'men')->with([
-            'subcategories',
             'products' => function ($query) {
-                $query->inRandomOrder()->take(8);
+                $query->select('category_id', 'id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity') // Only what's needed
+                      ->inRandomOrder()
+                      ->take(8);
             }
         ])->first();
 
-        $womenCategory = Category::where('slug', 'women')->with([
-            'subcategories',
+        $womenCategory =Category::where('slug', 'women')->with([
             'products' => function ($query) {
-                $query->inRandomOrder()->take(8);
+                $query->select('category_id',  'id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity') // Only what's needed
+                      ->inRandomOrder()
+                      ->take(8);
             }
         ])->first();
 
@@ -47,41 +49,41 @@ class HomeController extends Controller
             ->get();
 
         // Add hover image to each product in newArrivals using $product->images
-        $newArrivals = $newArrivals->map(function ($product) {
-            if (!empty($product->images)) {
-                $galleryImages = explode(',', $product->images);
-                $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
-            } else {
-                $product->hover_image = 'default-hover.jpg'; // Fallback image
-            }
-            return $product;
-        });
+        // $newArrivals = $newArrivals->map(function ($product) {
+        //     if (!empty($product->images)) {
+        //         $galleryImages = explode(',', $product->images);
+        //         $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+        //     } else {
+        //         $product->hover_image = 'default-hover.jpg'; // Fallback image
+        //     }
+        //     return $product;
+        // });
 
         // Add hover image to each product in manCategory using $product->images
-        if ($manCategory && $manCategory->products) {
-            $manCategory->products = $manCategory->products->map(function ($product) {
-                if (!empty($product->images)) {
-                    $galleryImages = explode(',', $product->images);
-                    $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
-                } else {
-                    $product->hover_image = 'default-hover.jpg'; // Fallback image
-                }
-                return $product;
-            });
-        }
+        // if ($manCategory && $manCategory->products) {
+        //     $manCategory->products = $manCategory->products->map(function ($product) {
+        //         if (!empty($product->images)) {
+        //             $galleryImages = explode(',', $product->images);
+        //             $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+        //         } else {
+        //             $product->hover_image = 'default-hover.jpg'; // Fallback image
+        //         }
+        //         return $product;
+        //     });
+        // }
 
         // Add hover image to each product in womenCategory using $product->images
-        if ($womenCategory && $womenCategory->products) {
-            $womenCategory->products = $womenCategory->products->map(function ($product) {
-                if (!empty($product->images)) {
-                    $galleryImages = explode(',', $product->images);
-                    $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
-                } else {
-                    $product->hover_image = 'default-hover.jpg'; // Fallback image
-                }
-                return $product;
-            });
-        }
+        // if ($womenCategory && $womenCategory->products) {
+        //     $womenCategory->products = $womenCategory->products->map(function ($product) {
+        //         if (!empty($product->images)) {
+        //             $galleryImages = explode(',', $product->images);
+        //             $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+        //         } else {
+        //             $product->hover_image = 'default-hover.jpg'; // Fallback image
+        //         }
+        //         return $product;
+        //     });
+        // }
 
         $categories->load('subcategories.category');
 
@@ -233,17 +235,6 @@ class HomeController extends Controller
 
         // Always paginate, even with filters
         $products = $productsQuery->paginate(16);
-
-        // Add hover image to each product using $product->images
-        $products->getCollection()->transform(function ($product) {
-            if (!empty($product->images)) {
-                $galleryImages = explode(',', $product->images);
-                $product->hover_image = count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
-            } else {
-                $product->hover_image = 'default-hover.jpg'; // Fallback image
-            }
-            return $product;
-        });
 
         $noProductsMessage = $products->isEmpty() ? 'No products found for this subcategory' : null;
 
