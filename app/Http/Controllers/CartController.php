@@ -664,4 +664,26 @@ class CartController extends Controller
         $finalTotal = $total + $shippingCost;
         return view('partials.cart-totals', compact('shippingCost', 'subtotal', 'tax', 'finalTotal'))->render();
     }
+
+    public function getCartPartial()
+    {
+        try {
+            $cartItems = Cart::instance('cart')->content();
+            return view('partials.cart-modal-content', compact('cartItems'))->render();
+        } catch (\Exception $e) {
+            Log::error('getCartPartial error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['error' => 'Unable to load cart content'], 500);
+        }
+    }
+ 
+    public function getCartCount()
+    {
+        try {
+            $count = Cart::instance('cart')->count();
+            return response()->json(['count' => $count]);
+        } catch (\Exception $e) {
+            Log::error('getCartCount error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['count' => 0], 500);
+        }
+    }
 }

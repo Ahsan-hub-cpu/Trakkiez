@@ -5,35 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Title -->
+   
     <title>Trakkiez - @yield('title', 'Welcome')</title>
 
-    <!-- SEO Meta Tags -->
+
     <meta name="author" content="Trakkiez">
     <meta name="description" content="Trakkiez - Your one-stop shop for stylish fashion, premium clothing, and trendy accessories.">
     <meta name="keywords" content="Trakkiez, online fashion store, stylish clothing, trendy fashion, men fashion, women fashion, accessories">
 
-    <!-- Canonical URL -->
+ 
     <link rel="canonical" href="https://trakkiez.com">
 
-    <!-- Open Graph Meta Tags -->
+ 
     <meta property="og:title" content="Trakkiez - Trendy Fashion Online">
     <meta property="og:description" content="Shop premium fashion clothing and accessories at Trakkiez.">
     <meta property="og:image" content="{{ asset('assets/images/og-image.jpg') }}">
     <meta property="og:url" content="https://trakkiez.com">
     <meta property="og:type" content="website">
 
-    <!-- Twitter Card Meta Tags -->
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Trakkiez - Trendy Fashion Online">
     <meta name="twitter:description" content="Shop premium fashion clothing and accessories at Trakkiez.">
     <meta name="twitter:image" content="{{ asset('assets/images/og-image.jpg') }}">
 
-    <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{{ asset('assets/images/apple-touch-icon.png') }}">
 
-    <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -52,400 +50,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
-    <style>
-     
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        /* Free Shipping Banner */
-        .free-shipping-banner {
-            background: #f5f5f5;
-            text-align: center;
-            padding: 5px 0;
-            z-index: 1000;
-        }
-
-        /* Header Styles */
-        .header-container {
-            background: #000;
-        }
-
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px 0;
-        }
-
-        #header {
-            padding-top: 8px;
-            padding-bottom: 8px;
-        }
-
-        .logo__image {
-            max-width: 220px;
-        }
-
-        /* Product Item */
-        .product-item {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 15px;
-            transition: all 0.3s ease;
-            padding-right: 5px;
-        }
-
-        .product-item .image {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            gap: 10px;
-            flex-shrink: 0;
-            padding: 5px;
-            border-radius: 10px;
-            background: #EFF4F8;
-        }
-
-        #box-content-search li {
-            list-style: none;
-        }
-
-        #box-content-search .product-item {
-            margin-bottom: 10px;
-        }
-
-        /* Header */
-        .header {
-            background-color: black !important;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .header-transparent-bg {
-            background-color: black !important;
-        }
-
-        .header .navigation__link,
-        .header-tools__item a,
-        .header-tools__item svg,
-        .header-tools__item i {
-            color: white !important;
-            fill: white !important;
-        }
-
-        .header .navigation__link:hover,
-        .header-tools__item a:hover,
-        .header-tools__item svg:hover,
-        .header-tools__item i:hover {
-            color: #f0f0f0 !important;
-            fill: #f0f0f0 !important;
-        }
-
-        /* Contact Icons */
-        .contact-icons a {
-            color: white !important;
-            font-size: 20px;
-            margin-left: 10px;
-        }
-
-        .contact-icons a:hover {
-            color: #f0f0f0 !important;
-        }
-
-        /* Body Padding */
-        body {
-            padding-top: 80px;
-        }
-
-        /* FAB Container */
-        .fab-container {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            transition: opacity 0.3s ease;
-            z-index: 1000;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        .fab-button {
-            background-color: #ff5f57;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 24px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            cursor: pointer;
-            margin-left: 2px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .fab-icons {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: none;
-            flex-direction: column;
-            gap: 8px;
-            opacity: 1;
-            pointer-events: auto;
-            transition: opacity 0.3s ease;
-            z-index: 1;
-        }
-
-        .fab-container:hover .fab-icons {
-            display: flex;
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .fab-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            text-decoration: none;
-            color: #fff;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: transform 0.2s ease;
-            position: relative;
-        }
-
-        .fab-icon:hover {
-            transform: scale(1.05);
-        }
-
-        .fab-icon.whatsapp {
-            background-color: #25D366;
-        }
-
-        .fab-icon.phone {
-            background-color: #0084FF;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .fab-icon .tooltip {
-            visibility: hidden;
-            opacity: 0;
-            position: absolute;
-            top: 50%;
-            left: 110%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            padding: 5px 8px;
-            border-radius: 4px;
-            white-space: nowrap;
-            font-size: 14px;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .fab-icon:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* Top Bar */
-        .top-bar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #dfd5d5;
-            padding: 8px 0;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .top-bar__text {
-            margin: 0;
-            font-weight: bold;
-            margin-top: 1%;
-        }
-
-        /* Navbar */
-        .navbar {
-            min-height: auto !important;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-        }
-
-        .navbar .container {
-            margin: 0 !important;
-        }
-
-        .search-field {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Desktop Styles */
-        @media (min-width: 769px) {
-            .header {
-                background: #000;
-            }
-
-            .header-desk {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 10px 0;
-            }
-
-            .navigation {
-                margin-left: 80px;
-            }
-
-            .navigation__list {
-                display: flex;
-                align-items: center;
-                margin: 0 80px;
-                padding: 0;
-            }
-
-            .header-tools {
-                display: flex;
-                align-items: center;
-            }
-        }
-
-        /* Mobile Styles */
-        @media (max-width: 768px) {
-            body {
-                padding-top: 0px;
-            }
-
-            .header-mobile {
-                background-color: black !important;
-                margin-top: 35px;
-                z-index: 1000;
-            }
-
-            .top-bar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                z-index: 9999;
-                height: 35px;
-                font-size: 12px;
-                display: flex;
-            }
-
-            .header-desk_type_1 {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            .navigation,
-            .mobile-nav {
-                margin: 0;
-                padding: 0;
-            }
-
-            .nav-icon,
-            .header-tools__cart svg,
-            .search-popup__submit svg,
-            .header-mobile__navigation .navigation__link svg {
-                fill: white;
-            }
-
-            .header-mobile__navigation.open .navigation__link {
-                color: white !important;
-            }
-
-            .mobile-nav-activator svg {
-                fill: white !important;
-            }
-
-            .btn-close-lg {
-                color: white !important;
-            }
-
-            .header-mobile__navigation .navigation__item.active a {
-                color: #FFD700;
-            }
-
-            .fab-container {
-                bottom: 15px;
-                left: 15px;
-            }
-
-            .fab-button,
-            .fab-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 20px;
-            }
-
-            .fab-icon.phone {
-                font-size: 12px;
-            }
-
-            .fab-icon .tooltip {
-                font-size: 12px;
-                left: 105%;
-            }
-
-            .clearfix::after {
-                content: "";
-                clear: both;
-                display: table;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .fab-container {
-                bottom: 50px;
-                left: 10px;
-            }
-
-            .fab-button,
-            .fab-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 18px;
-            }
-
-            .fab-icon.phone {
-                font-size: 11px;
-            }
-
-            .fab-icon .tooltip {
-                font-size: 11px;
-            }
-        }
-    </style>
 </head>
 
 <body class="gradient-bg">
@@ -693,14 +297,11 @@
             </a>
         </div>
 
-        <a href="{{ route('cart.index') }}" class="header-tools__item header-tools__cart">
-            <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <use href="#icon_cart" />
-            </svg>
-            @if (Cart::instance('cart')->content()->count() > 0)
-                <span class="cart-amount d-block position-absolute js-cart-items-count">{{ Cart::instance('cart')->content()->count() }}</span>
-            @endif
-        </a>
+    <a href="javascript:void(0);" class="nav-link" id="cart-icon" data-bs-toggle="modal" data-bs-target="#cartModal">
+        <i class="bi bi-cart"></i>
+        <span class="badge bg-primary cart-quantity">0</span>
+    </a>
+</li>
     </div>
 
     <!-- Mobile Navigation -->
@@ -877,14 +478,10 @@
                     @endif
                 </a>
 
-                <a href="{{ route('cart.index') }}" class="header-tools__item header-tools__cart">
-                    <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <use href="#icon_cart" />
-                    </svg>
-                    @if (Cart::instance('cart')->content()->count() > 0)
-                        <span class="cart-amount d-block position-absolute js-cart-items-count">{{ Cart::instance('cart')->content()->count() }}</span>
-                    @endif
-                </a>
+    <a href="javascript:void(0);" class="nav-link" id="cart-icon" data-bs-toggle="modal" data-bs-target="#cartModal">
+        <i class="bi bi-cart"></i>
+        <span class="badge bg-primary cart-quantity">0</span>
+    </a>
             </div>
         </div>
     </div>
@@ -1023,6 +620,24 @@
 <script src="{{ asset('assets/js/plugins/countdown.js') }}"></script>
 <script src="{{ asset('assets/js/theme.js') }}"></script>
 
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartModalLabel">Shopping Cart</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="cart-modal-content">
+                    <!-- Cart content will be loaded here via AJAX -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Shopping</button>
+                <a href="{{ route('cart.checkout') }}" class="btn btn-primary btn-checkout">Proceed to Checkout</a>
+            </div>
+        </div>
+    </div>
 <script>
     $(document).ready(function() {
         $("#search-input").on("keyup", function() {
@@ -1144,12 +759,49 @@
                 banner.style.display = '';
             }
         }
-
-        fixLayout();
-        window.addEventListener('load', fixLayout);
-        setTimeout(fixLayout, 100);
-        setTimeout(fixLayout, 500);
     });
+
+</script>
+
+<script defer>
+$(document).ready(function() {
+    // Update cart count on page load
+    updateCartCount();
+
+    // Open modal when cart icon is clicked
+    $('#cart-icon').on('click', function() {
+        loadCartContent();
+        $('#cartModal').modal('show');
+    });
+
+    // Load cart content via AJAX
+    function loadCartContent() {
+        $.ajax({
+            url: "{{ route('cart.partial') }}",
+            method: 'GET',
+            success: function(response) {
+                $('#cart-modal-content').html(response);
+            },
+            error: function(xhr) {
+                $('#cart-modal-content').html('<p class="text-danger">Unable to load cart content.</p>');
+            }
+        });
+    }
+
+    // Update cart count
+    function updateCartCount() {
+        $.ajax({
+            url: "{{ route('cart.count') }}",
+            method: 'GET',
+            success: function(response) {
+                $('.cart-quantity').text(response.count);
+            },
+            error: function(xhr) {
+                $('.cart-quantity').text('0');
+            }
+        });
+    }
+});
 </script>
 
 @stack("scripts")
