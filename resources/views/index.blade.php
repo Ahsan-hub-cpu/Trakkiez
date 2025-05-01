@@ -64,62 +64,74 @@
       <div class="row">
           <div class="col-12">
           <div class="position-relative">
-            <div class="swiper-container js-swiper-slider" data-settings='{
-                "autoplay": false,
-                "slidesPerView": 3,
-                "slidesPerGroup": 1,
-                "effect": "none",
-                "loop": false,
-                "lazy": {
-                    "loadPrevNext": true,
-                    "loadPrevNextAmount": 2
-                },
-                "breakpoints": {
-                    "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
-                    "768": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 1 },
-                    "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 25 }
-                }
-            }'>
-                <div class="swiper-wrapper">
-                    @foreach($newArrivals as $product)
-                        <div class="swiper-slide product-card">
-                            <div class="pc__img-wrapper">
-                                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                                    <img class="swiper-lazy pc__img" data-src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}">
-                                    @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
-                                        <img class="swiper-lazy pc__img-hover" data-src="{{ asset('uploads/products/' . $product->hover_image) }}" alt="{{ $product->name }} Hover">
-                                    @endif
-                                    <div class="swiper-lazy-preloader"></div>
-                                </a>
-                                @if($product->sale_price && $product->regular_price)
-                                    @php
-                                        $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
-                                    @endphp
-                                    <div class="discount-badge">SAVE {{ $discount }}%</div>
-                                @endif
-                                @if($product->quantity <= 0)
-                                    <div class="sold-out-badge">Sold Out</div>
-                                @endif
-                            </div>
-                            <div class="pc__info">
-                                <h6 class="pc__title">
-                                    <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                                        {{ $product->name }}
-                                    </a>
-                                </h6>
-                                <div class="product-card__price">
-                                    @if($product->sale_price)
-                                        <s>PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
-                                    @else
-                                        PKR {{ $product->regular_price }}
-                                    @endif
-                                </div>
-                            </div>
+    <div class="swiper-container js-swiper-slider" data-settings='{
+        "autoplay": false,
+        "slidesPerView": 3,
+        "slidesPerGroup": 1,
+        "effect": "none",
+        "loop": false,
+        "preloadImages": false,
+        "lazy": {
+            "loadPrevNext": true,
+            "loadPrevNextAmount": 1,
+            "loadOnTransitionStart": true,
+            "elementClass": "swiper-lazy",
+            "loadingClass": "swiper-lazy-loading",
+            "loadedClass": "swiper-lazy-loaded",
+            "preloaderClass": "swiper-lazy-preloader"
+        },
+        "breakpoints": {
+            "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
+            "768": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 1 },
+            "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 25 }
+        },
+        "watchSlidesVisibility": true,
+        "watchSlidesProgress": true
+    }'>
+        <div class="swiper-wrapper">
+            @foreach($newArrivals as $product)
+                <div class="swiper-slide product-card">
+                    <div class="pc__img-wrapper">
+                        <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
+                            <img class="swiper-lazy pc__img" 
+                                data-src="{{ asset('uploads/products/' . $product->image) }}" 
+                                alt="{{ $product->name }}">
+                            @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
+                                <img class="swiper-lazy pc__img-hover" 
+                                    data-src="{{ asset('uploads/products/' . $product->hover_image) }}" 
+                                    alt="{{ $product->name }} Hover">
+                            @endif
+                            <div class="swiper-lazy-preloader"></div>
+                        </a>
+                        @if($product->sale_price && $product->regular_price)
+                            @php
+                                $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                            @endphp
+                            <div class="discount-badge">SAVE {{ $discount }}%</div>
+                        @endif
+                        @if($product->quantity <= 0)
+                            <div class="sold-out-badge">Sold Out</div>
+                        @endif
+                    </div>
+                    <div class="pc__info">
+                        <h6 class="pc__title">
+                            <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
+                                {{ $product->name }}
+                            </a>
+                        </h6>
+                        <div class="product-card__price">
+                            @if($product->sale_price)
+                                <s>PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
+                            @else
+                                PKR {{ $product->regular_price }}
+                            @endif
                         </div>
-                    @endforeach
+                    </div>
                 </div>
-            </div>
-            </div>
+            @endforeach
+        </div>
+    </div>
+</div>
           </div>
       </div>
   </section>
@@ -138,54 +150,66 @@
         "slidesPerGroup": 1,
         "effect": "none",
         "loop": false,
+        "preloadImages": false,
         "lazy": {
             "loadPrevNext": true,
-            "loadPrevNextAmount": 2
+            "loadPrevNextAmount": 1,
+            "loadOnTransitionStart": true,
+            "elementClass": "swiper-lazy",
+            "loadingClass": "swiper-lazy-loading",
+            "loadedClass": "swiper-lazy-loaded",
+            "preloaderClass": "swiper-lazy-preloader"
         },
         "breakpoints": {
             "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
-            "768": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 15 },
+            "768": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 1 },
             "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 25 }
-        }
+        },
+        "watchSlidesVisibility": true,
+        "watchSlidesProgress": true
     }'>
         <div class="swiper-wrapper">
             @if($manCategory && $manCategory->products->isNotEmpty())
                 @foreach($manCategory->products as $product)
-                    <div class="swiper-slide product-card">
-                        <div class="pc__img-wrapper">
+                <div class="swiper-slide product-card">
+                    <div class="pc__img-wrapper">
+                        <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
+                            <img class="swiper-lazy pc__img" 
+                                data-src="{{ asset('uploads/products/' . $product->image) }}" 
+                                alt="{{ $product->name }}">
+                            @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
+                                <img class="swiper-lazy pc__img-hover" 
+                                    data-src="{{ asset('uploads/products/' . $product->hover_image) }}" 
+                                    alt="{{ $product->name }} Hover">
+                            @endif
+                            <div class="swiper-lazy-preloader"></div>
+                        </a>
+                        @if($product->sale_price && $product->regular_price)
+                            @php
+                                $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                            @endphp
+                            <div class="discount-badge">SAVE {{ $discount }}%</div>
+                        @endif
+                        @if($product->quantity <= 0)
+                            <div class="sold-out-badge">Sold Out</div>
+                        @endif
+                    </div>
+                    <div class="pc__info">
+                        <h6 class="pc__title">
                             <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                                <img class="swiper-lazy pc__img" data-src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}">
-                                @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
-                                    <img class="swiper-lazy pc__img-hover" data-src="{{ asset('uploads/products/' . $product->hover_image) }}" alt="{{ $product->name }} Hover">
-                                @endif
-                                <div class="swiper-lazy-preloader"></div>
+                                {{ $product->name }}
                             </a>
-                            @if($product->sale_price && $product->regular_price)
-                                @php
-                                    $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
-                                @endphp
-                                <div class="discount-badge">SAVE {{ $discount }}%</div>
+                        </h6>
+                        <div class="product-card__price">
+                            @if($product->sale_price)
+                                <s>PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
+                            @else
+                                PKR {{ $product->regular_price }}
                             @endif
-                            @if($product->quantity <= 0)
-                                <div class="sold-out-badge">Sold Out</div>
-                            @endif
-                        </div>
-                        <div class="pc__info">
-                            <h6 class="pc__title">
-                                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                                    {{ $product->name }}
-                                </a>
-                            </h6>
-                            <div class="product-card__price">
-                                @if($product->sale_price)
-                                    <s>PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
-                                @else
-                                    PKR {{ $product->regular_price }}
-                                @endif
-                            </div>
                         </div>
                     </div>
-                @endforeach
+                </div>
+            @endforeach
             @else
                 <p>No products available for this category.</p>
             @endif
@@ -205,60 +229,71 @@
           <div class="col-12">
           <div class="position-relative">
     <div class="swiper-container js-swiper-slider" data-settings='{
-        "autoplay": { "delay": 1500 },
+        "autoplay": false,
         "slidesPerView": 3,
         "slidesPerGroup": 1,
         "effect": "none",
         "loop": false,
+        "preloadImages": false,
         "lazy": {
             "loadPrevNext": true,
             "loadPrevNextAmount": 1,
-            "loadOnTransitionStart": true
+            "loadOnTransitionStart": true,
+            "elementClass": "swiper-lazy",
+            "loadingClass": "swiper-lazy-loading",
+            "loadedClass": "swiper-lazy-loaded",
+            "preloaderClass": "swiper-lazy-preloader"
         },
         "breakpoints": {
             "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
-            "768": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 15 },
-            "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 25 }
-        }
+            "768": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
+            "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 12 }
+        },
+        "watchSlidesVisibility": true,
+        "watchSlidesProgress": true
     }'>
         <div class="swiper-wrapper">
             @if($womenCategory && $womenCategory->products->isNotEmpty())
                 @foreach($womenCategory->products as $product)
-                    <div class="swiper-slide product-card">
-                        <div class="pc__img-wrapper">
+                <div class="swiper-slide product-card">
+                    <div class="pc__img-wrapper">
+                        <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
+                            <img class="swiper-lazy pc__img" 
+                                data-src="{{ asset('uploads/products/' . $product->image) }}" 
+                                alt="{{ $product->name }}">
+                            @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
+                                <img class="swiper-lazy pc__img-hover" 
+                                    data-src="{{ asset('uploads/products/' . $product->hover_image) }}" 
+                                    alt="{{ $product->name }} Hover">
+                            @endif
+                            <div class="swiper-lazy-preloader"></div>
+                        </a>
+                        @if($product->sale_price && $product->regular_price)
+                            @php
+                                $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                            @endphp
+                            <div class="discount-badge">SAVE {{ $discount }}%</div>
+                        @endif
+                        @if($product->quantity <= 0)
+                            <div class="sold-out-badge">Sold Out</div>
+                        @endif
+                    </div>
+                    <div class="pc__info">
+                        <h6 class="pc__title">
                             <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                                <img class="swiper-lazy pc__img" data-src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}">
-                                @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
-                                    <img class="swiper-lazy pc__img-hover" data-src="{{ asset('uploads/products/' . $product->hover_image) }}" alt="{{ $product->name }} Hover">
-                                @endif
-                                <div class="swiper-lazy-preloader"></div>
+                                {{ $product->name }}
                             </a>
-                            @if($product->sale_price && $product->regular_price)
-                                @php
-                                    $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
-                                @endphp
-                                <div class="discount-badge">SAVE {{ $discount }}%</div>
+                        </h6>
+                        <div class="product-card__price">
+                            @if($product->sale_price)
+                                <s>PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
+                            @else
+                                PKR {{ $product->regular_price }}
                             @endif
-                            @if($product->quantity <= 0)
-                                <div class="sold-out-badge">Sold Out</div>
-                            @endif
-                        </div>
-                        <div class="pc__info">
-                            <h6 class="pc__title">
-                                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                                    {{ $product->name }}
-                                </a>
-                            </h6>
-                            <div class="product-card__price">
-                                @if($product->sale_price)
-                                    <s>PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
-                                @else
-                                    PKR {{ $product->regular_price }}
-                                @endif
-                            </div>
                         </div>
                     </div>
-                @endforeach
+                </div>
+            @endforeach
             @else
                 <p>No products available for this category.</p>
             @endif
