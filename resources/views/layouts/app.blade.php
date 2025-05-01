@@ -722,11 +722,17 @@
     });
 </script>
 
+<!-- Initialize Swiper correctly in your JS -->
 <script>
+
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.js-swiper-slider').forEach(sliderEl => {
-            const settings = JSON.parse(sliderEl.getAttribute('data-settings'));
-            new Swiper(sliderEl, settings);
+        let swiperElements = document.querySelectorAll('.js-swiper-slider');
+        
+        swiperElements.forEach(function(element) {
+            let settings = JSON.parse(element.dataset.settings || '{}');
+            
+        
+            new Swiper(element, settings);
         });
     });
 </script>
