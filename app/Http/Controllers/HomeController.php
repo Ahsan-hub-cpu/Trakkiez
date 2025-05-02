@@ -19,7 +19,7 @@ class HomeController extends Controller
         $categories = Category::with([
             'subcategories',
             'products' => function ($query) {
-                $query->select('category_id', 'id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity')
+                $query->select('category_id', 'id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity')
                       ->inRandomOrder()
                       ->take(8);
             }
@@ -27,7 +27,7 @@ class HomeController extends Controller
 
         $manCategory = Category::where('slug', 'men')->with([
             'products' => function ($query) {
-                $query->select('category_id', 'id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity')
+                $query->select('category_id', 'id', 'name','image', 'slug', 'regular_price', 'sale_price', 'quantity')
                       ->inRandomOrder()
                       ->take(8);
             }
@@ -35,26 +35,26 @@ class HomeController extends Controller
 
         $womenCategory = Category::where('slug', 'women')->with([
             'products' => function ($query) {
-                $query->select('category_id', 'id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity')
+                $query->select('category_id', 'id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity')
                       ->inRandomOrder()
                       ->take(8);
             }
         ])->first();
 
-        $sproducts = Product::whereNotNull('sale_price')
-                           ->where('sale_price', '<>', '')
-                           ->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity')
-                           ->inRandomOrder()
-                           ->take(8)
-                           ->get();
+        // $sproducts = Product::whereNotNull('sale_price')
+        //                    ->where('sale_price', '<>', '')
+        //                    ->select('id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity')
+        //                    ->inRandomOrder()
+        //                    ->take(8)
+        //                    ->get();
 
-        $fproducts = Product::where('featured', 1)
-                           ->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity')
-                           ->take(8)
-                           ->get();
+        // $fproducts = Product::where('featured', 1)
+        //                    ->select('id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity')
+        //                    ->take(8)
+        //                    ->get();
 
         $newArrivals = Product::with(['productVariations.size'])
-            ->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'created_at')
+            ->select('id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity', 'created_at')
             ->where('created_at', '>=', Carbon::now()->subDays(15))
             ->orderBy('created_at', 'DESC')
             ->take(8)
@@ -66,7 +66,7 @@ class HomeController extends Controller
             return $category->subcategories;
         })->filter()->sortBy('name');
 
-        return view('index', compact('slides', 'categories', 'manCategory', 'womenCategory', 'sproducts', 'fproducts', 'newArrivals', 'allSubcategories'));
+        return view('index', compact('slides', 'categories', 'manCategory', 'womenCategory',  'newArrivals', 'allSubcategories'));
     }
 
     public function category($category_slug, Request $request)
