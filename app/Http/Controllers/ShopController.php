@@ -84,7 +84,7 @@ class ShopController extends Controller
     public function product_details($product_slug)
     {
         $product = Product::where('slug', $product_slug)
-                         ->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'description', 'short_description', 'SKU', 'category_id')
+                         ->select('size_chart','id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'description', 'short_description', 'SKU', 'category_id')
                          ->with(['category', 'productVariations.size'])
                          ->firstOrFail();
 
