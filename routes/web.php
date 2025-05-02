@@ -24,20 +24,19 @@ Route::get('/category/{category_slug}/{subcategory_id}', [HomeController::class,
 
 
 //CART
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-Route::post('/cart/increase-quantity/{rowId}', [CartController::class, 'increase_item_quantity'])->name('cart.qty.increase');
-Route::post('/cart/reduce-quantity/{rowId}', [CartController::class, 'reduce_item_quantity'])->name('cart.qty.reduce');
-Route::delete('/cart/remove/{rowId}', [CartController::class, 'remove_item_from_cart'])->name('cart.remove');
-Route::delete('/cart/clear', [CartController::class, 'empty_cart'])->name('cart.empty');
-Route::get('/cart/check-quantity', [CartController::class, 'checkQuantity'])->name('cart.checkQuantity');
-Route::post('/cart/apply-coupon', [CartController::class, 'apply_coupon_code'])->name('cart.applyCoupon');
-Route::post('/cart/remove-coupon', [CartController::class, 'remove_coupon_code'])->name('cart.removeCoupon');
-Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-Route::post('/cart/place-order', [CartController::class, 'place_order'])->name('cart.placeOrder');
-Route::get('/cart/confirmation', [CartController::class, 'confirmation'])->name('cart.confirmation');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 Route::get('/cart/partial', [CartController::class, 'getCartPartial'])->name('cart.partial');
 Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+Route::get('/cart/check-quantity', [CartController::class, 'checkQuantity'])->name('cart.checkQuantity');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.applyCoupon');
+Route::post('/cart/remove-coupon', [CartController::class, 'remove_coupon_code'])->name('cart.removeCoupon');
+Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+Route::post('/place-order', [CartController::class, 'place_order'])->name('cart.placeOrder');
+Route::get('/confirmation', [CartController::class, 'confirmation'])->name('cart.confirmation');
 
 //Wishlist
 Route::post('/wishlist/add',[WishlistController::class,'add_to_wishlist'])->name('wishlist.add');

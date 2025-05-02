@@ -256,3 +256,34 @@ body, html {
     margin-top: -2rem;
 }
 }
+#cartModal .modal-body {
+    padding: 20px;
+}
+#cartModal .cart-table th, #cartModal .cart-table td {
+    vertical-align: middle;
+}
+#cartModal .cart-qty-increase, #cartModal .cart-qty-reduce {
+    cursor: pointer;
+    background: #f8f9fa;
+    border: none;
+    padding: 5px 10px;
+}
+#cartModal .cart-remove-item {
+    padding: 5px 10px;
+}
+@media (max-width: 576px) {
+    #cartModal .cart-table {
+        font-size: 0.85rem;
+    }
+    #cartModal .cart-table img {
+        width: 60px;
+        height: 60px;
+    }
+    #cartModal .modal-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+    #cartModal .modal-footer .btn {
+        width: 100%;
+    }
+}

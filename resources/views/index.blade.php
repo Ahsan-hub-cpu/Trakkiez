@@ -56,7 +56,6 @@
     </div>
 </section>
 
-  
   <section class="new-arrivals container mt-3">
       <div class="text-center mb-3">
           <h2 class="section-title">New Arrivals <a href="{{ route('shop.index', ['filter' => 'new-arrivals']) }}">(View All)</a></h2>
@@ -66,7 +65,7 @@
           <div class="position-relative">
     <div class="swiper-container js-swiper-slider" data-settings='{
         "autoplay": false,
-        "slidesPerView": 3,
+        "slidesPerView": 2,
         "slidesPerGroup": 1,
         "effect": "none",
         "loop": false,
@@ -82,7 +81,7 @@
         },
         "breakpoints": {
             "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
-            "768": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 1 },
+            "576": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 8 },
             "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 25 }
         },
         "watchSlidesVisibility": true,
@@ -136,7 +135,6 @@
       </div>
   </section>
 
- 
   <section class="man-category container mt-3">
       <div class="text-center mb-3">
           <h2 class="section-title">Men's Collection <a href="{{ route('home.category', ['category_slug' => 'men']) }}">(View All)</a></h2>
@@ -146,7 +144,7 @@
           <div class="position-relative">
     <div class="swiper-container js-swiper-slider" data-settings='{
         "autoplay": false,
-        "slidesPerView": 3,
+        "slidesPerView": 2,
         "slidesPerGroup": 1,
         "effect": "none",
         "loop": false,
@@ -162,7 +160,7 @@
         },
         "breakpoints": {
             "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
-            "768": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 1 },
+            "576": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 8 },
             "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 25 }
         },
         "watchSlidesVisibility": true,
@@ -177,9 +175,9 @@
                             <img class="swiper-lazy pc__img" 
                                 data-src="{{ asset('uploads/products/' . $product->image) }}" 
                                 alt="{{ $product->name }}">
-                            @if($product->first_image && $product->first_image !== 'default-hover.jpg')
+                            @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
                                 <img class="swiper-lazy pc__img-hover" 
-                                    data-src="{{ asset('uploads/products/' . $product->first_image) }}" 
+                                    data-src="{{ asset('uploads/products/' . $product->hover_image) }}" 
                                     alt="{{ $product->name }} Hover">
                             @endif
                             <div class="swiper-lazy-preloader"></div>
@@ -220,7 +218,6 @@
       </div>
   </section>
 
- 
   <section class="woman-category container mt-3">
       <div class="text-center mb-3">
           <h2 class="section-title">Women's Collection <a href="{{ route('home.category', ['category_slug' => 'women']) }}">(View All)</a></h2>
@@ -230,7 +227,7 @@
           <div class="position-relative">
     <div class="swiper-container js-swiper-slider" data-settings='{
         "autoplay": false,
-        "slidesPerView": 3,
+        "slidesPerView": 2,
         "slidesPerGroup": 1,
         "effect": "none",
         "loop": false,
@@ -246,7 +243,7 @@
         },
         "breakpoints": {
             "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
-            "768": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 8 },
+            "576": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 8 },
             "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 12 }
         },
         "watchSlidesVisibility": true,
@@ -304,7 +301,6 @@
       </div>
   </section>
 
- 
   <section class="all-subcategories-section container mt-5">
       <div class="text-center mb-4">
           <h2 class="section-title">Featured</h2>
@@ -402,3 +398,4 @@
         });
     </script>
 @endsection
+

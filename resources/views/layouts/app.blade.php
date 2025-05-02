@@ -5,24 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-   
     <title>Trakkiez - @yield('title', 'Welcome')</title>
-
 
     <meta name="author" content="Trakkiez">
     <meta name="description" content="Trakkiez - Your one-stop shop for stylish fashion, premium clothing, and trendy accessories.">
     <meta name="keywords" content="Trakkiez, online fashion store, stylish clothing, trendy fashion, men fashion, women fashion, accessories">
 
- 
     <link rel="canonical" href="https://trakkiez.com">
 
- 
     <meta property="og:title" content="Trakkiez - Trendy Fashion Online">
     <meta property="og:description" content="Shop premium fashion clothing and accessories at Trakkiez.">
     <meta property="og:image" content="{{ asset('assets/images/og-image.jpg') }}">
     <meta property="og:url" content="https://trakkiez.com">
     <meta property="og:type" content="website">
-
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Trakkiez - Trendy Fashion Online">
@@ -38,7 +33,7 @@
         "@type": "Organization",
         "name": "Trakkiez",
         "url": "https://trakkiez.com",
-        "logo": "https://trakkiez.com/assets/images/logo.png"
+        "logo": "https://trakkiez.com/assets/images/logo.webp"
     }
     </script>
 
@@ -50,6 +45,9 @@
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+    <!-- Move jQuery to top to ensure dependencies load correctly -->
+    <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
 </head>
 
 <body class="gradient-bg">
@@ -277,372 +275,453 @@
     </symbol>
   </svg>
    
-  <div class="top-bar">
-    <div class="container">
-        <p class="top-bar__text">Free shipping on orders more than PKR 6999!</p>
+    <div class="top-bar">
+        <div class="container">
+            <p class="top-bar__text">Free shipping on orders more than PKR 6999!</p>
+        </div>
     </div>
-  </div>
 
-<div class="header-mobile header_sticky">
-    <div class="container d-flex align-items-center h-100">
-        <button class="navbar-toggler border-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">
-            <svg class="nav-icon" width="25" height="18" viewBox="0 0 25 18" xmlns="http://www.w3.org/2000/svg">
-                <use href="#icon_nav" />
-            </svg>
-        </button>
+    <div class="header-mobile header_sticky">
+        <div class="container d-flex align-items-center h-100">
+            <button class="navbar-toggler border-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">
+                <svg class="nav-icon" width="25" height="18" viewBox="0 0 25 18" xmlns="http://www.w3.org/2000/svg">
+                    <use href="#icon_nav" />
+                </svg>
+            </button>
 
-        <div class="logo">
-            <a href="{{ route('home.index') }}">
-                <img src="{{ asset('assets/images/logo.jpg') }}" alt="Uomo" class="logo__image d-block" />
+            <div class="logo">
+                <a href="{{ route('home.index') }}">
+                    <img src="{{ asset('assets/images/logo.webp') }}" alt="Trakkiez" class="logo__image d-block" />
+                </a>
+            </div>
+
+            <a href="javascript:void(0);" class="nav-link" id="cart-icon-mobile" data-bs-toggle="modal" data-bs-target="#cartModal">
+                <i class="bi bi-cart"></i>
+                <span class="badge bg-primary cart-quantity">0</span>
             </a>
         </div>
 
-    <a href="javascript:void(0);" class="nav-link" id="cart-icon" data-bs-toggle="modal" data-bs-target="#cartModal">
-        <i class="bi bi-cart"></i>
-        <span class="badge bg-primary cart-quantity">0</span>
-    </a>
-</li>
+        <!-- Mobile Navigation -->
+        <nav class="navbar navbar-expand-lg d-lg-none">
+            <div class="collapse navbar-collapse flex-column bg-body shadow-sm z-3 position-absolute top-100 start-0 w-100" id="mobileNav" style="max-height: 90vh; overflow-y: auto;">
+                <div class="container">
+                    <form action="{{ route('home.search') }}" method="GET" class="search-field position-relative">
+                        <div class="position-relative">
+                            <input class="form-control w-100 border rounded-1" type="text" name="search-keyword" placeholder="Search products" aria-label="Search products" />
+                            <button class="btn position-absolute top-0 end-0 mt-1 me-4" type="submit" aria-label="Submit search">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M14.4121 13.292L18.7071 17.5859L17.2931 18.9999L13.0001 14.7059C11.6841 15.7289 10.0121 16.3339 8.24906 16.3339C3.70906 16.3339 0.0000610352 12.6249 0.0000610352 8.0849C0.0000610352 3.5449 3.70906 -0.164093 8.24906 -0.164093C12.7891 -0.164093 16.4981 3.5449 16.4981 8.0849C16.4981 9.8479 15.8921 11.5199 14.8701 12.8359L14.4121 13.292Z" fill="#000"/>
+                                </svg>
+                            </button>
+                            <button class="btn position-absolute top-0 end-0 mt-1 me-1" type="reset" aria-label="Clear search">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="container">
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-2"><a href="{{ route('home.index') }}" class="nav-link">Home</a></li>
+                        <li class="mb-2"><a href="{{ route('shop.index') }}" class="nav-link">Shop</a></li>
+                        @foreach ($categories as $category)
+                            <li class="mb-2">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#{{ $category->slug }}" aria-expanded="false" aria-controls="{{ $category->slug }}">
+                                    {{ $category->name }}
+                                </a>
+                                <div class="collapse" id="{{ $category->slug }}">
+                                    <ul class="list-unstyled ps-3">
+                                        @foreach ($category->subcategories as $subcategory)
+                                            <li class="mb-2">
+                                                <a href="{{ route('home.subcategory', ['category_slug' => $category->slug, 'subcategory_id' => $subcategory->id]) }}" class="nav-link">
+                                                    {{ $subcategory->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </li>
+                        @endforeach
+                        <li class="mb-2"><a href="{{ route('cart.index') }}" class="nav-link">Cart</a></li>
+                        <li class="mb-2"><a href="{{ route('about.us') }}" class="nav-link">About</a></li>
+                        <li class="mb-2"><a href="{{ route('home.contact') }}" class="nav-link">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Icons -->
+                <div class="container pb-4">
+                    <ul class="list-unstyled d-flex gap-3">
+                        <li>
+                            <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="text-decoration-none">
+                                <svg class="svg-icon" width="9" height="15" viewBox="0 0 9 15" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#icon_facebook" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="text-decoration-none">
+                                <svg class="svg-icon" width="14" height="13" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#icon_instagram" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.tiktok.com/@trakkiezwear?_t=ZS-8t3QFgCyjjE&_r=1" class="text-decoration-none">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </div>
 
-    <!-- Mobile Navigation -->
-    <nav class="navbar navbar-expand-lg d-lg-none">
-        <div class="container d-flex justify-content-between align-items-center"></div>
+    <header id="header" class="header header-fullwidth header-transparent-bg header-black">
+        <div class="container">
+            <div class="header-desk header-desk_type_1">
+                <div class="logo">
+                    <a href="{{ route('home.index') }}">
+                        <img src="{{ asset('assets/images/logo.webp') }}" alt="Trakkiez" class="logo__image d-block" />
+                    </a>
+                </div>
 
-        <div class="collapse navbar-collapse flex-column bg-body shadow-sm z-3 position-absolute top-100 start-0 w-100" id="mobileNav" style="max-height: 90vh; overflow-y: auto;">
-            <div class="container">
-                <form action="#" method="GET" class="search-field position-relative">
-                    <div class="position-relative">
-                        <input class="form-control w-100 border rounded-1" type="text" name="search-keyword" placeholder="Search products" />
-                        <button class="btn position-absolute top-0 end-0 mt-1 me-4" type="submit">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M14.4121 13.292L18.7071 17.5859L17.2931 18.9999L13.0001 14.7059C11.6841 15.7289 10.0121 16.3339 8.24906 16.3339C3.70906 16.3339 0.0000610352 12.6249 0.0000610352 8.0849C0.0000610352 3.5449 3.70906 -0.164093 8.24906 -0.164093C12.7891 -0.164093 16.4981 3.5449 16.4981 8.0849C16.4981 9.8479 15.8921 11.5199 14.8701 12.8359L14.4121 13.292Z" fill="#000"/>
-                            </svg>
-                        </button>
-                        <button class="btn position-absolute top-0 end-0 mt-1 me-1" type="reset">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="container">
-                <ul class="list-unstyled mb-4">
-                    <li class="mb-2"><a href="{{ route('home.index') }}" class="nav-link">Home</a></li>
-                    <li class="mb-2"><a href="{{ route('shop.index') }}" class="nav-link">Shop</a></li>
-                    @foreach ($categories as $category)
-                        <li class="mb-2">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#{{ $category->slug }}" aria-expanded="false">
-                                {{ $category->name }}
-                            </a>
-                            <div class="collapse" id="{{ $category->slug }}">
-                                <ul class="list-unstyled ps-3">
+                <nav class="navigation" style="margin-left: 80px;">
+                    <ul class="navigation__list list-unstyled d-flex align-items-center">
+                        <li class="navigation__item">
+                            <a href="{{ route('home.index') }}" class="navigation__link">Home</a>
+                        </li>
+                        <li class="navigation__item">
+                            <a href="{{ route('shop.index') }}" class="navigation__link">Shop</a>
+                        </li>
+                        @foreach ($categories as $category)
+                            <li class="navigation__item dropdown">
+                                <a href="#" class="navigation__link dropdown-toggle" id="{{ $category->slug }}Dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ $category->name }}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="{{ $category->slug }}Dropdown">
                                     @foreach ($category->subcategories as $subcategory)
-                                        <li class="mb-2">
-                                            <a href="{{ route('home.subcategory', ['category_slug' => $category->slug, 'subcategory_id' => $subcategory->id]) }}" class="nav-link">
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('home.subcategory', ['category_slug' => $category->slug, 'subcategory_id' => $subcategory->id]) }}">
                                                 {{ $subcategory->name }}
                                             </a>
                                         </li>
                                     @endforeach
                                 </ul>
-                            </div>
+                            </li>
+                        @endforeach
+                        <li class="navigation__item">
+                            <a href="{{ route('home.contact') }}" class="navigation__link">Contact</a>
                         </li>
-                    @endforeach
-                    <li class="mb-2"><a href="{{ route('cart.index') }}" class="nav-link">Cart</a></li>
-                    <li class="mb-2"><a href="{{ route('about.us') }}" class="nav-link">About</a></li>
-                    <li class="mb-2"><a href="{{ route('home.contact') }}" class="nav-link">Contact</a></li>
-                </ul>
-            </div>
+                    </ul>
+                </nav>
 
-            <!-- Social Icons -->
-            <div class="container pb-4">
-                <ul class="list-unstyled d-flex gap-3">
-                    <li>
-                        <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="text-decoration-none">
-                            <svg class="svg-icon" width="9" height="15" viewBox="0 0 9 15" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_facebook" />
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="text-decoration-none">
-                            <svg class="svg-icon" width="14" height="13" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_instagram" />
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.tiktok.com/@trakkiezwear?_t=ZS-8t3QFgCyjjE&_r=1" class="text-decoration-none">
-                            <i class="fab fa-tiktok"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</div>
-
-<header id="header" class="header header-fullwidth header-transparent-bg header-black">
-    <div class="container">
-        <div class="header-desk header-desk_type_1">
-            <div class="logo">
-                <a href="{{ route('home.index') }}">
-                    <img src="{{ asset('assets/images/logo.jpg') }}" alt="Uomo" class="logo__image d-block" />
-                </a>
-            </div>
-
-            <nav class="navigation" style="margin-left: 80px;">
-                <ul class="navigation__list list-unstyled d-flex align-items-center">
-                    <li class="navigation__item">
-                        <a href="{{ route('home.index') }}" class="navigation__link">Home</a>
-                    </li>
-                    <li class="navigation__item">
-                        <a href="{{ route('shop.index') }}" class="navigation__link">Shop</a>
-                    </li>
-                    @foreach ($categories as $category)
-                        <li class="navigation__item dropdown">
-                            <a href="#" class="navigation__link dropdown-toggle" id="{{ $category->slug }}Dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ $category->name }}
+                <div class="header-tools d-flex align-items-center">
+                    <div class="header-tools__item hover-container">
+                        <div class="js-hover__open position-relative">
+                            <a class="js-search-popup search-field__actor" href="javascript:void(0);" aria-label="Open search">
+                                <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#icon_search" />
+                                </svg>
+                                <i class="btn-icon btn-close-lg"></i>
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="{{ $category->slug }}Dropdown">
-                                @foreach ($category->subcategories as $subcategory)
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('home.subcategory', ['category_slug' => $category->slug, 'subcategory_id' => $subcategory->id]) }}">
-                                            {{ $subcategory->name }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </li>
-                    @endforeach
-                    <li class="navigation__item">
-                        <a href="{{ route('home.contact') }}" class="navigation__link">Contact</a>
-                    </li>
-                </ul>
-            </nav>
+                        </div>
 
-            <div class="header-tools d-flex align-items-center">
-                <div class="header-tools__item hover-container">
-                    <div class="js-hover__open position-relative">
-                        <a class="js-search-popup search-field__actor" href="#">
-                            <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_search" />
-                            </svg>
-                            <i class="btn-icon btn-close-lg"></i>
-                        </a>
+                        <div class="search-popup js-hidden-content">
+                            <form action="{{ route('home.search') }}" method="GET" class="search-field container">
+                                <p class="text-uppercase text-secondary fw-medium mb-4">What are you looking for?</p>
+                                <div class="position-relative">
+                                    <input class="search-field__input search-popup__input w-100 fw-medium" type="text" name="search-keyword" id="search-input" placeholder="Search products" autocomplete="off" aria-label="Search products" />
+                                    <button class="btn-icon search-popup__submit" type="submit" aria-label="Submit search">
+                                        <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <use href="#icon_search" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn-icon btn-close-lg search-popup__reset" type="reset" aria-label="Clear search"></button>
+                                </div>
+                                <div class="search-popup__results">
+                                    <ul id="box-content-search"></ul>
+                                </div>
+                            </form>
+                        </div>
                     </div>
 
-                    <div class="search-popup js-hidden-content">
-                        <form action="{{ route('home.search') }}" method="GET" class="search-field container">
-                            <p class="text-uppercase text-secondary fw-medium mb-4">What are you looking for?</p>
-                            <div class="position-relative">
-                                <input class="search-field__input search-popup__input w-100 fw-medium" type="text" name="search-keyword" id="search-input" placeholder="Search products" autocomplete="off" />
-                                <button class="btn-icon search-popup__submit" type="submit">
-                                    <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <use href="#icon_search" />
-                                    </svg>
-                                </button>
-                                <button class="btn-icon btn-close-lg search-popup__reset" type="reset"></button>
-                            </div>
-                            <div class="search-popup__results">
-                                <ul id="box-content-search"></ul>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                    @guest
+                        <div class="header-tools__item hover-container">
+                            <a href="{{ route('login') }}" class="header-tools__item" aria-label="Login">
+                                <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#icon_user" />
+                                </svg>
+                            </a>
+                        </div>
+                    @else
+                        <div class="header-tools__item hover-container">
+                            <a class="header-tools__item" href="{{ auth()->user()->utype == 'ADM' ? route('admin.index') : route('user.index') }}">
+                                <span class="pr-6px">{{ auth()->user()->name }}</span>
+                                <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#icon_user" />
+                                </svg>
+                            </a>
+                        </div>
+                    @endguest
 
-                @guest
-                    <div class="header-tools__item hover-container">
-                        <a href="{{ route('login') }}" class="header-tools__item">
-                            <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_user" />
-                            </svg>
-                        </a>
-                    </div>
-                @else
-                    <div class="header-tools__item hover-container">
-                        <a class="header-tools__item" href="{{ auth()->user()->utype == 'ADM' ? route('admin.index') : route('user.index') }}">
-                            <span class="pr-6px">{{ auth()->user()->name }}</span>
-                            <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_user" />
-                            </svg>
-                        </a>
-                    </div>
-                @endguest
+                    <a href="{{ route('wishlist.index') }}" class="header-tools__item header-tools__cart" aria-label="Wishlist">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <use href="#icon_heart" />
+                        </svg>
+                        @if (Cart::instance('wishlist')->content()->count() > 0)
+                            <span class="cart-amount d-block position-absolute js-cart-items-count">{{ Cart::instance('wishlist')->content()->count() }}</span>
+                        @endif
+                    </a>
 
-                <a href="{{ route('wishlist.index') }}" class="header-tools__item header-tools__cart">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <use href="#icon_heart" />
-                    </svg>
-                    @if (Cart::instance('wishlist')->content()->count() > 0)
-                        <span class="cart-amount d-block position-absolute js-cart-items-count">{{ Cart::instance('wishlist')->content()->count() }}</span>
-                    @endif
-                </a>
-
-    <a href="javascript:void(0);" class="nav-link" id="cart-icon" data-bs-toggle="modal" data-bs-target="#cartModal">
-        <i class="bi bi-cart"></i>
-        <span class="badge bg-primary cart-quantity">0</span>
-    </a>
-            </div>
-        </div>
-    </div>
-</header>
-
-@yield("content")
-
-<hr class="mt-5 text-secondary" />
-
-<footer class="footer footer_type_2">
-    <div class="footer-middle container">
-        <div class="row row-cols-lg-5 row-cols-2">
-            <div class="footer-column footer-store-info col-12 mb-4 mb-lg-0">
-                <div class="logo">
-                    <a href="{{ route('home.index') }}">
-                        <img src="{{ asset('assets/images/logo w.jpg') }}" alt="Trakkiez" class="logo__image d-block" />
+                    <a href="javascript:void(0);" class="nav-link" id="cart-icon" data-bs-toggle="modal" data-bs-target="#cartModal" aria-label="Open cart">
+                        <i class="bi bi-cart"></i>
+                        <span class="badge bg-primary cart-quantity">0</span>
                     </a>
                 </div>
-                <p class="m-0"><strong class="fw-medium">trakkiezstore@gmail.com</strong></p>
-                <p><strong class="fw-medium">+923249485029</strong></p>
-                <ul class="social-links list-unstyled d-flex flex-wrap mb-0">
-                    <li>
-                        <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="footer__social-link d-block">
-                            <svg class="svg-icon svg-icon_facebook" width="9" height="15" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_facebook" />
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="footer__social-link d-block">
-                            <svg class="svg-icon svg-icon_instagram" width="14" height="13" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_instagram" />
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.tiktok.com/@trakkiezwear?_t=ZS-8t3QFgCyjjE&_r=1" class="footer__social-link d-block">
-                            <i class="fa-brands fa-tiktok"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="footer-column footer-menu mb-4 mb-lg-0">
-                <h6 class="sub-menu__title text-uppercase">Company</h6>
-                <ul class="sub-menu__list list-unstyled">
-                    <li class="sub-menu__item"><a href="{{ route('about.us') }}" class="menu-link menu-link_us-s">About Us</a></li>
-                    <li class="sub-menu__item"><a href="{{ route('home.contact') }}" class="menu-link menu-link_us-s">Contact Us</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-column footer-menu mb-4 mb-lg-0">
-                <h6 class="sub-menu__title text-uppercase">Shop</h6>
-                <ul class="sub-menu__list list-unstyled">
-                    <li class="sub-menu__item"><a href="{{ route('shop.index') }}" class="menu-link menu-link_us-s">Shop All</a></li>
-                </ul>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Footer Bottom -->
-    <div class="footer-bottom" style="padding-bottom: 4rem">
-        <div class="container d-md-flex align-items-center">
-            <span class="me-auto d-flex align-items-center">
-                ©2025 Trakkiez Store
-                <div class="fab-container ms-3">
-                    <div id="fabIcons" class="fab-icons">
-                        <a href="https://wa.me/923249485029" target="_blank" class="fab-icon whatsapp" title="WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                            <span class="tooltip">WhatsApp</span>
-                        </a>
-                        <a href="tel:923249485029" class="fab-icon phone" title="Call Us">
-                            <i class="fas fa-phone"></i>
-                            <span class="tooltip">Call Us</span>
+    @yield("content")
+
+    <hr class="mt-5 text-secondary" />
+
+    <footer class="footer footer_type_2">
+        <div class="footer-middle container">
+            <div class="row row-cols-lg-5 row-cols-2">
+                <div class="footer-column footer-store-info col-12 mb-4 mb-lg-0">
+                    <div class="logo">
+                        <a href="{{ route('home.index') }}">
+                            <img src="{{ asset('assets/images/logo.webp') }}" alt="Trakkiez" class="logo__image d-block" />
                         </a>
                     </div>
-                    <div id="fabButton" class="fab-button">
-                        <i class="fas fa-times"></i>
-                    </div>
+                    <p class="m-0"><strong class="fw-medium">trakkiezstore@gmail.com</strong></p>
+                    <p><strong class="fw-medium">+923249485029</strong></p>
+                    <ul class="social-links list-unstyled d-flex flex-wrap mb-0">
+                        <li>
+                            <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="footer__social-link d-block">
+                                <svg class="svg-icon svg-icon_facebook" width="9" height="15" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#icon_facebook" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="footer__social-link d-block">
+                                <svg class="svg-icon svg-icon_instagram" width="14" height="13" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#icon_instagram" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.tiktok.com/@trakkiezwear?_t=ZS-8t3QFgCyjjE&_r=1" class="footer__social-link d-block">
+                                <i class="fa-brands fa-tiktok"></i>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-            </span>
-            <div class="footer-settings d-md-flex align-items-center">
-                <a href="{{ route('privacy.policy') }}">Privacy Policy</a>  | 
-                <a href="{{ route('terms.condition') }}">Terms & Conditions</a>  | 
-                <a href="https://www.shopify.com/?utm_campaign=poweredby&utm_medium=shopify&utm_source=onlinestore">Powered By Shopify</a>  | 
-                <a href="{{ route('return.policy') }}">Return Policy</a>
+
+                <div class="footer-column footer-menu mb-4 mb-lg-0">
+                    <h6 class="sub-menu__title text-uppercase">Company</h6>
+                    <ul class="sub-menu__list list-unstyled">
+                        <li class="sub-menu__item"><a href="{{ route('about.us') }}" class="menu-link menu-link_us-s">About Us</a></li>
+                        <li class="sub-menu__item"><a href="{{ route('home.contact') }}" class="menu-link menu-link_us-s">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column footer-menu mb-4 mb-lg-0">
+                    <h6 class="sub-menu__title text-uppercase">Shop</h6>
+                    <ul class="sub-menu__list list-unstyled">
+                        <li class="sub-menu__item"><a href="{{ route('shop.index') }}" class="menu-link menu-link_us-s">Shop All</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
 
-<footer class="footer-mobile container w-100 px-5 d-md-none bg-body">
-    <div class="row text-center">
-        <div class="col-4">
-            <a href="{{ route('home.index') }}" class="footer-mobile__link d-flex flex-column align-items-center">
-                <svg class="d-block" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <use href="#icon_home" />
-                </svg>
-                <span>Home</span>
-            </a>
+        <div class="footer-bottom" style="padding-bottom: 4rem">
+            <div class="container d-md-flex align-items-center">
+                <span class="me-auto d-flex align-items-center">
+                    ©2025 Trakkiez Store
+                    <div class="fab-container ms-3">
+                        <div id="fabIcons" class="fab-icons">
+                            <a href="https://wa.me/923249485029" target="_blank" class="fab-icon whatsapp" title="WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                                <span class="tooltip">WhatsApp</span>
+                            </a>
+                            <a href="tel:923249485029" class="fab-icon phone" title="Call Us">
+                                <i class="fas fa-phone"></i>
+                                <span class="tooltip">Call Us</span>
+                            </a>
+                        </div>
+                        <div id="fabButton" class="fab-button">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                </span>
+                <div class="footer-settings d-md-flex align-items-center">
+                    <a href="{{ route('privacy.policy') }}">Privacy Policy</a>  | 
+                    <a href="{{ route('terms.condition') }}">Terms & Conditions</a>  | 
+                    <a href="https://www.shopify.com/?utm_campaign=poweredby&utm_medium=shopify&utm_source=onlinestore">Powered By Shopify</a>  | 
+                    <a href="{{ route('return.policy') }}">Return Policy</a>
+                </div>
+            </div>
         </div>
+    </footer>
 
-        <div class="col-4">
-            <a href="{{ route('shop.index') }}" class="footer-mobile__link d-flex flex-column align-items-center">
-                <svg class="d-block" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <use href="#icon_hanger" />
-                </svg>
-                <span>Shop</span>
-            </a>
-        </div>
-
-        <div class="col-4">
-            <a href="{{ route('wishlist.index') }}" class="footer-mobile__link d-flex flex-column align-items-center">
-                <div class="position-relative">
-                    <svg class="d-block" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <use href="#icon_heart" />
+    <footer class="footer-mobile container w-100 px-5 d-md-none bg-body">
+        <div class="row text-center">
+            <div class="col-4">
+                <a href="{{ route('home.index') }}" class="footer-mobile__link d-flex flex-column align-items-center">
+                    <svg class="d-block" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <use href="#icon_home" />
                     </svg>
-                    @if (Cart::instance('wishlist')->content()->count() > 0)
-                        <span class="cart-amount d-block position-absolute js-cart-items-count">{{ Cart::instance('wishlist')->content()->count() }}</span>
-                    @endif
-                </div>
-                <span>Wishlist</span>
-            </a>
-        </div>
-    </div>
-</footer>
-
-<div class="visually-hidden end-0"></div>
-<div class="page-overlay"></div>
-
-<script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/bootstrap-slider.min.js') }}"></script>
-<script src="{{ asset('js/sweetalert.min.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/swiper.min.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/countdown.js') }}"></script>
-<script src="{{ asset('assets/js/theme.js') }}"></script>
-
-<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cartModalLabel">Shopping Cart</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <span>Home</span>
+                </a>
             </div>
-            <div class="modal-body">
-                <div id="cart-modal-content">
-                    <!-- Cart content will be loaded here via AJAX -->
-                </div>
+
+            <div class="col-4">
+                <a href="{{ route('shop.index') }}" class="footer-mobile__link d-flex flex-column align-items-center">
+                    <svg class="d-block" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <use href="#icon_hanger" />
+                    </svg>
+                    <span>Shop</span>
+                </a>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Shopping</button>
-                <a href="{{ route('cart.checkout') }}" class="btn btn-primary btn-checkout">Proceed to Checkout</a>
+
+            <div class="col-4">
+                <a href="{{ route('wishlist.index') }}" class="footer-mobile__link d-flex flex-column align-items-center">
+                    <div class="position-relative">
+                        <svg class="d-block" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <use href="#icon_heart" />
+                        </svg>
+                        @if (Cart::instance('wishlist')->content()->count() > 0)
+                            <span class="cart-amount d-block position-absolute js-cart-items-count">{{ Cart::instance('wishlist')->content()->count() }}</span>
+                        @endif
+                    </div>
+                    <span>Wishlist</span>
+                </a>
             </div>
         </div>
+    </footer>
+
+    <!-- Cart Modal (Single Definition) -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Shopping Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cart-modal-content">
+                        <!-- Cart content loaded via AJAX -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Shopping</button>
+                    <a href="{{ route('cart.checkout') }}" class="btn btn-primary btn-checkout">Proceed to Checkout</a>
+                    <button type="button" class="btn btn-danger" id="clear-cart">Clear Cart</button>
+                </div>
+            </div>
+        </div>
     </div>
-<script>
+
+    <div class="visually-hidden end-0"></div>
+    <div class="page-overlay"></div>
+
+    <!-- Scripts (Moved after jQuery) -->
+    <script src="{{ asset('assets/js/plugins/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/bootstrap-slider.min.js') }}"></script>
+    <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/swiper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/countdown.js') }}"></script>
+    <script src="{{ asset('assets/js/theme.js') }}"></script>
+
+    <!-- Consolidated JavaScript -->
+    <script>
+(function() { // IIFE to avoid global conflicts
+    // FAB Button Toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const fabButton = document.getElementById('fabButton');
+        const fabIcons = document.getElementById('fabIcons');
+
+        if (fabButton && fabIcons) {
+            fabButton.addEventListener('click', () => {
+                fabIcons.style.display = fabIcons.style.display === 'flex' ? 'none' : 'flex';
+            });
+
+            const fabContainer = document.querySelector('.fab-container');
+            window.addEventListener('scroll', () => {
+                fabContainer.style.opacity = '1';
+                fabContainer.style.visibility = 'visible';
+            });
+        }
+    });
+
+    // Mobile Navigation
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileNav = document.getElementById('mobileNav');
+        const navLinks = mobileNav?.querySelectorAll('.navigation__link');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+
+        if (mobileNav && navLinks && navbarToggler) {
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
+                    bsCollapse.hide();
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!mobileNav.contains(e.target) && !navbarToggler.contains(e.target) && mobileNav.classList.contains('show')) {
+                    const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
+                    bsCollapse.hide();
+                }
+            });
+        }
+    });
+
+    // Swiper Initialization
+    document.addEventListener('DOMContentLoaded', function() {
+        let swiperElements = document.querySelectorAll('.js-swiper-slider');
+        swiperElements.forEach(function(element) {
+            let settings = JSON.parse(element.dataset.settings || '{}');
+            new Swiper(element, settings);
+        });
+    });
+
+    // Fix Layout
+    document.addEventListener('DOMContentLoaded', function() {
+        const elements = [
+            '.header-mobile',
+            '.banner-section',
+            '.banner-slider',
+            '.navigation',
+            '.mobile-nav'
+        ];
+
+        // elements.forEach(selector => {
+        //     const element = document.querySelector(selector);
+        //     if (element) {
+        //         element.style.margin = '0';
+        //         element.style.padding = '0';
+        //         element.style.position = 'relative';
+        //         element.style.width = '100%';
+        //     }
+        // });
+
+        const banner = document.querySelector('.banner-section');
+        if (banner) {
+            banner.style.display = 'none';
+            banner.offsetHeight;
+            banner.style.display = '';
+        }
+    });
+
+    // jQuery-dependent code
     $(document).ready(function() {
+        // Search Functionality
         $("#search-input").on("keyup", function() {
             const searchQuery = $(this).val();
-
             if (searchQuery.length > 2) {
                 $.ajax({
                     type: "GET",
@@ -651,11 +730,9 @@
                     dataType: "json",
                     success: function(data) {
                         $("#box-content-search").empty();
-
                         $.each(data, function(index, item) {
                             const url = "{{ route('shop.product.details', ['product_slug' => '__slug__']) }}".replace('__slug__', item.slug);
-                            const imageUrl = "{{ asset('uploads/products/thumbnails') }}/" + item.image;
-
+                            const imageUrl = "{{ asset('Uploads/products/thumbnails') }}/" + item.image;
                             $("#box-content-search").append(`
                                 <li>
                                     <ul>
@@ -676,140 +753,151 @@
                                 </li>
                             `);
                         });
+                    },
+                    error: function(xhr) {
+                        console.error('Search error:', xhr.responseText);
+                        $("#box-content-search").html('<li class="text-danger">Error loading search results.</li>');
                     }
                 });
+            } else {
+                $("#box-content-search").empty();
             }
         });
-    });
-</script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const fabButton = document.getElementById('fabButton');
-        const fabIcons = document.getElementById('fabIcons');
-
-        fabButton.addEventListener('click', () => {
-            fabIcons.style.display = fabIcons.style.display === 'flex' ? 'none' : 'flex';
+        // Toggle Search Popup
+        $('.js-search-popup').on('click', function(e) {
+            e.preventDefault();
+            $('.search-popup').toggleClass('js-hidden-content');
         });
 
-        const fabContainer = document.querySelector('.fab-container');
-        window.addEventListener('scroll', () => {
-            fabContainer.style.opacity = '1';
-            fabContainer.style.visibility = 'visible';
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileNav = document.getElementById('mobileNav');
-        const navLinks = mobileNav.querySelectorAll('.navigation__link');
-        const navbarToggler = document.querySelector('.navbar-toggler');
-
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
-                bsCollapse.hide();
-            });
+        $('.search-popup__reset').on('click', function() {
+            $('#search-input').val('');
+            $("#box-content-search").empty();
+            $('.search-popup').addClass('js-hidden-content');
         });
 
-        document.addEventListener('click', (e) => {
-            if (!mobileNav.contains(e.target) && !navbarToggler.contains(e.target) && mobileNav.classList.contains('show')) {
-                const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
-                bsCollapse.hide();
-            }
-        });
-    });
-</script>
-
-<!-- Initialize Swiper correctly in your JS -->
-<script>
-
-    document.addEventListener('DOMContentLoaded', function() {
-        let swiperElements = document.querySelectorAll('.js-swiper-slider');
-        
-        swiperElements.forEach(function(element) {
-            let settings = JSON.parse(element.dataset.settings || '{}');
-            
-        
-            new Swiper(element, settings);
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function fixLayout() {
-            const elements = [
-                '.header-mobile',
-                '.banner-section',
-                '.banner-slider',
-                '.navigation',
-                '.mobile-nav'
-            ];
-
-            elements.forEach(selector => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    element.style.margin = '0';
-                    element.style.padding = '0';
-                    element.style.position = 'relative';
-                    element.style.width = '100%';
+        // Cart Modal Functionality
+        window.updateCartCount = function() {
+            console.log('updateCartCount called'); // Debug
+            $.ajax({
+                url: "{{ route('cart.count') }}",
+                method: 'GET',
+                success: function(response) {
+                    console.log('Cart count response:', response); // Debug
+                    $('.cart-quantity').text(response.count);
+                },
+                error: function(xhr) {
+                    console.error('Cart count error:', xhr.responseText);
+                    $('.cart-quantity').text('0');
                 }
             });
+        };
 
-            const banner = document.querySelector('.banner-section');
-            if (banner) {
-                banner.style.display = 'none';
-                banner.offsetHeight; 
-                banner.style.display = '';
-            }
-        }
+        window.loadCartContent = function() {
+            console.log('loadCartContent called'); // Debug
+            $.ajax({
+                url: "{{ route('cart.partial') }}",
+                method: 'GET',
+                success: function(response) {
+                    $('#cart-modal-content').html(response);
+                },
+                error: function(xhr) {
+                    console.error('Cart content error:', xhr.responseText);
+                    $('#cart-modal-content').html('<p class="text-danger">Unable to load cart content.</p>');
+                }
+            });
+        };
+
+        // Initialize cart count
+        window.updateCartCount();
+
+        // Open cart modal
+        $('#cart-icon, #cart-icon-mobile').on('click', function() {
+            window.loadCartContent();
+            $('#cartModal').modal('show');
+        });
+
+        // Handle modal close focus for accessibility
+        $('#cartModal').on('hidden.bs.modal', function() {
+            $('#cart-icon').focus();
+        });
+
+        // Quantity update
+        $(document).on('click', '.cart-qty-increase, .cart-qty-reduce', function() {
+            const button = $(this);
+            const rowId = button.data('row-id');
+            const currentQty = parseInt(button.siblings('.cart-qty-input').val());
+            const newQty = button.hasClass('cart-qty-increase') ? currentQty + 1 : currentQty - 1;
+
+            if (newQty < 1) return;
+
+            $.ajax({
+                url: '{{ route('cart.update') }}',
+                method: 'POST',
+                data: { rowId: rowId, quantity: newQty, _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        $('#cart-modal-content').html(response.content);
+                        window.updateCartCount();
+                    } else {
+                        $('#stock-error-' + rowId).text(response.message || 'Failed to update quantity').fadeIn().delay(2000).fadeOut();
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Quantity update error:', xhr.responseText);
+                    $('#stock-error-' + rowId).text(xhr.responseJSON?.message || 'Failed to update quantity').fadeIn().delay(2000).fadeOut();
+                }
+            });
+        });
+
+        // Remove item
+        $(document).on('click', '.cart-remove-item', function() {
+            const rowId = $(this).data('row-id');
+            $.ajax({
+                url: '{{ route('cart.remove') }}',
+                method: 'POST',
+                data: { rowId: rowId, _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        $('#cart-modal-content').html(response.content);
+                        window.updateCartCount();
+                    } else {
+                        Swal.fire('Error', response.message || 'Failed to remove item', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Remove item error:', xhr.responseText);
+                    Swal.fire('Error', xhr.responseJSON?.message || 'Failed to remove item', 'error');
+                }
+            });
+        });
+
+        // Clear cart
+        $(document).on('click', '#clear-cart', function() {
+            $.ajax({
+                url: '{{ route('cart.clear') }}',
+                method: 'POST',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        $('#cart-modal-content').html(response.content);
+                        window.updateCartCount();
+                        $('#cartModal').modal('hide');
+                        Swal.fire('Success', 'Cart cleared successfully', 'success');
+                    } else {
+                        Swal.fire('Error', response.message || 'Failed to clear cart', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Clear cart error:', xhr.responseText);
+                    Swal.fire('Error', xhr.responseJSON?.message || 'Failed to clear cart', 'error');
+                }
+            });
+        });
     });
-
+})();
 </script>
 
-<script defer>
-$(document).ready(function() {
-    // Update cart count on page load
-    updateCartCount();
-
-    // Open modal when cart icon is clicked
-    $('#cart-icon').on('click', function() {
-        loadCartContent();
-        $('#cartModal').modal('show');
-    });
-
-    // Load cart content via AJAX
-    function loadCartContent() {
-        $.ajax({
-            url: "{{ route('cart.partial') }}",
-            method: 'GET',
-            success: function(response) {
-                $('#cart-modal-content').html(response);
-            },
-            error: function(xhr) {
-                $('#cart-modal-content').html('<p class="text-danger">Unable to load cart content.</p>');
-            }
-        });
-    }
-
-    // Update cart count
-    function updateCartCount() {
-        $.ajax({
-            url: "{{ route('cart.count') }}",
-            method: 'GET',
-            success: function(response) {
-                $('.cart-quantity').text(response.count);
-            },
-            error: function(xhr) {
-                $('.cart-quantity').text('0');
-            }
-        });
-    }
-});
-</script>
-
-@stack("scripts")
+    @stack("scripts")
 </body>
 </html>
