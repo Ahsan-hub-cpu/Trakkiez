@@ -11,14 +11,13 @@ class Product extends Model
         'image', 'images', 'size_chart', 'category_id', 'brand_id', 'subcategory_id'
     ];
 
-    protected $casts = [
-        'images' => 'array', // Cast JSON text to PHP array
-    ];
-    
-    // Accessor to get first image from `images` array
-    public function getFirstImageAttribute()
+    public function getHoverImageAttribute()
     {
-        return !empty($this->images) && is_array($this->images) ? $this->images[0] : null;
+        if (!empty($this->images)) {
+            $galleryImages = explode(',', $this->images);
+            return count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
+        }
+        return 'default-hover.jpg';
     }
     
 

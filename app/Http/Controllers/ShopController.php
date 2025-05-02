@@ -11,7 +11,8 @@ class ShopController extends Controller
 {
     public function index(Request $request)
     {
-        $productsQuery = Product::query();
+        $productsQuery = Product::query()->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'created_at', 'featured', 'category_id')
+                                       ->with(['category', 'productVariations.size']);
         
         if ($request->query('filter') === 'featured') {
             $productsQuery->where('featured', true);
@@ -21,10 +22,8 @@ class ShopController extends Controller
             $productsQuery->whereNotNull('sale_price');
         }
 
-        if ($request->has('subcategory')) {
-            $productsQuery->whereHas('subCategory', function ($query) use ($request) {
-                $query->where('id', $request->subcategory);
-            });
+        if ($request->has('category')) {
+            $productsQuery->where('category_id', $request->category);
         }
 
         if ($request->has('size')) {
@@ -35,14 +34,7 @@ class ShopController extends Controller
 
         if ($request->has('price_from') || $request->has('price_to')) {
             $priceFrom = $request->get('price_from', 0);
-            $priceTo = $request->get('price_to', null);
-
-            if (!$priceTo) {
-                $maxRegular = Product::max('regular_price');
-                $maxSale = Product::whereNotNull('sale_price')->max('sale_price');
-                $priceTo = max($maxRegular, $maxSale);
-            }
-
+            $priceTo = $request->get('price_to', max(Product::max('regular_price'), Product::whereNotNull('sale_price')->max('sale_price') ?? 0));
             $productsQuery->whereRaw("IFNULL(sale_price, regular_price) BETWEEN ? AND ?", [$priceFrom, $priceTo]);
         } elseif ($request->has('price')) {
             $priceRange = explode('-', $request->price);
@@ -64,11 +56,9 @@ class ShopController extends Controller
                     $productsQuery->orderBy('name', 'desc');
                     break;
                 case 'price-low-high':
-                   
                     $productsQuery->orderByRaw("IFNULL(sale_price, regular_price) ASC");
                     break;
                 case 'price-high-low':
-        
                     $productsQuery->orderByRaw("IFNULL(sale_price, regular_price) DESC");
                     break;
                 default:
@@ -79,34 +69,32 @@ class ShopController extends Controller
             $productsQuery->orderBy('created_at', 'desc');
         }
 
-        $categories = Category::with('subCategories')->get();
+        $categories = Category::all();
         $sizes = Sizes::all();
+        $maxPrice = max(Product::max('regular_price'), Product::whereNotNull('sale_price')->max('sale_price') ?? 0);
 
-        $maxRegular = Product::max('regular_price');
-        $maxSale = Product::whereNotNull('sale_price')->max('sale_price');
-        $maxPrice = max($maxRegular, $maxSale);
-
-        if (
-            $request->has('size') ||
-            $request->has('price') ||
-            $request->has('price_from') ||
-            $request->has('price_to') ||
-            $request->has('sort') ||
-            $request->has('subcategory')
-        ) {
-            $products = $productsQuery->get();
-        } else {
-            $products = $productsQuery->paginate(12);
-        }
+        $products = ($request->has('size') || $request->has('price') || $request->has('price_from') || 
+                     $request->has('price_to') || $request->has('sort') || $request->has('category'))
+            ? $productsQuery->get()
+            : $productsQuery->paginate(12);
       
         return view('shop', compact('products', 'categories', 'sizes', 'maxPrice'));
     }
 
     public function product_details($product_slug)
     {
-        $product = Product::where("slug", $product_slug)->first();
-        $rproducts = Product::where("slug", "<>", $product_slug)->take(8)->get();
-        return view('details', compact("product", "rproducts"));
-    }
+        $product = Product::where('slug', $product_slug)
+                         ->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'description', 'short_description', 'SKU', 'category_id')
+                         ->with(['category', 'productVariations.size'])
+                         ->firstOrFail();
 
+        $rproducts = Product::where('slug', '<>', $product_slug)
+                           ->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'category_id')
+                           ->with(['category', 'productVariations.size'])
+                           ->inRandomOrder()
+                           ->take(8)
+                           ->get();
+
+        return view('details', compact('product', 'rproducts'));
+    }
 }

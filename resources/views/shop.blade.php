@@ -5,64 +5,7 @@
   .filled-heart { color: orange; }
   .slideshow-bg { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
   .slideshow-bg__img { width: 100%; height: 100%; object-fit: contain; }
-  /*.category-header {*/
-  /*  border-bottom: 1px solid #e0e0e0;*/
-  /*  background-color: #f8f9fa;*/
-  /*}*/
-  /*.category-link {*/
-  /*  padding: 8px 12px;*/
-  /*  display: inline-block;*/
-  /*  transition: all 0.3s ease;*/
-  /*}*/
-  /*.category-link:hover {*/
-  /*  background-color: #ff6f61;*/
-  /*  color: #fff !important;*/
-  /*}*/
-  /*.subcategories {*/
-  /*  display: none;*/
-  /*  position: absolute; */
-  /*  top: 100%;*/
-  /*  left: 0;*/
-  /*  min-width: 200px;*/
-  /*  z-index: 1000;*/
-  /*  border-radius: 8px;*/
-  /*  background-color: #fff; */
-  /*  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
-  /*}*/
-  /*.list-inline-item:hover .subcategories {*/
-  /*  display: block;*/
-  /*}*/
-  /*.subcategories li {*/
-  /*  margin: 5px 0;*/
-  /*}*/
-  /*.subcategories a:hover {*/
-  /*  color: #ff6f61 !important;*/
-  /*}*/
-  /*.hover-bg:hover {*/
-  /*  background-color: #f8f9fa;*/
-  /*  color: #ff6f61 !important;*/
-  /*}*/
  
-  /*.category-header .list-inline {*/
-  /*  display: flex;*/
-  /*  justify-content: center;*/
-  /*  flex-wrap: wrap;*/
-  /*}*/
-  /*.category-header .list-inline-item {*/
-  /*  display: flex;*/
-  /*  align-items: center;*/
-  /*  margin: 0 10px; */
-  /*}*/
-  /*.category-header .list-inline-item a {*/
-  /*  display: inline-block;*/
-  /*  padding: 10px 15px;*/
-  /*}*/
-  /*.category-header .category-link, */
-  /*.category-header .list-inline-item a {*/
-  /*  text-align: center;*/
-  /*  margin-bottom: 0;*/
-  /*}*/
-  
   .product-card { 
     background: transparent; 
     border: none; 
@@ -139,220 +82,7 @@
     border-radius: 5px;
     z-index: 10;
   }
-  /* .trakkiez-category-header {*/
-  /*  position: relative;*/
-  /*  background: white;*/
-  /*  box-shadow: 0 2px 4px rgba(0,0,0,0.05);*/
-  /*  border-bottom: 1px solid #e0e0e0;*/
-  /*}*/
-  /*.trakkiez-category-list {*/
-  /*  display: flex;*/
-  /*  align-items: center;*/
-  /*  justify-content: center;*/
-  /*  padding: 0;*/
-  /*  margin: 0;*/
-  /*  list-style: none;*/
-  /*}*/
-  
-  /* Mobile Styles */
-  @media (max-width: 768px) {
-   
-  /*} .trakkiez-category-header {*/
-  /*    overflow-x: auto;*/
-  /*    -webkit-overflow-scrolling: touch;*/
-  /*    scrollbar-width: none;*/
-  /*    -ms-overflow-style: none;*/
-  /*  }*/
-  /*  .trakkiez-category-header::-webkit-scrollbar {*/
-  /*    display: none;*/
-  /*  }*/
-  /*  .trakkiez-category-list {*/
-  /*    flex-wrap: nowrap;*/
-  /*    justify-content: flex-start;*/
-  /*    padding: 0 15px;*/
-  /*    width: auto;*/
-  /*    min-width: min-content;*/
-  /*  }*/
-  /*  .trakkiez-category-item {*/
-  /*    flex: 0 0 auto;*/
-  /*    position: relative;*/
-  /*  }*/
-  /*  .trakkiez-subcategories {*/
-  /*    position: absolute;*/
-  /*    top: 100%;*/
-  /*    left: 0;*/
-  /*    min-width: 200px;*/
-  /*    background: white;*/
-  /*    box-shadow: 0 4px 12px rgba(0,0,0,0.1);*/
-  /*    border-radius: 8px;*/
-  /*    z-index: 1000;*/
-  /*    margin-top: 5px;*/
-  /*  }*/
-  /*  .trakkiez-category-link[data-has-dropdown].active::after {*/
-  /*    transform: rotate(-135deg);*/
-  /*  }*/
-  /*}*/
-
-  /* Desktop Styles */
-  /*@media (min-width: 769px) {*/
-  /*  .trakkiez-category-list {*/
-  /*    flex-wrap: wrap;*/
-  /*    gap: 10px;*/
-  /*  }*/
-  /*}*/
-
-  /*.trakkiez-category-item {*/
-  /*  position: relative;*/
-  /*  margin: 0 5px;*/
-  /*}*/
-  /*.trakkiez-category-link {*/
-  /*  display: flex;*/
-  /*  align-items: center;*/
-  /*  padding: 12px 20px;*/
-  /*  color: #333;*/
-  /*  text-decoration: none;*/
-  /*  border-radius: 4px;*/
-  /*  transition: all 0.3s ease;*/
-  /*  font-weight: 500;*/
-  /*  position: relative;*/
-  /*  cursor: pointer;*/
-  /*  white-space: nowrap;*/
-  /*}*/
-  /*.trakkiez-category-link:hover {*/
-  /*  background-color: #ff6f61;*/
-  /*  color: #fff;*/
-  /*}*/
-  /*.trakkiez-subcategories {*/
-  /*  display: none;*/
-  /*  position: absolute;*/
-  /*  top: 100%;*/
-  /*  left: 0;*/
-  /*  min-width: 200px;*/
-  /*  background: white;*/
-  /*  box-shadow: 0 4px 12px rgba(0,0,0,0.1);*/
-  /*  border-radius: 8px;*/
-  /*  z-index: 1000;*/
-  /*  padding: 8px 0;*/
-  /*  opacity: 0;*/
-  /*  visibility: hidden;*/
-  /*  transition: all 0.3s ease;*/
-  /*}*/
-  /*.trakkiez-subcategories.active {*/
-  /*  display: block;*/
-  /*  opacity: 1;*/
-  /*  visibility: visible;*/
-  /*}*/
-  /*.trakkiez-subcategory-link {*/
-  /*  display: block;*/
-  /*  padding: 10px 20px;*/
-  /*  color: #555;*/
-  /*  text-decoration: none;*/
-  /*  transition: all 0.2s ease;*/
-  /*  font-size: 0.95em;*/
-  /*  white-space: nowrap;*/
-  /*}*/
-  /*.trakkiez-subcategory-link:hover {*/
-  /*  background-color: #f8f9fa;*/
-  /*  color: #ff6f61;*/
-  /*  padding-left: 25px;*/
-  /*}*/
-  
-  /* Arrow indicator for dropdown */
-  /*.trakkiez-category-link[data-has-dropdown]::after {*/
-  /*  content: '';*/
-  /*  display: inline-block;*/
-  /*  width: 6px;*/
-  /*  height: 6px;*/
-  /*  border-right: 2px solid #666;*/
-  /*  border-bottom: 2px solid #666;*/
-  /*  margin-left: 8px;*/
-  /*  transform: rotate(45deg);*/
-  /*  transition: transform 0.2s ease;*/
-  /*  position: relative;*/
-  /*  top: -2px;*/
-  /*}*/
-  /*.trakkiez-category-link[data-has-dropdown].active::after {*/
-  /*  transform: rotate(-135deg);*/
-  /*  top: 0;*/
-  /*  border-color: #fff;*/
-  /*}*/
-  /* Container styles */
-  /*.container {*/
-  /*  max-width: 1200px;*/
-  /*  margin: 0 auto;*/
-  /*  padding: 0 30px;*/
-  /*}*/
-  /* Animation for dropdown */
-  /*@keyframes fadeInUp {*/
-  /*  from {*/
-  /*    opacity: 0;*/
-  /*    transform: translate(-50%, 10px);*/
-  /*  }*/
-  /*  to {*/
-  /*    opacity: 1;*/
-  /*    transform: translate(-50%, 0);*/
-  /*  }*/
-  /*}*/
-  /*.trakkiez-category-item:hover .trakkiez-subcategories {*/
-  /*  animation: fadeInUp 0.3s ease forwards;*/
-  /*}*/
-
-  /*@media (max-width: 768px) {*/
-  /*  @keyframes fadeInUp {*/
-  /*    from {*/
-  /*      opacity: 0;*/
-  /*      transform: translate(-50%, 10px);*/
-  /*    }*/
-  /*    to {*/
-  /*      opacity: 1;*/
-  /*      transform: translate(-50%, 0);*/
-  /*    }*/
-  /*  }*/
-</style>
-
-<!--<div class="trakkiez-category-header bg-light py-3 shadow-sm mb-4">-->
-<!--        <div class="container">-->
-<!--        <ul class="trakkiez-category-list">-->
-<!--            @foreach ($categories as $category)-->
-<!--            <li class="trakkiez-category-item">-->
-<!--                <a href="#" class="trakkiez-category-link" -->
-<!--                   @if($category->subCategories->count() > 0) data-has-dropdown="true" @endif-->
-<!--                   data-category="{{ $category->id }}">-->
-<!--                  {{ $category->name }}-->
-<!--                </a>-->
-<!--                @if ($category->subCategories->count() > 0)-->
-<!--                <ul class="trakkiez-subcategories" id="subcategories-{{ $category->id }}">-->
-<!--                    @foreach ($category->subCategories as $subCategory)-->
-<!--                      <li>-->
-<!--                        <a href="{{ route('shop.index', ['subcategory' => $subCategory->id]) }}" -->
-<!--                           class="trakkiez-subcategory-link">-->
-<!--                          {{ $subCategory->name }}-->
-<!--                        </a>-->
-<!--                      </li>-->
-<!--                    @endforeach-->
-<!--                  </ul>-->
-<!--                @endif-->
-<!--              </li>-->
-<!--            @endforeach-->
-      
-<!--            <li class="trakkiez-category-item">-->
-<!--                <a href="{{ route('shop.index', ['filter' => 'hot-deals']) }}" class="trakkiez-category-link">-->
-<!--                Hot Deals-->
-<!--              </a>-->
-<!--            </li>-->
-<!--            <li class="trakkiez-category-item">-->
-<!--                <a href="{{ route('shop.index', ['filter' => 'featured']) }}" class="trakkiez-category-link">-->
-<!--                Featured Products-->
-<!--              </a>-->
-<!--            </li>-->
-<!--            <li class="trakkiez-category-item">-->
-<!--                <a href="{{ route('shop.index', ['filter' => 'new-arrivals']) }}" class="trakkiez-category-link">-->
-<!--                New Arrivals-->
-<!--              </a>-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </div>-->
-<!--      </div>-->
+  </style>
 
 <div class="container mb-4">
   <div class="row">
@@ -385,7 +115,7 @@
   </div>
 </div>
 
-@if(request()->has('subcategory') || request()->has('size') || request()->has('price_from') || request()->has('price_to') || request()->has('sort'))
+@if(request()->has('category') || request()->has('size') || request()->has('price_from') || request()->has('price_to') || request()->has('sort'))
   <div class="text-center mt-3">
     <a href="{{ route('shop.index') }}" class="btn btn-outline-dark">Clear Filter</a>
   </div>
@@ -415,86 +145,84 @@
                     <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" 
                         alt="{{ $product->name }}" 
                         class="pc__img primary-img card-img-top rounded">
-                    
-                    @php
-                        $galleryImages = explode(',', $product->images); // Split gallery images
-                        $hoverImage = count($galleryImages) > 0 ? $galleryImages[0] : null; // Pick the first one
-                    @endphp
-                    @if($hoverImage)
-                        <img loading="lazy" src="{{ asset('uploads/products/' . $hoverImage) }}" 
+                    @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
+                        <img loading="lazy" src="{{ asset('uploads/products/' . $product->hover_image) }}" 
                             width="330" height="400" 
                             alt="{{ $product->name }}" 
                             class="secondary-img">
                     @endif
                 </a>
-            </a>
-            @if($product->quantity <= 0)
-              <div class="sold-out-badge">Sold Out</div>
-            @endif
-            @if($product->quantity > 0)
-              @if(Cart::instance("cart")->content()->where('id', $product->id)->count() > 0)
-                <a href="{{ route('cart.index') }}" class="pc__atc btn btn-sm btn-outline-dark position-absolute bottom-0 start-50 translate-middle-x mb-2">
-                  Go to Cart
+                @if($product->quantity <= 0)
+                  <div class="sold-out-badge">Sold Out</div>
+                @endif
+                @if($product->quantity > 0)
+                  @if(Cart::instance("cart")->content()->where('id', $product->id)->count() > 0)
+                    <a href="{{ route('cart.index') }}" class="pc__atc btn btn-sm btn-outline-dark position-absolute bottom-0 start-50 translate-middle-x mb-2">
+                      Go to Cart
+                    </a>
+                  @else
+                    <form name="addtocart-form" method="POST" action="{{ route('cart.add') }}">
+                      @csrf
+                      <input type="hidden" name="id" value="{{ $product->id }}" />
+                      <input type="hidden" name="name" value="{{ $product->name }}" />
+                      <input type="hidden" name="quantity" value="1" />
+                      <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}" />
+                      <input type="hidden" name="size_id" value="{{ $product->productVariations->first()->size->id ?? 1 }}" />
+                      <button type="submit" class="pc__atc btn btn-sm btn-outline-dark position-absolute bottom-0 start-50 translate-middle-x mb-2">
+                        Add to Cart
+                      </button>
+                    </form>
+                  @endif
+                @endif
+            </div>
+            <div class="card-body px-0 pb-0">
+              <p class="pc__category text-muted small mb-1">{{ $product->category ? $product->category->name : 'N/A' }}</p>
+              <h6 class="pc__title card-title mb-2">
+                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" class="text-dark text-decoration-none">
+                  {{ $product->name }}
                 </a>
+              </h6>
+              <div class="product-card__price d-flex align-items-center mb-2">
+                <span class="money price fw-bold">
+                  @if($product->sale_price)
+                    <s class="text-muted me-2">PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
+                  @else
+                    PKR {{ $product->regular_price }}
+                  @endif
+                </span>
+              </div>
+              @if(Cart::instance("wishlist")->content()->where('id', $product->id)->count() > 0)
+                <form method="POST" action="{{ route('wishlist.remove', ['rowId' => Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId]) }}">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="pc__btn-wl btn btn-link p-0 position-absolute top-0 end-0 mt-2 me-2" title="Remove from Wishlist">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="orange" xmlns="http://www.w3.org/2000/svg">
+                      <use href="#icon_heart" />
+                    </svg>
+                  </button>
+                </form>
               @else
-                <form name="addtocart-form" method="POST" action="{{ route('cart.add') }}">
+                <form method="POST" action="{{ route('wishlist.add') }}">
                   @csrf
                   <input type="hidden" name="id" value="{{ $product->id }}" />
                   <input type="hidden" name="name" value="{{ $product->name }}" />
                   <input type="hidden" name="quantity" value="1" />
                   <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}" />
+                  <button type="submit" class="pc__btn-wl btn btn-link p-0 position-absolute top-0 end-0 mt-2 me-2" title="Add To Wishlist">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <use href="#icon_heart" />
+                    </svg>
+                  </button>
                 </form>
               @endif
-            @endif
-          </div>
-          <div class="card-body px-0 pb-0">
-            <p class="pc__category text-muted small mb-1">{{ $product->category->name }}</p>
-            <h6 class="pc__title card-title mb-2">
-              <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" class="text-dark text-decoration-none">
-                {{ $product->name }}
-              </a>
-            </h6>
-            <div class="product-card__price d-flex align-items-center mb-2">
-              <span class="money price fw-bold">
-                @if($product->sale_price)
-                  <s class="text-muted me-2">PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
-                @else
-                  PKR {{ $product->regular_price }}
-                @endif
-              </span>
             </div>
-            @if(Cart::instance("wishlist")->content()->where('id', $product->id)->count() > 0)
-              <form method="POST" action="{{ route('wishlist.remove', ['rowId' => Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId]) }}">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="pc__btn-wl btn btn-link p-0 position-absolute top-0 end-0 mt-2 me-2" title="Remove from Wishlist">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="orange" xmlns="http://www.w3.org/2000/svg">
-                    <use href="#icon_heart" />
-                  </svg>
-                </button>
-              </form>
-            @else
-              <form method="POST" action="{{ route('wishlist.add') }}">
-                @csrf
-                <input type="hidden" name="id" value="{{ $product->id }}" />
-                <input type="hidden" name="name" value="{{ $product->name }}" />
-                <input type="hidden" name="quantity" value="1" />
-                <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}" />
-                <button type="submit" class="pc__btn-wl btn btn-link p-0 position-absolute top-0 end-0 mt-2 me-2" title="Add To Wishlist">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <use href="#icon_heart" />
-                  </svg>
-                </button>
-              </form>
-            @endif
-          </div>
         </div>
       </div>
     @endforeach
   </div>
 </div>
 
-@if(!request()->has('size') && !request()->has('price_from') && !request()->has('price_to') && !request()->has('sort') && !request()->has('subcategory'))
+@if(!request()->has('size') && !request()->has('price_from') && !request()->has('price_to') && !request()->has('sort') && !request()->has('category'))
   <div class="divider"></div>
   <div class="flex items-center justify-between flex-wrap gap10 wgp pagination">
     {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
@@ -531,7 +259,7 @@
 @endsection
 
 @push('scripts')
-      <script>
+<script>
 $(function(){
     const categoryLinks = document.querySelectorAll('.trakkiez-category-link[data-has-dropdown]');
     let activeDropdown = null;
@@ -590,7 +318,7 @@ $(function(){
         }
     });
 
-    // Your existing scripts
+    // Filter and sort handlers
     $('#size-filter').on('change', function() {
         updateUrl('size', $(this).val());
     });
@@ -621,17 +349,42 @@ $(function(){
         window.location.href = url.toString();
     });
 
-        function updateUrl(key, value) {
-    var url = new URL(window.location.href);
-    var searchParams = new URLSearchParams(url.search);
-    if (value) {
-      searchParams.set(key, value);
-    } else {
-      searchParams.delete(key);
+    function updateUrl(key, value) {
+        var url = new URL(window.location.href);
+        var searchParams = new URLSearchParams(url.search);
+        if (value) {
+            searchParams.set(key, value);
+        } else {
+            searchParams.delete(key);
+        }
+        url.search = searchParams.toString();
+        window.location.href = url.toString();
     }
-    url.search = searchParams.toString();
-    window.location.href = url.toString();
-  }
+
+    // Hover effect for product cards
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        const mainImg = card.querySelector('.primary-img');
+        const hoverImg = card.querySelector('.secondary-img');
+        if (hoverImg) {
+            card.addEventListener('mouseover', () => {
+                mainImg.style.opacity = '0';
+                hoverImg.style.opacity = '1';
+            });
+            card.addEventListener('mouseout', () => {
+                mainImg.style.opacity = '1';
+                hoverImg.style.opacity = '0';
+            });
+            card.addEventListener('touchstart', () => {
+                mainImg.style.opacity = '0';
+                hoverImg.style.opacity = '1';
+            });
+            card.addEventListener('touchend', () => {
+                mainImg.style.opacity = '1';
+                hoverImg.style.opacity = '0';
+            });
+        }
+    });
 });
-      </script>
+</script>
 @endpush

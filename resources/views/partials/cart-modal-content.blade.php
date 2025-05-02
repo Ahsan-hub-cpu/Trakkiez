@@ -1,4 +1,3 @@
-<!-- resources/views/partials/cart-modal-content.blade.php -->
 @php
     $cartSubtotal = (float) str_replace(',', '', \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->subtotal());
     $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
@@ -26,7 +25,7 @@
                         <td>
                             <div class="shopping-cart__product-item d-flex align-items-center">
                                 <img loading="lazy" 
-                                     src="{{ asset($cartItem->model && isset($cartItem->model->image) ? 'Uploads/products/thumbnails/' . $cartItem->model->image : 'images/placeholder.jpg') }}" 
+                                     src="{{ asset($cartItem->model && isset($cartItem->model->image) ? 'uploads/products/thumbnails/' . $cartItem->model->image : 'images/placeholder.jpg') }}" 
                                      width="80" height="80" 
                                      alt="{{ $cartItem->name }}" />
                                 <div class="ms-3">
@@ -45,12 +44,12 @@
                                        value="{{ $cartItem->qty }}" 
                                        min="1" 
                                        readonly
-                                       class="qty-control__number text-center" 
-                                       data-rowid="{{ $cartItem->rowId }}"
+                                       class="qty-control__number text-center cart-qty-input" 
+                                       data-row-id="{{ $cartItem->rowId }}"
                                        data-max="{{ $cartItem->options->available_quantity }}"
                                        data-global="{{ $cartItem->options->global_quantity }}">
-                                <button class="qty-control__reduce" data-action="reduce" data-rowid="{{ $cartItem->rowId }}">-</button>
-                                <button class="qty-control__increase" data-action="increase" data-rowid="{{ $cartItem->rowId }}">+</button>
+                                <button class="qty-control__reduce cart-qty-reduce" data-row-id="{{ $cartItem->rowId }}">-</button>
+                                <button class="qty-control__increase cart-qty-increase" data-row-id="{{ $cartItem->rowId }}">+</button>
                             </div>
                             <span class="text-danger stock-error" id="stock-error-{{ $cartItem->rowId }}"></span>
                         </td>
@@ -58,16 +57,7 @@
                             <span class="shopping-cart__subtotal" id="subtotal-{{ $cartItem->rowId }}">PKR {{ number_format((float)$cartItem->subtotal(), 2) }}</span>
                         </td>
                         <td>
-                            <form method="POST" action="{{ route('cart.remove', ['rowId' => $cartItem->rowId]) }}" class="remove-cart-form">
-                                @csrf
-                                @method("DELETE")
-                                <button type="submit" class="remove-cart">
-                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z" />
-                                        <path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z" />
-                                    </svg>
-                                </button>
-                            </form>
+                            <button class="cart-remove-item btn btn-sm btn-danger" data-row-id="{{ $cartItem->rowId }}">Remove</button>
                         </td>
                     </tr>
                 @endforeach
@@ -87,11 +77,6 @@
                     <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4 text-danger" type="submit" value="REMOVE COUPON">
                 </form>
             @endif
-            <form method="POST" action="{{ route('cart.empty') }}" id="clear-cart-form">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-light" type="submit">CLEAR CART</button>
-            </form>
             @if(Session()->has('success'))
                 <p class="text-success mt-2">{{ session()->get('success') }}</p>
             @elseif(Session()->has('error'))
