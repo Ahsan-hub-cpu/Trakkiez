@@ -6,7 +6,7 @@
           <div class="banner-slider">
               @foreach($slides as $index => $slide)
                   <div class="banner-slide {{ $index === 0 ? 'active' : '' }}">
-                      <img rel="preload" src="{{ asset('Uploads/slides/' . $slide->image) }}" alt="Banner {{ $index + 1 }}" class="trakkiez-banner-image">
+                      <img rel="preload" src="{{ asset('uploads/slides/' . $slide->image) }}" alt="Banner {{ $index + 1 }}" class="trakkiez-banner-image">
                   </div>
               @endforeach
 
@@ -60,12 +60,12 @@
       <div class="text-center mb-3">
           <h2 class="section-title">New Arrivals <a href="{{ route('shop.index', ['filter' => 'new-arrivals']) }}">(View All)</a></h2>
       </div>
-      <div class="row">
+      <div class="row justify-content-center">
           <div class="col-12">
           <div class="position-relative">
     <div class="swiper-container js-swiper-slider" data-settings='{
         "autoplay": false,
-        "slidesPerView": 1,
+        "slidesPerView": 3,
         "slidesPerGroup": 1,
         "effect": "none",
         "loop": false,
@@ -81,7 +81,7 @@
         },
         "breakpoints": {
             "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 0 },
-            "576": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 0 },
+            "576": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 10 },
             "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 30 }
         },
         "watchSlidesVisibility": true,
@@ -97,7 +97,7 @@
                     <div class="pc__img-wrapper">
                         <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
                             <img class="swiper-lazy pc__img" 
-                                data-src="{{ asset('Uploads/products/' . $product->image) }}" 
+                                data-src="{{ asset('uploads/products/' . $product->image) }}" 
                                 alt="{{ $product->name }}" 
                                 width="400" height="600">
                             <div class="swiper-lazy-preloader"></div>
@@ -139,12 +139,12 @@
       <div class="text-center mb-3">
           <h2 class="section-title">Men's Collection <a href="{{ route('home.category', ['category_slug' => 'men']) }}">(View All)</a></h2>
       </div>
-      <div class="row">
+      <div class="row justify-content-center">
           <div class="col-12">
           <div class="position-relative">
     <div class="swiper-container js-swiper-slider" data-settings='{
         "autoplay": false,
-        "slidesPerView": 1,
+        "slidesPerView": 3,
         "slidesPerGroup": 1,
         "effect": "none",
         "loop": false,
@@ -160,7 +160,7 @@
         },
         "breakpoints": {
             "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 0 },
-            "576": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 0 },
+            "576": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 10 },
             "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 30 }
         },
         "watchSlidesVisibility": true,
@@ -177,7 +177,7 @@
                     <div class="pc__img-wrapper">
                         <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
                             <img class="swiper-lazy pc__img" 
-                                data-src="{{ asset('Uploads/products/' . $product->image) }}" 
+                                data-src="{{ asset('uploads/products/' . $product->image) }}" 
                                 alt="{{ $product->name }}" 
                                 width="400" height="600">
                             <div class="swiper-lazy-preloader"></div>
@@ -222,12 +222,12 @@
       <div class="text-center mb-3">
           <h2 class="section-title">Women's Collection <a href="{{ route('home.category', ['category_slug' => 'women']) }}">(View All)</a></h2>
       </div>
-      <div class="row">
+      <div class="row justify-content-center">
           <div class="col-12">
           <div class="position-relative">
     <div class="swiper-container js-swiper-slider" data-settings='{
         "autoplay": false,
-        "slidesPerView": 1,
+        "slidesPerView": 3,
         "slidesPerGroup": 1,
         "effect": "none",
         "loop": false,
@@ -243,7 +243,7 @@
         },
         "breakpoints": {
             "320": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 0 },
-            "576": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 0 },
+            "576": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 10 },
             "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 30 }
         },
         "watchSlidesVisibility": true,
@@ -260,7 +260,7 @@
                     <div class="pc__img-wrapper">
                         <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
                             <img class="swiper-lazy pc__img" 
-                                data-src="{{ asset('Uploads/products/' . $product->image) }}" 
+                                data-src="{{ asset('uploads/products/' . $product->image) }}" 
                                 alt="{{ $product->name }}" 
                                 width="400" height="600">
                             <div class="swiper-lazy-preloader"></div>
@@ -625,10 +625,13 @@
 
 .swiper-container {
     padding-bottom: 20px;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .swiper-slide {
     margin-bottom: 0;
+    width: auto;
 }
 
 .all-subcategories-section {
