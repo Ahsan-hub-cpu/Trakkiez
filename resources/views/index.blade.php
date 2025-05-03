@@ -315,10 +315,11 @@
                     $imageName = "{$categorySlug}-{$subcategoryName}.avif";
                     $imagePath = asset('assets/images/subcategories/' . $imageName);
                     $finalImage = file_exists(base_path('assets/images/subcategories/' . $imageName)) ? $imagePath : asset('assets/images/subcategories/default-subcategory.jpg');
+                   
                 @endphp
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                     <a href="{{ route('home.subcategory', ['category_slug' => $subcategory->category->slug, 'subcategory_id' => $subcategory->id]) }}" class="subcategory-card">
-                        <div class="subcategory-card-image lazy-background" data-bg="{{ $finalImage }}">
+                    <div class="subcategory-card-image" style="background-image: url('{{ $finalImage }}');">
                             <div class="subcategory-card-overlay">
                                 <h2 class="subcategory-card-title">
                                     {{ $subcategory->category->name ?? 'Unknown Category' }} {{ $subcategory->name ?? 'Unnamed Subcategory' }}
@@ -341,7 +342,7 @@
             <p class="text-center text-muted">Koi subcategories nahi hain.</p>
         </div>
     @endif
-</div>
+    </div>
   </section>
 </main>
 <script>

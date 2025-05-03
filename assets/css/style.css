@@ -14619,7 +14619,6 @@ button.js-add-wishlist.active .flaticon.flaticon-heart, a.add-to-wishlist.active
     flex-grow: 1; }
    .checkout-form .billing-info__wrapper .form-floating > label, .checkout-form .billing-info__wrapper .form-label-fixed > .form-label {
     color: #767676;
-    margin-top: -2rem !important;
 }
   .checkout-form .checkout__totals-wrapper .sticky-content {
     padding-top: 3.125rem; }
@@ -15630,9 +15629,9 @@ body.coming-soon-page {
         }
 
         .logo__image {
-            max-width: 220px;
-        }
-
+          max-width: 200px;
+          margin-left: 42px;
+      }
         /* Product Item */
         .product-item {
             display: flex;

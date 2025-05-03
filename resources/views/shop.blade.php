@@ -155,25 +155,6 @@
                 @if($product->quantity <= 0)
                   <div class="sold-out-badge">Sold Out</div>
                 @endif
-                @if($product->quantity > 0)
-                  @if(Cart::instance("cart")->content()->where('id', $product->id)->count() > 0)
-                    <a href="{{ route('cart.index') }}" class="pc__atc btn btn-sm btn-outline-dark position-absolute bottom-0 start-50 translate-middle-x mb-2">
-                      Go to Cart
-                    </a>
-                  @else
-                    <form name="addtocart-form" method="POST" action="{{ route('cart.add') }}">
-                      @csrf
-                      <input type="hidden" name="id" value="{{ $product->id }}" />
-                      <input type="hidden" name="name" value="{{ $product->name }}" />
-                      <input type="hidden" name="quantity" value="1" />
-                      <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}" />
-                      <input type="hidden" name="size_id" value="{{ $product->productVariations->first()->size->id ?? 1 }}" />
-                      <button type="submit" class="pc__atc btn btn-sm btn-outline-dark position-absolute bottom-0 start-50 translate-middle-x mb-2">
-                        Add to Cart
-                      </button>
-                    </form>
-                  @endif
-                @endif
             </div>
             <div class="card-body px-0 pb-0">
               <p class="pc__category text-muted small mb-1">{{ $product->category ? $product->category->name : 'N/A' }}</p>
