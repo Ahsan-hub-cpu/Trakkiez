@@ -69,6 +69,28 @@
 <!-- End Meta Pixel Code -->
 
 </head>
+<style>
+    .cart-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.cart-bag-icon {
+    display: block;
+    color: white; /* Adjust the icon color as needed */
+}
+
+.cart-count-overlay {
+    position: absolute;
+    top: -5px; /* Adjust to position the count on the bag */
+    right: -5px; /* Adjust to position the count on the bag */
+    width: 16px; /* Size of the count circle */
+    height: 16px; /* Size of the count circle */
+    font-size: 10px; /* Size of the count text */
+    font-weight: bold;
+    line-height: 1;
+}
+</style>
 
 <body class="gradient-bg" >
   <svg class="d-none">
@@ -316,9 +338,17 @@
             </div>
 
             <a href="javascript:void(0);" class="nav-link" id="cart-icon-mobile" data-bs-toggle="modal" data-bs-target="#cartModal">
-                <i class="bi bi-cart"></i>
-                <span class="badge bg-primary cart-quantity">0</span>
-            </a>
+    <div class="cart-icon-container position-relative d-inline-block">
+        <!-- Bag Icon (SVG) -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart-bag-icon">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <path d="M3 6h18"></path>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <!-- Cart Count Overlay -->
+        <span class="cart-count-overlay position-absolute text-white bg-primary rounded-circle d-flex align-items-center justify-content-center">0</span>
+    </div>
+</a>
         </div>
 
         <!-- Mobile Navigation -->
@@ -493,10 +523,18 @@
                         @endif
                     </a>
 
-                    <a href="javascript:void(0);" class="nav-link" id="cart-icon" data-bs-toggle="modal" data-bs-target="#cartModal" aria-label="Open cart">
-                        <i class="bi bi-cart"></i>
-                        <span class="badge bg-primary cart-quantity">0</span>
-                    </a>
+                    <a href="javascript:void(0);" class="nav-link" id="cart-icon-mobile" data-bs-toggle="modal" data-bs-target="#cartModal">
+    <div class="cart-icon-container position-relative d-inline-block">
+        <!-- Bag Icon (SVG) -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart-bag-icon">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <path d="M3 6h18"></path>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <!-- Cart Count Overlay -->
+        <span class="cart-count-overlay position-absolute text-white bg-primary rounded-circle d-flex align-items-center justify-content-center">0</span>
+    </div>
+</a>
                 </div>
             </div>
         </div>
@@ -798,17 +836,15 @@
 
         // Cart Modal Functionality
         window.updateCartCount = function() {
-            console.log('updateCartCount called'); // Debug
             $.ajax({
                 url: "{{ route('cart.count') }}",
                 method: 'GET',
                 success: function(response) {
-                    console.log('Cart count response:', response); // Debug
-                    $('.cart-quantity').text(response.count);
+                    $('.cart-count-overlay').text(response.count);
                 },
                 error: function(xhr) {
                     console.error('Cart count error:', xhr.responseText);
-                    $('.cart-quantity').text('0');
+                    $('.cart-count-overlay').text('0');
                 }
             });
         };

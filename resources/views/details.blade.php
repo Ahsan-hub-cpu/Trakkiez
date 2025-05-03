@@ -503,21 +503,6 @@
                                     @if($rproduct->quantity <= 0)
                                         <div class="sold-out-label">Sold Out</div>
                                     @endif
-                                    @if($rproduct->quantity > 0)
-                                        @if(Cart::instance("cart")->content()->where('id', $rproduct->id)->count() > 0)
-                                            <a href="{{ route('cart.index') }}" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-warning mb-3">Go to Cart</a>
-                                        @else
-                                            <form name="addtocart-form" method="POST" action="{{ route('cart.add') }}">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $rproduct->id }}" />
-                                                <input type="hidden" name="name" value="{{ $rproduct->name }}" />
-                                                <input type="hidden" name="quantity" value="1"/>
-                                                <input type="hidden" name="price" value="{{ $rproduct->sale_price == '' ? $rproduct->regular_price : $rproduct->sale_price }}" />
-                                                <input type="hidden" name="size_id" value="{{ $rproduct->productVariations->first()->size->id ?? 1 }}" />
-                                                <button type="submit" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-primary mb-3">Add to Cart</button>
-                                            </form>
-                                        @endif
-                                    @endif
                                 </div>
                                 <div class="pc__info position-relative">
                                     <p class="pc__category">{{ $rproduct->category ? $rproduct->category->name : 'N/A' }}</p>

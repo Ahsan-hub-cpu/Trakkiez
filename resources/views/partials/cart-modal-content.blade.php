@@ -54,8 +54,13 @@
                             <span class="text-danger stock-error" id="stock-error-{{ $cartItem->rowId }}"></span>
                         </td>
                         <td>
-                            <span class="shopping-cart__subtotal" id="subtotal-{{ $cartItem->rowId }}">PKR {{ number_format((float)$cartItem->subtotal(), 2) }}</span>
-                        </td>
+    @php
+        $rawSubtotal = floatval(preg_replace('/[^\d.]/', '', $cartItem->subtotal()));
+    @endphp
+    <span class="shopping-cart__subtotal" id="subtotal-{{ $cartItem->rowId }}">
+        PKR {{ number_format($rawSubtotal, 2) }}
+    </span>
+</td>
                         <td>
                             <button class="cart-remove-item btn btn-sm btn-danger" data-row-id="{{ $cartItem->rowId }}">Remove</button>
                         </td>

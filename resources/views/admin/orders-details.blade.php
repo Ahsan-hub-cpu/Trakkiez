@@ -91,40 +91,46 @@
         </thead>
         <tbody>
         @foreach ($orderitems as $orderitem)
-            <tr>
-                <td class="">
-                    <div class="image">
-                        <img src="{{ asset('uploads/products/thumbnails') }}/{{$orderitem->product->image}}" alt="{{$orderitem->product->name}}" class="image">
-                    </div>
-                    <div class="name">
-                        <a href="{{ route('shop.product.details', ['product_slug' => $orderitem->product->slug]) }}" target="_blank" class="body-title-2">{{$orderitem->product->name}}</a>
-                    </div>
-                </td>
-                <td class="text-center">PKR {{$orderitem->price}}</td>
-                <td class="text-center">{{$orderitem->quantity}}</td>
-                <td class="text-center">{{$orderitem->product->SKU}}</td>
-                <td class="text-center">{{$orderitem->product->category->name}}</td>
-                <td class="text-center">{{$orderitem->product->brand->name}}</td>
+    <tr>
+        <td class="">
+            @if($orderitem->product)
+                <div class="image">
+                    <img src="{{ asset('uploads/products/thumbnails') }}/{{$orderitem->product->image}}" alt="{{$orderitem->product->name}}" class="image">
+                </div>
+                <div class="name">
+                    <a href="{{ route('shop.product.details', ['product_slug' => $orderitem->product->slug]) }}" target="_blank" class="body-title-2">{{$orderitem->product->name}}</a>
+                </div>
+            @else
+                <div class="text-danger">Product not found</div>
+            @endif
+        </td>
+        <td class="text-center">PKR {{$orderitem->price}}</td>
+        <td class="text-center">{{$orderitem->quantity}}</td>
+        <td class="text-center">{{ $orderitem->product?->SKU ?? 'N/A' }}</td>
+        <td class="text-center">{{ $orderitem->product?->category?->name ?? 'N/A' }}</td>
+        <td class="text-center">{{ $orderitem->product?->brand?->name ?? 'N/A' }}</td>
 
-                {{-- Size and Color --}}
-                @php
-                    $size = $orderitem->productVariation ? $orderitem->productVariation->size->name : 'N/A';
-                @endphp
-                <td class="text-center">{{$size}}</td>
-                <td class="text-center">{{$orderitem->options}}</td>
-                <td class="text-center">{{$orderitem->rstatus == 0 ? "No" : "Yes"}}</td>
-                
-                <td class="text-center">
-                    <a href="{{ route('shop.product.details', ['product_slug' => $orderitem->product->slug]) }}" target="_blank">
-                        <div class="list-icon-function view-icon">
-                            <div class="item eye">
-                                <i class="icon-eye"></i>
-                            </div>
+        @php
+            $size = $orderitem->productVariation ? $orderitem->productVariation->size->name : 'N/A';
+        @endphp
+        <td class="text-center">{{$size}}</td>
+        <td class="text-center">{{$orderitem->options}}</td>
+        <td class="text-center">{{$orderitem->rstatus == 0 ? "No" : "Yes"}}</td>
+        
+        <td class="text-center">
+            @if($orderitem->product)
+                <a href="{{ route('shop.product.details', ['product_slug' => $orderitem->product->slug]) }}" target="_blank">
+                    <div class="list-icon-function view-icon">
+                        <div class="item eye">
+                            <i class="icon-eye"></i>
                         </div>
-                    </a>
-                </td>
-            </tr>
-        @endforeach
+                    </div>
+                </a>
+            @endif
+        </td>
+    </tr>
+@endforeach
+
         </tbody>
     </table>
 </div>

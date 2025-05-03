@@ -253,7 +253,6 @@ body, html {
 .checkout-form .billing-info__wrapper .form-label-fixed > 
 .form-label {
     color: #767676;
-    margin-top: -2rem;
 }
 }
 #cartModal .modal-body {
@@ -266,10 +265,14 @@ body, html {
     cursor: pointer;
     background: #f8f9fa;
     border: none;
-    padding: 5px 10px;
+    margin-right: 7px;
+    margin-left: 6px;
+    margin-top:3px;
 }
 #cartModal .cart-remove-item {
-    padding: 5px 10px;
+    padding: 2px 10px;
+    margin-top: 100px;
+    margin-left: -5rem;
 }
 @media (max-width: 576px) {
     #cartModal .cart-table {
@@ -286,4 +289,28 @@ body, html {
     #cartModal .modal-footer .btn {
         width: 100%;
     }
+}
+.checkout-form .billing-info__wrapper .form-floating > label, .checkout-form .billing-info__wrapper .form-label-fixed > .form-label {
+    color: #767676;
+    margin-bottom: -10rem !important;
+}
+.qty-control__reduce, .qty-control__increase {
+    position: absolute;
+    top: 0;
+    width: .75rem;
+    padding: 0;
+    cursor: pointer;
+    user-select: none;
+    -ms-user-select: none;
+    background: none !important;
+}
+.product-single__addtocart .qty-control__increase {
+    padding-right: 1.25rem;
+    margin-top: .4px;
+    margin-right: 5px;
+}
+.product-single__addtocart .qty-control__reduce {
+    padding-left: 1.25rem;
+    margin-top: .4px;
+    margin-right:5px;
 }

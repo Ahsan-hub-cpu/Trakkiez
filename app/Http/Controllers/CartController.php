@@ -75,13 +75,17 @@ class CartController extends Controller
                 ], 400);
             }
     
-            Cart::instance('cart')->add([
+            // Add item to cart and associate the Product model
+            $cartItem = Cart::instance('cart')->add([
                 'id' => $product->id,
                 'name' => $product->name,
-                'qty' => $request->quantity, // Use 'qty' instead of 'quantity'
+                'qty' => $request->quantity,
                 'price' => $product->sale_price ?: $product->regular_price,
-                'options' => ['size' => $size->name]
+                'options' => ['size' => $size->name],
             ]);
+    
+            // Associate the Product model
+            $cartItem->associate(\App\Models\Product::class);
     
             return response()->json([
                 'success' => true,
