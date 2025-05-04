@@ -801,4 +801,39 @@ class CartController extends Controller
             ? response()->json(['success' => false, 'message' => $message], $status)
             : redirect()->back()->with('error', $message);
     }
+
+    public function getCheckoutTotals()
+{
+    try {
+        $this->setAmountForCheckout();
+        $checkout = session()->get('checkout');
+        $cartItems = Cart::instance('cart')->content()->map(function ($item) {
+            return [
+                'rowId' => $item->rowId,
+                'name' => $item->name,
+                'qty' => $item->qty,
+                'price' => $item->price,
+                'subtotal' => $item->subtotal,
+                'options' => $item->options->toArray(),
+            ];
+        });
+
+        $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
+        $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
+        $subtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
+        $tax = (float) str_replace(',', '', Cart::instance('cart')->tax());
+        $total = (float) str_replace(',', '', Cart::instance('cart')->total());
+        $finalTotal = $total + $shippingCost;
+
+        $totals = view('partials.cart-totals', compact('subtotal', 'tax', 'shippingCost', 'finalTotal'))->render();
+
+        return response()->json([
+            'totals' => $totals,
+            'items' => $cartItems->values()->toArray(),
+        ]);
+    } catch (\Exception $e) {
+        Log::error('getCheckoutTotals error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+        return response()->json(['message' => $e->getMessage()], 500);
+    }
+}
 }

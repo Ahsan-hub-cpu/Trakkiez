@@ -6,13 +6,17 @@
           <div class="banner-slider">
               @foreach($slides as $index => $slide)
                   <div class="banner-slide {{ $index === 0 ? 'active' : '' }}">
-                      <img rel="preload" src="{{ asset('uploads/slides/' . $slide->image) }}" alt="Banner {{ $index + 1 }}" class="trakkiez-banner-image">
+                      <img rel="preload" 
+                           src="{{ asset('uploads/slides/' . $slide->image) }}" 
+                           alt="Promotional banner slide {{ $index + 1 }} for Trakkiez collection"
+                           class="trakkiez-banner-image"
+                           width="1200" height="600">
                   </div>
               @endforeach
 
               <div class="slider-dots">
                   @foreach($slides as $index => $slide)
-                      <div class="slider-dot {{ $index === 0 ? 'active' : '' }}"></div>
+                      <div class="slider-dot {{ $index === 0 ? 'active' : '' }}" role="button" aria-label="Go to slide {{ $index + 1 }}"></div>
                   @endforeach
               </div>
           </div>
@@ -28,24 +32,24 @@
   <section class="summer-collection container mt-5">
     <div class="image-gallery">
         <picture class="img1">
-            <source srcset="assets/images/main/h.avif" type="image/avif">
-            <img src="assets/images/main/h.avif" alt="Summer 1" loading="lazy" width="300" height="400">
+            <source srcset="assets/images/main/h.avif 300w, assets/images/main/h_small.avif 150w" sizes="(max-width: 576px) 150px, 300px" type="image/avif">
+            <img src="assets/images/main/h.avif" alt="Model in summer outfit under bright sunlight" width="300" height="400">
         </picture>
         <picture class="img2">
-            <source srcset="assets/images/main/g.avif" type="image/avif">
-            <img src="assets/images/main/g.avif" alt="Summer 2" loading="lazy" width="300" height="400">
+            <source srcset="assets/images/main/g.avif 300w, assets/images/main/g_small.avif 150w" sizes="(max-width: 576px) 150px, 300px" type="image/avif">
+            <img src="assets/images/main/g.avif" alt="Model wearing summer dress in a garden" width="300" height="400">
         </picture>
         <picture class="img3">
-            <source srcset="assets/images/main/b.avif" type="image/avif">
-            <img src="assets/images/main/b.avif" alt="Summer 3" loading="lazy" width="300" height="400">
+            <source srcset="assets/images/main/b.avif 300w, assets/images/main/b_small.avif 150w" sizes="(max-width: 576px) 150px, 300px" type="image/avif">
+            <img src="assets/images/main/b.avif" alt="Summer outfit on a beach setting" width="300" height="400">
         </picture>
         <picture class="img4">
-            <source srcset="assets/images/main/c.avif" type="image/avif">
-            <img src="assets/images/main/c.avif" alt="Summer 4" loading="lazy" width="300" height="400">
+            <source srcset="assets/images/main/c.avif 300w, assets/images/main/c_small.avif 150w" sizes="(max-width: 576px) 150px, 300px" type="image/avif">
+            <img src="assets/images/main/c.avif" alt="Model in summer attire with sunglasses" width="300" height="400">
         </picture>
         <picture class="img5">
-            <source srcset="assets/images/main/a.avif" type="image/avif">
-            <img src="assets/images/main/a.avif" alt="Summer 5" loading="lazy" width="300" height="400">
+            <source srcset="assets/images/main/a.avif 300w, assets/images/main/a_small.avif 150w" sizes="(max-width: 576px) 150px, 300px" type="image/avif">
+            <img src="assets/images/main/a.avif" alt="Summer fashion in a park" width="300" height="400">
         </picture>
     </div>
     <div class="text-content">
@@ -89,7 +93,7 @@
         "slidesOffsetBefore": 0,
         "slidesOffsetAfter": 0,
         "centerInsufficientSlides": true,
-        "centeredSlides": true
+        "centeredSlides": false
     }'>
         <div class="swiper-wrapper">
             @foreach($newArrivals as $product)
@@ -97,9 +101,11 @@
                     <div class="pc__img-wrapper">
                         <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
                             <img class="swiper-lazy pc__img" 
-                                data-src="{{ asset('uploads/products/' . $product->image) }}" 
-                                alt="{{ $product->name }}" 
-                                width="400" height="600">
+                                 data-srcset="{{ asset('uploads/products/' . $product->image) }} 400w, {{ asset('uploads/products/small/' . $product->image) }} 200w"
+                                 data-sizes="(max-width: 576px) 200px, 400px"
+                                 data-src="{{ asset('uploads/products/' . $product->image) }}" 
+                                 alt="{{ $product->name }} in {{ $product->category->name ?? 'unknown category' }}"
+                                 width="400" height="600">
                             <div class="swiper-lazy-preloader"></div>
                         </a>
                         @if($product->sale_price && $product->regular_price)
@@ -168,7 +174,7 @@
         "slidesOffsetBefore": 0,
         "slidesOffsetAfter": 0,
         "centerInsufficientSlides": true,
-        "centeredSlides": true
+        "centeredSlides": false
     }'>
         <div class="swiper-wrapper">
             @if($manCategory && $manCategory->products->isNotEmpty())
@@ -177,9 +183,11 @@
                     <div class="pc__img-wrapper">
                         <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
                             <img class="swiper-lazy pc__img" 
-                                data-src="{{ asset('uploads/products/' . $product->image) }}" 
-                                alt="{{ $product->name }}" 
-                                width="400" height="600">
+                                 data-srcset="{{ asset('uploads/products/' . $product->image) }} 400w, {{ asset('uploads/products/small/' . $product->image) }} 200w"
+                                 data-sizes="(max-width: 576px) 200px, 400px"
+                                 data-src="{{ asset('uploads/products/' . $product->image) }}" 
+                                 alt="{{ $product->name }} in men's collection"
+                                 width="400" height="600">
                             <div class="swiper-lazy-preloader"></div>
                         </a>
                         @if($product->sale_price && $product->regular_price)
@@ -251,7 +259,7 @@
         "slidesOffsetBefore": 0,
         "slidesOffsetAfter": 0,
         "centerInsufficientSlides": true,
-        "centeredSlides": true
+        "centeredSlides": false
     }'>
         <div class="swiper-wrapper">
             @if($womenCategory && $womenCategory->products->isNotEmpty())
@@ -260,9 +268,11 @@
                     <div class="pc__img-wrapper">
                         <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
                             <img class="swiper-lazy pc__img" 
-                                data-src="{{ asset('uploads/products/' . $product->image) }}" 
-                                alt="{{ $product->name }}" 
-                                width="400" height="600">
+                                 data-srcset="{{ asset('uploads/products/' . $product->image) }} 400w, {{ asset('uploads/products/small/' . $product->image) }} 200w"
+                                 data-sizes="(max-width: 576px) 200px, 400px"
+                                 data-src="{{ asset('uploads/products/' . $product->image) }}" 
+                                 alt="{{ $product->name }} in women's collection"
+                                 width="400" height="600">
                             <div class="swiper-lazy-preloader"></div>
                         </a>
                         @if($product->sale_price && $product->regular_price)
@@ -313,13 +323,11 @@
                     $categorySlug = strtolower($subcategory->category->slug ?? 'unknown-category');
                     $subcategoryName = strtolower(str_replace(' ', '-', $subcategory->name ?? 'unnamed-subcategory'));
                     $imageName = "{$categorySlug}-{$subcategoryName}.avif";
-                    $imagePath = asset('assets/images/subcategories/' . $imageName);
-                    $finalImage = file_exists(base_path('assets/images/subcategories/' . $imageName)) ? $imagePath : asset('assets/images/subcategories/default-subcategory.jpg');
-                   
+                    $finalImage = asset('assets/images/subcategories/' . $imageName);
                 @endphp
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                     <a href="{{ route('home.subcategory', ['category_slug' => $subcategory->category->slug, 'subcategory_id' => $subcategory->id]) }}" class="subcategory-card">
-                    <div class="subcategory-card-image" style="background-image: url('{{ $finalImage }}');">
+                    <div class="subcategory-card-image" style="background-image: url('{{ $finalImage }}'), url('{{ asset('assets/images/subcategories/default-subcategory.jpg') }}');">
                             <div class="subcategory-card-overlay">
                                 <h2 class="subcategory-card-title">
                                     {{ $subcategory->category->name ?? 'Unknown Category' }} {{ $subcategory->name ?? 'Unnamed Subcategory' }}
@@ -345,38 +353,7 @@
     </div>
   </section>
 </main>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.banner-slide');
-        const dots = document.querySelectorAll('.slider-dot');
-
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.remove('active');
-                dots[i].classList.remove('active');
-                if (i === index) {
-                    slide.classList.add('active');
-                    dots[i].classList.add('active');
-                }
-            });
-        }
-
-        dots.forEach((dot, i) => {
-            dot.addEventListener('click', () => {
-                currentSlide = i;
-                showSlide(currentSlide);
-            });
-        });
-
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
-        }
-
-        setInterval(nextSlide, 5000); // Auto-slide every 5 seconds
-    });
-</script>
+<script defer src="{{ asset('js/banner-slider.js') }}"></script>
 @endsection
 
 <style>
@@ -770,7 +747,7 @@
 
     .swiper-slide {
         height: auto;
-        width: 100% !important; /* Ensure full width for single slide */
+        width: 100% !important;
     }
 
     .slideshow-character {
@@ -881,18 +858,18 @@
     }
 
     .product-card {
-        max-width: 100%; /* Full width for single card */
+        max-width: 100%;
         margin: 0 auto;
-        width: 100% !important; /* Ensure full width */
+        width: 100% !important;
     }
 
     .swiper-slide.product-card {
-        width: 100% !important; /* Full width for single card on mobile */
+        width: 100% !important;
     }
 
     @media (min-width: 576px) {
         .swiper-slide.product-card {
-            width: 50% !important; /* Half width for 2 cards */
+            width: 50% !important;
         }
     }
 
@@ -1062,7 +1039,7 @@
     }
 
     .swiper-slide.product-card {
-        width: 100% !important; /* Ensure full width for single card */
+        width: 100% !important;
     }
 }
 </style>
