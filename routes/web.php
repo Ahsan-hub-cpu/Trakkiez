@@ -23,7 +23,7 @@ Route::get('/category/{category_slug}', [HomeController::class, 'category'])->na
 Route::get('/category/{category_slug}/{subcategory_id}', [HomeController::class, 'subcategory'])->name('home.subcategory');
 
 
-//CART
+//CART Updated
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
