@@ -392,8 +392,7 @@
                                 </div>
                             </li>
                         @endforeach
-                        <!-- <li class="mb-2"><a href="{{ route('cart.index') }}" class="nav-link">Cart</a></li> -->
-                        <li class="mb-2"><a href="{{ route('about.us') }}" class="nav-link">About</a></li>
+                        <li class="mb-2"><a href="{{ route('about.us') }}" class="nav-link">About US</a></li>
                         <li class="mb-2"><a href="{{ route('home.contact') }}" class="nav-link">Contact</a></li>
                     </ul>
                 </div>
