@@ -25,7 +25,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            source ~/.nvm/nvm.sh
+ 
             cd  /var/www/html/
             git pull origin ${{ secrets.BRANCH }}
             sudo systemctl restart apache2
