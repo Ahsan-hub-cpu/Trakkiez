@@ -26,7 +26,7 @@ jobs:
           port: 22
           script: |
  
-            cd  /var/www/html/
+            cd  /var/www/html/Trakkiez
             git pull origin ${{ secrets.BRANCH }}
             sudo systemctl restart apache2
             
