@@ -392,7 +392,8 @@
                                 </div>
                             </li>
                         @endforeach
-                        <li class="mb-2"><a href="{{ route('about.us') }}" class="nav-link">About US</a></li>
+
+                        <li class="mb-2"><a href="{{ route('about.us') }}" class="nav-link">About</a></li>
                         <li class="mb-2"><a href="{{ route('home.contact') }}" class="nav-link">Contact</a></li>
                     </ul>
                 </div>
@@ -694,6 +695,267 @@
     <script src="{{ asset('assets/js/theme.js') }}"></script>
 
     <!-- Consolidated JavaScript -->
+         <!-- Consolidated JavaScript -->
+         <script>
+ (function() { // IIFE to avoid global conflicts
+     // FAB Button Toggle
+     document.addEventListener('DOMContentLoaded', function() {
+         const fabButton = document.getElementById('fabButton');
+         const fabIcons = document.getElementById('fabIcons');
+ 
+         if (fabButton && fabIcons) {
+             fabButton.addEventListener('click', () => {
+                 fabIcons.style.display = fabIcons.style.display === 'flex' ? 'none' : 'flex';
+             });
+ 
+             const fabContainer = document.querySelector('.fab-container');
+             window.addEventListener('scroll', () => {
+                 fabContainer.style.opacity = '1';
+                 fabContainer.style.visibility = 'visible';
+             });
+         }
+     });
+ 
+     // Mobile Navigation
+     document.addEventListener('DOMContentLoaded', function() {
+         const mobileNav = document.getElementById('mobileNav');
+         const navLinks = mobileNav?.querySelectorAll('.navigation__link');
+         const navbarToggler = document.querySelector('.navbar-toggler');
+ 
+         if (mobileNav && navLinks && navbarToggler) {
+             navLinks.forEach(link => {
+                 link.addEventListener('click', () => {
+                     const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
+                     bsCollapse.hide();
+                 });
+             });
+ 
+             document.addEventListener('click', (e) => {
+                 if (!mobileNav.contains(e.target) && !navbarToggler.contains(e.target) && mobileNav.classList.contains('show')) {
+                     const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
+                     bsCollapse.hide();
+                 }
+             });
+         }
+     });
+ 
+     // Swiper Initialization
+     document.addEventListener('DOMContentLoaded', function() {
+         let swiperElements = document.querySelectorAll('.js-swiper-slider');
+         swiperElements.forEach(function(element) {
+             let settings = JSON.parse(element.dataset.settings || '{}');
+             new Swiper(element, settings);
+         });
+     });
+ 
+     // Fix Layout
+     document.addEventListener('DOMContentLoaded', function() {
+         const elements = [
+             '.header-mobile',
+             '.banner-section',
+             '.banner-slider',
+             '.navigation',
+             '.mobile-nav'
+         ];
+ 
+         // elements.forEach(selector => {
+         //     const element = document.querySelector(selector);
+         //     if (element) {
+         //         element.style.margin = '0';
+         //         element.style.padding = '0';
+         //         element.style.position = 'relative';
+         //         element.style.width = '100%';
+         //     }
+         // });
+ 
+         const banner = document.querySelector('.banner-section');
+         if (banner) {
+             banner.style.display = 'none';
+             banner.offsetHeight;
+             banner.style.display = '';
+         }
+     });
+ 
+     // jQuery-dependent code
+     $(document).ready(function() {
+         // Search Functionality
+         $("#search-input").on("keyup", function() {
+             const searchQuery = $(this).val();
+             if (searchQuery.length > 2) {
+                 $.ajax({
+                     type: "GET",
+                     url: "{{ route('home.search') }}",
+                     data: { query: searchQuery },
+                     dataType: "json",
+                     success: function(data) {
+                         $("#box-content-search").empty();
+                         $.each(data, function(index, item) {
+                             const url = "{{ route('shop.product.details', ['product_slug' => '__slug__']) }}".replace('__slug__', item.slug);
+                             const imageUrl = "{{ asset('Uploads/products/thumbnails') }}/" + item.image;
+                             $("#box-content-search").append(`
+                                 <li>
+                                     <ul>
+                                         <li class="product-item gap14 mb-10">
+                                             <div class="image no-bg">
+                                                 <img src="${imageUrl}" alt="${item.name}">
+                                             </div>
+                                             <div class="flex items-center justify-between gap20 flex-grow">
+                                                 <div class="name">
+                                                     <a href="${url}" class="body-text">${item.name}</a>
+                                                 </div>
+                                             </div>
+                                         </li>
+                                         <li class="mb-10">
+                                             <div class="divider"></div>
+                                         </li>
+                                     </ul>
+                                 </li>
+                             `);
+                         });
+                     },
+                     error: function(xhr) {
+                         console.error('Search error:', xhr.responseText);
+                         $("#box-content-search").html('<li class="text-danger">Error loading search results.</li>');
+                     }
+                 });
+             } else {
+                 $("#box-content-search").empty();
+             }
+         });
+ 
+         // Toggle Search Popup
+         $('.js-search-popup').on('click', function(e) {
+             e.preventDefault();
+             $('.search-popup').toggleClass('js-hidden-content');
+         });
+ 
+         $('.search-popup__reset').on('click', function() {
+             $('#search-input').val('');
+             $("#box-content-search").empty();
+             $('.search-popup').addClass('js-hidden-content');
+         });
+ 
+         // Cart Modal Functionality
+         window.updateCartCount = function() {
+             $.ajax({
+                 url: "{{ route('cart.count') }}",
+                 method: 'GET',
+                 success: function(response) {
+                     $('.cart-count-overlay').text(response.count);
+                 },
+                 error: function(xhr) {
+                     console.error('Cart count error:', xhr.responseText);
+                     $('.cart-count-overlay').text('0');
+                 }
+             });
+         };
+ 
+         window.loadCartContent = function() {
+             console.log('loadCartContent called'); // Debug
+             $.ajax({
+                 url: "{{ route('cart.partial') }}",
+                 method: 'GET',
+                 success: function(response) {
+                     $('#cart-modal-content').html(response);
+                 },
+                 error: function(xhr) {
+                     console.error('Cart content error:', xhr.responseText);
+                     $('#cart-modal-content').html('<p class="text-danger">Unable to load cart content.</p>');
+                 }
+             });
+         };
+ 
+         // Initialize cart count
+         window.updateCartCount();
+ 
+         // Open cart modal
+         $('#cart-icon, #cart-icon-mobile').on('click', function() {
+             window.loadCartContent();
+             $('#cartModal').modal('show');
+         });
+ 
+         // Handle modal close focus for accessibility
+         $('#cartModal').on('hidden.bs.modal', function() {
+             $('#cart-icon').focus();
+         });
+ 
+         // Quantity update
+         $(document).on('click', '.cart-qty-increase, .cart-qty-reduce', function() {
+             const button = $(this);
+             const rowId = button.data('row-id');
+             const currentQty = parseInt(button.siblings('.cart-qty-input').val());
+             const newQty = button.hasClass('cart-qty-increase') ? currentQty + 1 : currentQty - 1;
+ 
+             if (newQty < 1) return;
+ 
+             $.ajax({
+                 url: '{{ route('cart.update') }}',
+                 method: 'POST',
+                 data: { rowId: rowId, quantity: newQty, _token: '{{ csrf_token() }}' },
+                 success: function(response) {
+                     if (response.success) {
+                         $('#cart-modal-content').html(response.content);
+                         window.updateCartCount();
+                     } else {
+                         $('#stock-error-' + rowId).text(response.message || 'Failed to update quantity').fadeIn().delay(2000).fadeOut();
+                     }
+                 },
+                 error: function(xhr) {
+                     console.error('Quantity update error:', xhr.responseText);
+                     $('#stock-error-' + rowId).text(xhr.responseJSON?.message || 'Failed to update quantity').fadeIn().delay(2000).fadeOut();
+                 }
+             });
+         });
+ 
+         // Remove item
+         $(document).on('click', '.cart-remove-item', function() {
+             const rowId = $(this).data('row-id');
+             $.ajax({
+                 url: '{{ route('cart.remove') }}',
+                 method: 'POST',
+                 data: { rowId: rowId, _token: '{{ csrf_token() }}' },
+                 success: function(response) {
+                     if (response.success) {
+                         $('#cart-modal-content').html(response.content);
+                         window.updateCartCount();
+                     } else {
+                         Swal.fire('Error', response.message || 'Failed to remove item', 'error');
+                     }
+                 },
+                 error: function(xhr) {
+                     console.error('Remove item error:', xhr.responseText);
+                     Swal.fire('Error', xhr.responseJSON?.message || 'Failed to remove item', 'error');
+                 }
+             });
+         });
+ 
+         // Clear cart
+         $(document).on('click', '#clear-cart', function() {
+             $.ajax({
+                 url: '{{ route('cart.clear') }}',
+                 method: 'POST',
+                 data: { _token: '{{ csrf_token() }}' },
+                 success: function(response) {
+                     if (response.success) {
+                         $('#cart-modal-content').html(response.content);
+                         window.updateCartCount();
+                         $('#cartModal').modal('hide');
+                         Swal.fire('Success', 'Cart cleared successfully', 'success');
+                     } else {
+                         Swal.fire('Error', response.message || 'Failed to clear cart', 'error');
+                     }
+                 },
+                 error: function(xhr) {
+                     console.error('Clear cart error:', xhr.responseText);
+                     Swal.fire('Error', xhr.responseJSON?.message || 'Failed to clear cart', 'error');
+                 }
+             });
+         });
+     });
+ })();
+ </script>
+ 
+     @stack("scripts")
    
 </body>
 </html>

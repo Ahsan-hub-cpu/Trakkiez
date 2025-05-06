@@ -55,6 +55,8 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         try {
+            Log::info('addToCart Request:', $request->all());
+    
             $request->validate([
                 'id' => 'required|integer|exists:products,id',
                 'quantity' => 'required|integer|min:1',
@@ -92,6 +94,7 @@ class CartController extends Controller
                 'message' => 'Item added to cart'
             ]);
         } catch (\Exception $e) {
+            Log::error('addToCart error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
