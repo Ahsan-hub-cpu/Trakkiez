@@ -23,14 +23,14 @@
 <main class="pt-90">
     <div class="mb-4 pb-4"></div>
     <section class="shop-checkout container">
-        <h2 class="page-title">Shipping and Checkout</h2>
+        <!-- <h2 class="page-title">Shipping and Checkout</h2>
         <div class="checkout-steps">
             <a href="{{ route('shop.index') }}" class="checkout-steps__item active">
                 <span class="checkout-steps__item-number">01</span>
                 <span class="checkout-steps__item-title">
                     <span>Shopping Bag</span>
                     <em>Manage Your Items List</em>
-                </span>
+                </span>findstr /s /i "cart.qty.increase" resources\views\*.*
             </a>
             <a href="{{ route('cart.checkout') }}" class="checkout-steps__item active">
                 <span class="checkout-steps__item-number">02</span>
@@ -46,7 +46,7 @@
                     <em>Order Confirmation</em>
                 </span>
             </a>
-        </div>
+        </div> -->
         <form name="checkout-form" action="{{ route('cart.placeOrder') }}" method="POST">
             @csrf
             <div class="checkout-form">

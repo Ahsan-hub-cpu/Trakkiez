@@ -110,4 +110,20 @@
       </div>
     </section>
   </main>
+  <script>
+  fbq('track', 'Purchase', {
+    value: {{ $order->total }},
+    currency: 'PKR',
+    contents: [
+      @foreach($order->orderItems as $item)
+        {
+          id: '{{ $item->product->id }}',
+          quantity: {{ $item->quantity }},
+          item_price: {{ $item->price }}
+        }@if (!$loop->last),@endif
+      @endforeach
+    ],
+    content_type: 'product'
+  });
+</script>
 @endsection

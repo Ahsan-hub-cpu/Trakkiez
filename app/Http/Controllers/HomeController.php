@@ -72,7 +72,7 @@ class HomeController extends Controller
     public function category($category_slug, Request $request)
     {
         $category = Category::where('slug', $category_slug)->firstOrFail();
-        $productsQuery = $category->products()->select('id', 'category_id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity');
+        $productsQuery = $category->products()->select('id', 'category_id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity');
 
         if ($request->has('size')) {
             $productsQuery->whereHas('sizes', function ($q) use ($request) {
@@ -111,7 +111,7 @@ class HomeController extends Controller
     {
         $category = Category::where('slug', $category_slug)->firstOrFail();
         $subcategory = SubCategory::where('category_id', $category->id)->findOrFail($subcategory_id);
-        $productsQuery = $subcategory->products()->select('id', 'category_id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity');
+        $productsQuery = $subcategory->products()->select('id', 'category_id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity');
 
         if ($request->has('size')) {
             $productsQuery->whereHas('sizes', function ($q) use ($request) {
@@ -169,7 +169,7 @@ class HomeController extends Controller
     {
         $query = $request->input('query');
         $results = Product::where('name', 'LIKE', "%{$query}%")
-                         ->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity')
+                         ->select('id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity')
                          ->take(8)
                          ->get();
 
