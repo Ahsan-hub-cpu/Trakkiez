@@ -697,7 +697,7 @@
     <!-- Consolidated JavaScript -->
          <!-- Consolidated JavaScript -->
          <script>
-            (function() {
+(function() {
     // Utility to debounce functions
     function debounce(func, wait) {
         let timeout;
@@ -876,6 +876,18 @@
         // Handle modal close focus
         $('#cartModal').on('hidden.bs.modal', function() {
             $('.cart-icon-container').first().focus();
+        });
+
+        // Track Proceed to Checkout with Meta Pixel
+        $('.btn-checkout').on('click', function(e) {
+            // Track the InitiateCheckout event with Meta Pixel
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'InitiateCheckout', {
+                    content_type: 'product',
+                    num_items: parseInt($('.cart-count-overlay').text()) || 0,
+                    currency: 'PKR'
+                });
+            }
         });
 
         // Quantity update (debounced)

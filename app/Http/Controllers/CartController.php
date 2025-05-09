@@ -49,7 +49,7 @@ class CartController extends Controller
     /**
      * Add a product to the cart.
      */
-    public function addToCart(Request $request)
+  public function addToCart(Request $request)
     {
         try {
             $request->validate([
@@ -89,7 +89,15 @@ class CartController extends Controller
     
             $cartItem->associate(Product::class);
     
-            $cartItems = Cart::instance('cart')->content();
+            $cartItems = Cart::instance('cart')->content()->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'price' => $item->price,
+                    'quantity' => $item->qty,
+                    'options' => $item->options->toArray()
+                ];
+            })->values()->all();
             $content = view('partials.cart-modal-content', compact('cartItems'))->render();
     
             return response()->json([
@@ -97,6 +105,7 @@ class CartController extends Controller
                 'message' => 'Item added to cart',
                 'content' => $content,
                 'count' => Cart::instance('cart')->content()->count(),
+                'cartItems' => $cartItems // Added to return all cart items
             ]);
         } catch (\Exception $e) {
             Log::error('addToCart error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
@@ -106,6 +115,8 @@ class CartController extends Controller
             ], 500);
         }
     }
+
+
     /**
      * Check quantity of a product/size in the cart.
      */

@@ -530,6 +530,44 @@ $(document).ready(function() {
     const $cartStatus = $('.cart-status');
     const $addToCartBtn = $('.btn-addtocart');
     let selectedSize = null;
+    let cartItems = [];
+
+    // Fetch initial cart items on page load
+    $.ajax({
+        url: '{{ route('cart.partial') }}',
+        method: 'GET',
+        success: function(response) {
+            const $cartContent = $(response);
+            cartItems = $cartContent.find('.cart-item').map(function() {
+                return {
+                    id: $(this).data('id'),
+                    name: $(this).data('name'),
+                    price: $(this).data('price'),
+                    quantity: $(this).data('quantity')
+                };
+            }).get();
+
+            if (cartItems.length > 0 && typeof fbq !== 'undefined') {
+                console.log('Initial Cart Items:', cartItems);
+                const contentIds = cartItems.map(item => item.id);
+                const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
+                fbq('track', 'AddToCart', {
+                    content_ids: contentIds,
+                    content_type: 'product',
+                    value: totalValue,
+                    currency: 'PKR',
+                    contents: cartItems.map(item => ({
+                        id: item.id,
+                        quantity: item.quantity,
+                        name: item.name
+                    }))
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error('Failed to load initial cart:', xhr.responseText);
+        }
+    });
 
     $('.size-btn').on('click', function() {
         const $btn = $(this);
@@ -614,18 +652,23 @@ $(document).ready(function() {
                     $('#cart-modal-content').html(response.content);
                     $('#cartModal').modal('show');
 
-                    // Track "Add to Cart" event with Meta Pixel
-                    if (typeof fbq !== 'undefined') {
+                    // Update cart items from response
+                    cartItems = response.cartItems || cartItems;
+                    if (cartItems.length > 0 && typeof fbq !== 'undefined') {
+                        console.log('Updated Cart Items:', cartItems);
+                        const contentIds = cartItems.map(item => item.id);
+                        const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
                         fbq('track', 'AddToCart', {
-                            content_ids: ['{{ $product->id }}'], // Product ID
-                            content_type: 'product', // Type of content
-                            value: parseFloat('{{ $product->sale_price ?: $product->regular_price }}'), // Price
-                            currency: 'PKR', // Currency
-                            quantity: parseInt($quantityInput.val()), // Quantity
-                            content_name: '{{ $product->name }}' // Product name
+                            content_ids: contentIds,
+                            content_type: 'product',
+                            value: totalValue,
+                            currency: 'PKR',
+                            contents: cartItems.map(item => ({
+                                id: item.id,
+                                quantity: item.quantity,
+                                name: item.name
+                            }))
                         });
-                    } else {
-                        console.warn('Meta Pixel not initialized');
                     }
                 } else {
                     $qtyError.text(response.message || 'Failed to add to cart');
@@ -635,7 +678,6 @@ $(document).ready(function() {
                 console.error('Add to cart error:', xhr.responseJSON || xhr.responseText);
                 $addToCartBtn.removeClass('loading').prop('disabled', false).text('Add to Cart');
                 $qtyError.text(xhr.responseJSON?.message || 'An error occurred while adding to cart');
-                // Load cart content to ensure modal reflects current cart state
                 $.ajax({
                     url: '{{ route('cart.partial') }}',
                     method: 'GET',
