@@ -1,79 +1,6 @@
 @extends('layouts.app')
 @section('content')
 <style>
-  #cartModal .modal-content {
-       border-radius: 8px;
-   }
-
-   #cartModal .cart-table {
-       width: 100%;
-       border-collapse: collapse;
-       margin-bottom: 20px;
-   }
-
-   #cartModal .cart-table th,
-   #cartModal .cart-table td {
-       padding: 10px;
-       text-align: left;
-       border-bottom: 1px solid #eee;
-   }
-
-   #cartModal .cart-totals {
-       text-align: right;
-   }
-
-   #cartModal .cart-totals th,
-   #cartModal .cart-totals td {
-       padding: 5px 0;
-   }
-
-   #cartModal .cart-total th,
-   #cartModal .cart-total td {
-       color: green;
-       font-weight: bold;
-       font-size: 18px;
-   }
-
-   #cartModal .shopping-cart__product-item img {
-       border-radius: 4px;
-   }
-
-   @media (max-width: 576px) {
-       #cartModal .modal-dialog {
-           margin: 0.5rem;
-       }
-
-       #cartModal .cart-table th,
-       #cartModal .cart-table td {
-           font-size: 0.9rem;
-           padding: 8px;
-       }
-
-       #cartModal .cart-totals th,
-       #cartModal .cart-totals td {
-           font-size: 0.9rem;
-       }
-
-       #cartModal .cart-total th,
-       #cartModal .cart-total td {
-           font-size: 16px;
-       }
-
-       #cartModal .shopping-cart__product-item {
-           flex-direction: column;
-           align-items: flex-start;
-       }
-
-       #cartModal .shopping-cart__product-item img {
-           width: 60px;
-           height: 60px;
-       }
-
-       #cartModal .shopping-cart__product-item .ms-3 {
-           margin-left: 0 !important;
-           margin-top: 10px;
-       }
-   }
   .filled-heart {
     color: orange;
   }
@@ -246,6 +173,11 @@
       max-height: 35vh;
       width: 100%;
     }
+
+    .gap-2 {
+      gap: 0.5rem !important;
+      margin-bottom: 1rem;
+    }
   }
 
   @media (max-width: 480px) {
@@ -264,25 +196,21 @@
       max-height: 30vh;
     }
   }
- @media (max-width: 768px) {
+
+  .text-success {
+    color: black !important;
+  }
+
   .gap-2 {
     gap: 0.5rem !important;
     margin-bottom: 1rem;
-  }
-}
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  .text-success {
-    color: black !important;
-}
-.gap-2 {
-    gap: 0.5rem !important;
-    margin-bottom: 1rem;
     margin-top: 1rem;
-}
+  }
+
+  .btn-addtocart.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 </style>
 
 <main class="pt-90">
@@ -370,7 +298,7 @@
         @if($product->quantity <= 0)
           <span class="btn btn-secondary mb-3">Sold Out</span>
         @else
-          <form name="addtocart-form" method="POST" action="{{ route('cart.add') }}">
+          <form id="add-to-cart-form" method="POST" action="{{ route('cart.add') }}">
             @csrf
             <div class="product-single__options">
               <div class="d-flex align-items-center">
@@ -402,7 +330,7 @@
 
             <div class="product-single__addtocart">
               <div class="qty-control position-relative">
-                <input type="number" name="quantity" value="1" min="1" max="{{ $product->quantity }}" class="qty-control__number text-center">
+                <input type="number" name="quantity" value="1" min="1" class="qty-control__number text-center">
                 <div class="qty-control__reduce">-</div>
                 <div class="qty-control__increase">+</div>
               </div>
@@ -413,18 +341,18 @@
               </div>
               <input type="hidden" name="id" value="{{ $product->id }}" />
               <input type="hidden" name="name" value="{{ $product->name }}" />
-              <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}" />
-              <button type="submit" class="btn btn-primary btn-addtocart" data-aside="cartDrawer">Add to Cart</button>
+              <input type="hidden" name="price" value="{{ $product->sale_price ?: $product->regular_price }}" />
+              <button type="submit" class="btn btn-primary btn-addtocart">Add to Cart</button>
               <span class="cart-status text-success ms-2" aria-live="polite"></span>
             </div>
           </form>
         @endif
         <div class="product-single__addtolinks">
           @if(Cart::instance("wishlist")->content()->where('id', $product->id)->count() > 0)
-            <form method="POST" action="{{ route('wishlist.remove', ['rowId' => Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId]) }}" id="from">
+            <form method="POST" action="{{ route('wishlist.remove', ['rowId' => Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId]) }}" id="wishlist-remove-form">
               @csrf
               @method('DELETE')
-              <a href="javascript:void(0)" class="menu-link menu-link_us-s add-to-wishlist filled-heart" onclick="document.getElementById('from').submit();">
+              <a href="javascript:void(0)" class="menu-link menu-link_us-s add-to-wishlist filled-heart" onclick="document.getElementById('wishlist-remove-form').submit();">
                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <use href="#icon_heart" />
                 </svg>
@@ -432,13 +360,13 @@
               </a>
             </form>
           @else
-            <form method="POST" action="{{ route('wishlist.add') }}" id="wishlist-form">
+            <form method="POST" action="{{ route('wishlist.add') }}" id="wishlist-add-form">
               @csrf
               <input type="hidden" name="id" value="{{ $product->id }}" />
               <input type="hidden" name="name" value="{{ $product->name }}" />
               <input type="hidden" name="quantity" value="1"/>
-              <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}" />
-              <a href="javascript:void(0)" class="menu-link menu-link_us-s add-to-wishlist" onclick="document.getElementById('wishlist-form').submit()">
+              <input type="hidden" name="price" value="{{ $product->sale_price ?: $product->regular_price }}" />
+              <a href="javascript:void(0)" class="menu-link menu-link_us-s add-to-wishlist" onclick="document.getElementById('wishlist-add-form').submit()">
                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <use href="#icon_heart" />
                 </svg>
@@ -533,27 +461,25 @@
               <div class="pc__img-wrapper">
                 <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">
                   <img loading="lazy" src="{{ asset('uploads/products/' . $rproduct->image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
-                  @foreach(explode(',', $rproduct->images) as $gimg)
-                    <img loading="lazy" src="{{ asset('uploads/products/' . $gimg) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img pc__img-second">
-                  @endforeach
                 </a>
                 @if($rproduct->quantity <= 0)
                   <div class="sold-out-label">Sold Out</div>
                 @endif
-                @if($rproduct->quantity > 0)
+                <!-- Note: Add-to-cart form commented out as it lacks size selection. Uncomment and add size selector if needed. -->
+                <!-- @if($rproduct->quantity > 0)
                   @if(Cart::instance("cart")->content()->where('id', $rproduct->id)->count() > 0)
                     <a href="{{ route('cart.index') }}" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-warning mb-3">Go to Cart</a>
                   @else
-                    <form name="addtocart-form" method="POST" action="{{ route('cart.add') }}">
+                    <form method="POST" action="{{ route('cart.add') }}">
                       @csrf
                       <input type="hidden" name="id" value="{{ $rproduct->id }}" />
                       <input type="hidden" name="name" value="{{ $rproduct->name }}" />
                       <input type="hidden" name="quantity" value="1"/>
-                      <input type="hidden" name="price" value="{{ $rproduct->sale_price == '' ? $rproduct->regular_price : $rproduct->sale_price }}" />
+                      <input type="hidden" name="price" value="{{ $rproduct->sale_price ?: $rproduct->regular_price }}" />
                       <button type="submit" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-primary mb-3">Add to Cart</button>
                     </form>
                   @endif
-                @endif
+                @endif -->
               </div>
               <div class="pc__info position-relative">
                 <p class="pc__category">{{ $rproduct->category->name }}</p>
@@ -599,162 +525,193 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-       let selectedSize = null;
-       const quantityInput = $('input.qty-control__number');
-       const qtyError = $('.qty-error');
-       const addToCartBtn = $('.btn-addtocart');
-       const cartStatus = $('.cart-status');
+    const $quantityInput = $('input.qty-control__number');
+    const $qtyError = $('.qty-error');
+    const $cartStatus = $('.cart-status');
+    const $addToCartBtn = $('.btn-addtocart');
+    let selectedSize = null;
+    let cartItems = [];
 
-       $('.size-btn').on('click', function() {
-           const btn = $(this);
-           if (btn.hasClass('sold-out') || btn.prop('disabled')) return;
-           $('.size-btn').removeClass('active');
-           btn.addClass('active');
-           selectedSize = {
-               id: btn.data('size-id'),
-               quantity: btn.data('quantity')
-           };
-           $('#selected_size').val(selectedSize.id);
-           quantityInput.attr('max', selectedSize.quantity);
-           if (parseInt(quantityInput.val()) > selectedSize.quantity) {
-               quantityInput.val(1);
-               qtyError.text('');
-           }
-           updateCartStatus(selectedSize.id);
-       });
+    // Fetch initial cart items on page load
+    $.ajax({
+        url: '{{ route('cart.partial') }}',
+        method: 'GET',
+        success: function(response) {
+            const $cartContent = $(response);
+            cartItems = $cartContent.find('.cart-item').map(function() {
+                return {
+                    id: $(this).data('id'),
+                    name: $(this).data('name'),
+                    price: $(this).data('price'),
+                    quantity: $(this).data('quantity')
+                };
+            }).get();
 
-       $('.qty-control__increase').on('click', function() {
-           if (!selectedSize) {
-               qtyError.text('Please select a size first');
-               return;
-           }
-           const currentVal = parseInt(quantityInput.val()) || 1;
-           if (currentVal < selectedSize.quantity) {
-               quantityInput.val(currentVal);
-               qtyError.text('');
-           } else {
-               qtyError.text(`Only ${selectedSize.quantity} items available`);
-           }
-       });
+            if (cartItems.length > 0 && typeof fbq !== 'undefined') {
+                console.log('Initial Cart Items:', cartItems);
+                const contentIds = cartItems.map(item => item.id);
+                const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
+                fbq('track', 'AddToCart', {
+                    content_ids: contentIds,
+                    content_type: 'product',
+                    value: totalValue,
+                    currency: 'PKR',
+                    contents: cartItems.map(item => ({
+                        id: item.id,
+                        quantity: item.quantity,
+                        name: item.name
+                    }))
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error('Failed to load initial cart:', xhr.responseText);
+        }
+    });
 
-       $('.qty-control__reduce').on('click', function() {
-           const currentVal = parseInt(quantityInput.val()) || 1;
-           if (currentVal > 1) {
-               quantityInput.val(currentVal);
-               qtyError.text('');
-           }
-       });
+    $('.size-btn').on('click', function() {
+        const $btn = $(this);
+        if ($btn.hasClass('sold-out') || $btn.prop('disabled')) return;
+        $('.size-btn').removeClass('active');
+        $btn.addClass('active');
+        selectedSize = {
+            id: $btn.data('size-id'),
+            quantity: $btn.data('quantity')
+        };
+        $('#selected_size').val(selectedSize.id);
+        $quantityInput.attr('max', selectedSize.quantity);
+        if (parseInt($quantityInput.val()) > selectedSize.quantity) {
+            $quantityInput.val(1);
+            $qtyError.text('');
+        }
+    });
 
-       quantityInput.on('input', function() {
-           const currentVal = parseInt(quantityInput.val());
-           const maxVal = parseInt(quantityInput.attr('max'));
-           if (currentVal > maxVal) {
-               qtyError.text(`Only ${maxVal} items available`);
-               quantityInput.val(maxVal);
-           } else if (currentVal < 1 || isNaN(currentVal)) {
-               quantityInput.val(1);
-               qtyError.text('');
-           } else {
-               qtyError.text('');
-           }
-       });
+    $('.qty-control__increase').on('click', function() {
+        if (!selectedSize) {
+            $qtyError.text('Please select a size first');
+            return;
+        }
+        const currentVal = parseInt($quantityInput.val()) || 1;
+        if (currentVal < selectedSize.quantity) {
+            $quantityInput.val(currentVal);
+            $qtyError.text('');
+        } else {
+            $qtyError.text(`Only ${selectedSize.quantity} items available`);
+        }
+    });
 
-       $('form[name="addtocart-form"]').on('submit', function(e) {
-           e.preventDefault();
-           if (!selectedSize) {
-               qtyError.text('Please select a size');
-               return;
-           }
-           const form = $(this);
-           const formData = form.serialize();
-           $.ajax({
-               url: form.attr('action'),
-               method: 'POST',
-               data: formData,
-               headers: {
-                   'X-CSRF-TOKEN': '{{ csrf_token() }}'
-               },
-               success: function(response) {
-                   if (response.success) {
-                       const cartQuantity = response.cartQuantity || 1;
-                       cartStatus.text(`${cartQuantity} in cart already`).show();
-                       qtyError.text('');
-                       quantityInput.val(1);
+    $('.qty-control__reduce').on('click', function() {
+        const currentVal = parseInt($quantityInput.val()) || 1;
+        if (currentVal > 1) {
+            $quantityInput.val(currentVal);
+            $qtyError.text('');
+        }
+    });
 
-                       // Update cart quantity in header
-                       updateCartQuantity();
+    $quantityInput.on('input', function() {
+        if (!selectedSize) {
+            $qtyError.text('Please select a size first');
+            $quantityInput.val(1);
+            return;
+        }
+        const currentVal = parseInt($quantityInput.val());
+        const maxVal = selectedSize.quantity;
+        if (currentVal > maxVal) {
+            $qtyError.text(`Only ${maxVal} items available`);
+            $quantityInput.val(maxVal);
+        } else if (currentVal < 1 || isNaN(currentVal)) {
+            $quantityInput.val(1);
+            $qtyError.text('');
+        } else {
+            $qtyError.text('');
+        }
+    });
 
-                       // Load cart content into modal
-                       $.ajax({
-                           url: '{{ route('cart.partial') }}',
-                           method: 'GET',
-                           success: function(cartHtml) {
-                               $('#cart-modal-content').html(cartHtml);
-                               $('#cartModal').modal('show');
-                           },
-                           error: function(xhr) {
-                               qtyError.text('Failed to load cart content');
-                           }
-                       });
-                   } else {
-                       qtyError.text(response.message || 'Failed to add to cart');
-                   }
-               },
-               error: function(xhr) {
-                   qtyError.text(xhr.responseJSON?.message || 'An error occurred while adding to cart');
-               }
-           });
-       });
+    $('#add-to-cart-form').on('submit', function(e) {
+        e.preventDefault();
+        if (!selectedSize) {
+            $qtyError.text('Please select a size');
+            return;
+        }
+        const $form = $(this);
+        $addToCartBtn.addClass('loading').prop('disabled', true).text('Adding...');
+        $.ajax({
+            url: $form.attr('action'),
+            method: 'POST',
+            data: $form.serialize(),
+            success: function(response) {
+                $addToCartBtn.removeClass('loading').prop('disabled', false).text('Add to Cart');
+                if (response.success) {
+                    $cartStatus.text('Added to cart').show().fadeOut(3000);
+                    $qtyError.text('');
+                    $quantityInput.val(1);
+                    $('.size-btn').removeClass('active');
+                    $('#selected_size').val('');
+                    selectedSize = null;
+                    $('.cart-count-overlay').text(response.count).attr('aria-label', `Cart contains ${response.count} items`);
+                    $('#cart-modal-content').html(response.content);
+                    $('#cartModal').modal('show');
 
-       function updateCartStatus(sizeId) {
-           $.ajax({
-               url: '{{ route('cart.checkQuantity') }}',
-               method: 'GET',
-               data: { product_id: {{ $product->id }}, size_id: sizeId },
-               success: function(response) {
-                   if (response.cartQuantity > 0) {
-                       cartStatus.text(`${response.cartQuantity} in cart already`).show();
-                   } else {
-                       cartStatus.text('').hide();
-                   }
-               },
-               error: function() {
-                   cartStatus.text('').hide();
-               }
-           });
-       }
+                    // Update cart items from response
+                    cartItems = response.cartItems || cartItems;
+                    if (cartItems.length > 0 && typeof fbq !== 'undefined') {
+                        console.log('Updated Cart Items:', cartItems);
+                        const contentIds = cartItems.map(item => item.id);
+                        const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
+                        fbq('track', 'AddToCart', {
+                            content_ids: contentIds,
+                            content_type: 'product',
+                            value: totalValue,
+                            currency: 'PKR',
+                            contents: cartItems.map(item => ({
+                                id: item.id,
+                                quantity: item.quantity,
+                                name: item.name
+                            }))
+                        });
+                    }
+                } else {
+                    $qtyError.text(response.message || 'Failed to add to cart');
+                }
+            },
+            error: function(xhr) {
+                console.error('Add to cart error:', xhr.responseJSON || xhr.responseText);
+                $addToCartBtn.removeClass('loading').prop('disabled', false).text('Add to Cart');
+                $qtyError.text(xhr.responseJSON?.message || 'An error occurred while adding to cart');
+                $.ajax({
+                    url: '{{ route('cart.partial') }}',
+                    method: 'GET',
+                    success: function(cartContent) {
+                        $('#cart-modal-content').html(cartContent);
+                        $('#cartModal').modal('show');
+                    },
+                    error: function(cartXhr) {
+                        console.error('Cart content load error:', cartXhr.responseText);
+                        $qtyError.text('Failed to load cart content');
+                    }
+                });
+            }
+        });
+    });
+});
 
-       function updateCartQuantity() {
-           $.ajax({
-               url: '{{ route('cart.count') }}',
-               method: 'GET',
-               success: function(response) {
-                   $('.cart-quantity').text(response.count);
-               },
-               error: function() {
-                   $('.cart-quantity').text('0');
-               }
-           });
-       }
-   });
+function openLightbox() {
+    const lightbox = document.getElementById('size-chart-lightbox');
+    lightbox.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
 
-   function openLightbox() {
-       const lightbox = document.getElementById('size-chart-lightbox');
-       lightbox.style.display = 'flex';
-       document.body.style.overflow = 'hidden';
-   }
+function closeLightbox() {
+    const lightbox = document.getElementById('size-chart-lightbox');
+    lightbox.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
 
-   function closeLightbox() {
-       const lightbox = document.getElementById('size-chart-lightbox');
-       lightbox.style.display = 'none';
-       document.body.style.overflow = 'auto';
-   }
-
-   document.addEventListener('click', function(event) {
-       const lightbox = document.getElementById('size-chart-lightbox');
-       if (event.target === lightbox) {
-           closeLightbox();
-       }
-   });
+document.addEventListener('click', function(event) {
+    const lightbox = document.getElementById('size-chart-lightbox');
+    if (event.target === lightbox) {
+        closeLightbox();
+    }
+});
 </script>
 @endpush

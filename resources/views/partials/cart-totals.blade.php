@@ -1,18 +1,17 @@
-<!-- resources/views/partials/cart-totals.blade.php -->
 <table class="cart-totals">
     <tbody>
         <tr>
             <th>Subtotal</th>
             <td>PKR {{ number_format($subtotal, 2) }}</td>
         </tr>
-        @if(Session()->has('discounts'))
+        @if(session()->has('discounts'))
             <tr>
-                <th>Discount {{ Session::get("coupon")["code"] }}</th>
-                <td>-PKR {{ number_format((float)Session::get("discounts")["discount"], 2) }}</td>
+                <th>Discount {{ session('coupon.code') }}</th>
+                <td>-PKR {{ number_format((float)session('discounts.discount'), 2) }}</td>
             </tr>
             <tr>
                 <th>Subtotal After Discount</th>
-                <td>PKR {{ number_format((float)Session::get("discounts")["subtotal"], 2) }}</td>
+                <td>PKR {{ number_format((float)session('discounts.subtotal'), 2) }}</td>
             </tr>
         @endif
         <tr>

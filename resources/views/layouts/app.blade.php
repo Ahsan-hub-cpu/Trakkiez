@@ -697,265 +697,349 @@
     <!-- Consolidated JavaScript -->
          <!-- Consolidated JavaScript -->
          <script>
- (function() { // IIFE to avoid global conflicts
-     // FAB Button Toggle
-     document.addEventListener('DOMContentLoaded', function() {
-         const fabButton = document.getElementById('fabButton');
-         const fabIcons = document.getElementById('fabIcons');
- 
-         if (fabButton && fabIcons) {
-             fabButton.addEventListener('click', () => {
-                 fabIcons.style.display = fabIcons.style.display === 'flex' ? 'none' : 'flex';
-             });
- 
-             const fabContainer = document.querySelector('.fab-container');
-             window.addEventListener('scroll', () => {
-                 fabContainer.style.opacity = '1';
-                 fabContainer.style.visibility = 'visible';
-             });
-         }
-     });
- 
-     // Mobile Navigation
-     document.addEventListener('DOMContentLoaded', function() {
-         const mobileNav = document.getElementById('mobileNav');
-         const navLinks = mobileNav?.querySelectorAll('.navigation__link');
-         const navbarToggler = document.querySelector('.navbar-toggler');
- 
-         if (mobileNav && navLinks && navbarToggler) {
-             navLinks.forEach(link => {
-                 link.addEventListener('click', () => {
-                     const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
-                     bsCollapse.hide();
-                 });
-             });
- 
-             document.addEventListener('click', (e) => {
-                 if (!mobileNav.contains(e.target) && !navbarToggler.contains(e.target) && mobileNav.classList.contains('show')) {
-                     const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
-                     bsCollapse.hide();
-                 }
-             });
-         }
-     });
- 
-     // Swiper Initialization
-     document.addEventListener('DOMContentLoaded', function() {
-         let swiperElements = document.querySelectorAll('.js-swiper-slider');
-         swiperElements.forEach(function(element) {
-             let settings = JSON.parse(element.dataset.settings || '{}');
-             new Swiper(element, settings);
-         });
-     });
- 
-     // Fix Layout
-     document.addEventListener('DOMContentLoaded', function() {
-         const elements = [
-             '.header-mobile',
-             '.banner-section',
-             '.banner-slider',
-             '.navigation',
-             '.mobile-nav'
-         ];
- 
-         // elements.forEach(selector => {
-         //     const element = document.querySelector(selector);
-         //     if (element) {
-         //         element.style.margin = '0';
-         //         element.style.padding = '0';
-         //         element.style.position = 'relative';
-         //         element.style.width = '100%';
-         //     }
-         // });
- 
-         const banner = document.querySelector('.banner-section');
-         if (banner) {
-             banner.style.display = 'none';
-             banner.offsetHeight;
-             banner.style.display = '';
-         }
-     });
- 
-     // jQuery-dependent code
-     $(document).ready(function() {
-         // Search Functionality
-         $("#search-input").on("keyup", function() {
-             const searchQuery = $(this).val();
-             if (searchQuery.length > 2) {
-                 $.ajax({
-                     type: "GET",
-                     url: "{{ route('home.search') }}",
-                     data: { query: searchQuery },
-                     dataType: "json",
-                     success: function(data) {
-                         $("#box-content-search").empty();
-                         $.each(data, function(index, item) {
-                             const url = "{{ route('shop.product.details', ['product_slug' => '__slug__']) }}".replace('__slug__', item.slug);
-                             const imageUrl = "{{ asset('Uploads/products/thumbnails') }}/" + item.image;
-                             $("#box-content-search").append(`
-                                 <li>
-                                     <ul>
-                                         <li class="product-item gap14 mb-10">
-                                             <div class="image no-bg">
-                                                 <img src="${imageUrl}" alt="${item.name}">
-                                             </div>
-                                             <div class="flex items-center justify-between gap20 flex-grow">
-                                                 <div class="name">
-                                                     <a href="${url}" class="body-text">${item.name}</a>
-                                                 </div>
-                                             </div>
-                                         </li>
-                                         <li class="mb-10">
-                                             <div class="divider"></div>
-                                         </li>
-                                     </ul>
-                                 </li>
-                             `);
-                         });
-                     },
-                     error: function(xhr) {
-                         console.error('Search error:', xhr.responseText);
-                         $("#box-content-search").html('<li class="text-danger">Error loading search results.</li>');
-                     }
-                 });
-             } else {
-                 $("#box-content-search").empty();
-             }
-         });
- 
-         // Toggle Search Popup
-         $('.js-search-popup').on('click', function(e) {
-             e.preventDefault();
-             $('.search-popup').toggleClass('js-hidden-content');
-         });
- 
-         $('.search-popup__reset').on('click', function() {
-             $('#search-input').val('');
-             $("#box-content-search").empty();
-             $('.search-popup').addClass('js-hidden-content');
-         });
- 
-         // Cart Modal Functionality
-         window.updateCartCount = function() {
-             $.ajax({
-                 url: "{{ route('cart.count') }}",
-                 method: 'GET',
-                 success: function(response) {
-                     $('.cart-count-overlay').text(response.count);
-                 },
-                 error: function(xhr) {
-                     console.error('Cart count error:', xhr.responseText);
-                     $('.cart-count-overlay').text('0');
-                 }
-             });
-         };
- 
-         window.loadCartContent = function() {
-             console.log('loadCartContent called'); // Debug
-             $.ajax({
-                 url: "{{ route('cart.partial') }}",
-                 method: 'GET',
-                 success: function(response) {
-                     $('#cart-modal-content').html(response);
-                 },
-                 error: function(xhr) {
-                     console.error('Cart content error:', xhr.responseText);
-                     $('#cart-modal-content').html('<p class="text-danger">Unable to load cart content.</p>');
-                 }
-             });
-         };
- 
-         // Initialize cart count
-         window.updateCartCount();
- 
-         // Open cart modal
-         $('#cart-icon, #cart-icon-mobile').on('click', function() {
-             window.loadCartContent();
-             $('#cartModal').modal('show');
-         });
- 
-         // Handle modal close focus for accessibility
-         $('#cartModal').on('hidden.bs.modal', function() {
-             $('#cart-icon').focus();
-         });
- 
-         // Quantity update
-         $(document).on('click', '.cart-qty-increase, .cart-qty-reduce', function() {
-             const button = $(this);
-             const rowId = button.data('row-id');
-             const currentQty = parseInt(button.siblings('.cart-qty-input').val());
-             const newQty = button.hasClass('cart-qty-increase') ? currentQty + 1 : currentQty - 1;
- 
-             if (newQty < 1) return;
- 
-             $.ajax({
-                 url: '{{ route('cart.update') }}',
-                 method: 'POST',
-                 data: { rowId: rowId, quantity: newQty, _token: '{{ csrf_token() }}' },
-                 success: function(response) {
-                     if (response.success) {
-                         $('#cart-modal-content').html(response.content);
-                         window.updateCartCount();
-                     } else {
-                         $('#stock-error-' + rowId).text(response.message || 'Failed to update quantity').fadeIn().delay(2000).fadeOut();
-                     }
-                 },
-                 error: function(xhr) {
-                     console.error('Quantity update error:', xhr.responseText);
-                     $('#stock-error-' + rowId).text(xhr.responseJSON?.message || 'Failed to update quantity').fadeIn().delay(2000).fadeOut();
-                 }
-             });
-         });
- 
-         // Remove item
-         $(document).on('click', '.cart-remove-item', function() {
-             const rowId = $(this).data('row-id');
-             $.ajax({
-                 url: '{{ route('cart.remove') }}',
-                 method: 'POST',
-                 data: { rowId: rowId, _token: '{{ csrf_token() }}' },
-                 success: function(response) {
-                     if (response.success) {
-                         $('#cart-modal-content').html(response.content);
-                         window.updateCartCount();
-                     } else {
-                         Swal.fire('Error', response.message || 'Failed to remove item', 'error');
-                     }
-                 },
-                 error: function(xhr) {
-                     console.error('Remove item error:', xhr.responseText);
-                     Swal.fire('Error', xhr.responseJSON?.message || 'Failed to remove item', 'error');
-                 }
-             });
-         });
- 
-         // Clear cart
-         $(document).on('click', '#clear-cart', function() {
-             $.ajax({
-                 url: '{{ route('cart.clear') }}',
-                 method: 'POST',
-                 data: { _token: '{{ csrf_token() }}' },
-                 success: function(response) {
-                     if (response.success) {
-                         $('#cart-modal-content').html(response.content);
-                         window.updateCartCount();
-                         $('#cartModal').modal('hide');
-                         Swal.fire('Success', 'Cart cleared successfully', 'success');
-                     } else {
-                         Swal.fire('Error', response.message || 'Failed to clear cart', 'error');
-                     }
-                 },
-                 error: function(xhr) {
-                     console.error('Clear cart error:', xhr.responseText);
-                     Swal.fire('Error', xhr.responseJSON?.message || 'Failed to clear cart', 'error');
-                 }
-             });
-         });
-     });
- })();
- </script>
- 
-     @stack("scripts")
-   
+(function() {
+    // Utility to debounce functions
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    // Show loading state
+    function showLoading(target) {
+        $(target).addClass('loading').prop('disabled', true);
+    }
+
+    // Hide loading state
+    function hideLoading(target) {
+        $(target).removeClass('loading').prop('disabled', false);
+    }
+
+    // Show feedback message
+    function showFeedback(title, message, type) {
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: type,
+            timer: 3000,
+            showConfirmButton: false
+        });
+    }
+
+    // Update cart count
+    function updateCartCount() {
+        return $.ajax({
+            url: '{{ route('cart.count') }}',
+            method: 'GET'
+        }).then(response => {
+            $('.cart-count-overlay').text(response.count).attr('aria-label', `Cart contains ${response.count} items`);
+        }).catch(xhr => {
+            console.error('Cart count error:', xhr.responseText);
+            $('.cart-count-overlay').text('0');
+        });
+    }
+
+    // Load cart content
+    function loadCartContent() {
+        return $.ajax({
+            url: '{{ route('cart.partial') }}',
+            method: 'GET'
+        }).then(response => {
+            $('#cart-modal-content').html(response);
+            return updateCartCount(); // Chain cart count update
+        }).catch(xhr => {
+            console.error('Cart content error:', xhr.responseText);
+            $('#cart-modal-content').html('<p class="text-danger">Unable to load cart content.</p>');
+        });
+    }
+
+    // Initialize on DOM ready
+    $(document).ready(function() {
+        // FAB Button Toggle
+        const fabButton = document.getElementById('fabButton');
+        const fabIcons = document.getElementById('fabIcons');
+        if (fabButton && fabIcons) {
+            fabButton.addEventListener('click', () => {
+                fabIcons.style.display = fabIcons.style.display === 'flex' ? 'none' : 'flex';
+                fabButton.setAttribute('aria-expanded', fabIcons.style.display === 'flex');
+            });
+
+            const fabContainer = document.querySelector('.fab-container');
+            window.addEventListener('scroll', () => {
+                fabContainer.style.opacity = '1';
+                fabContainer.style.visibility = 'visible';
+            });
+        }
+
+        // Mobile Navigation
+        const mobileNav = document.getElementById('mobileNav');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        if (mobileNav && navbarToggler) {
+            const navLinks = mobileNav.querySelectorAll('.navigation__link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
+                    bsCollapse.hide();
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!mobileNav.contains(e.target) && !navbarToggler.contains(e.target) && mobileNav.classList.contains('show')) {
+                    const bsCollapse = new bootstrap.Collapse(mobileNav, { toggle: false });
+                    bsCollapse.hide();
+                }
+            });
+        }
+
+        // Swiper Initialization
+        const swiperElements = document.querySelectorAll('.js-swiper-slider');
+        swiperElements.forEach(element => {
+            const settings = JSON.parse(element.dataset.settings || '{}');
+            new Swiper(element, settings);
+        });
+
+        // Search Functionality (debounced)
+        const searchHandler = debounce(function() {
+            const searchQuery = $('#search-input').val();
+            if (searchQuery.length > 2) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('home.search') }}',
+                    data: { query: searchQuery },
+                    dataType: 'json',
+                    success: function(data) {
+                        const $searchResults = $('#box-content-search').empty();
+                        $.each(data, function(index, item) {
+                            const url = '{{ route('shop.product.details', ['product_slug' => '__slug__']) }}'.replace('__slug__', item.slug);
+                            const imageUrl = '{{ asset('Uploads/products/thumbnails') }}/' + item.image;
+                            $searchResults.append(`
+                                <li>
+                                    <ul>
+                                        <li class="product-item gap14 mb-10">
+                                            <div class="image no-bg">
+                                                <img src="${imageUrl}" alt="${item.name}">
+                                            </div>
+                                            <div class="flex items-center justify-between gap20 flex-grow">
+                                                <div class="name">
+                                                    <a href="${url}" class="body-text">${item.name}</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="mb-10">
+                                            <div class="divider"></div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            `);
+                        });
+                    },
+                    error: function(xhr) {
+                        console.error('Search error:', xhr.responseText);
+                        showFeedback('Error', xhr.responseJSON?.message || 'Error loading search results', 'error');
+                    }
+                });
+            } else {
+                $('#box-content-search').empty();
+            }
+        }, 300);
+
+        $('#search-input').on('keyup', searchHandler);
+
+        // Toggle Search Popup
+        $('.js-search-popup').on('click', function(e) {
+            e.preventDefault();
+            $('.search-popup').toggleClass('js-hidden-content');
+            if (!$('.search-popup').hasClass('js-hidden-content')) {
+                $('#search-input').focus();
+            }
+        });
+
+        $('.search-popup__reset').on('click', function() {
+            $('#search-input').val('');
+            $('#box-content-search').empty();
+            $('.search-popup').addClass('js-hidden-content');
+        });
+
+        // Cart Initialization
+        updateCartCount();
+
+        // Open cart modal
+        $('.cart-icon-container').on('click', function(e) {
+            e.preventDefault();
+            loadCartContent().then(() => {
+                $('#cartModal').modal('show');
+            });
+        });
+
+        // Handle modal close focus
+        $('#cartModal').on('hidden.bs.modal', function() {
+            $('.cart-icon-container').first().focus();
+        });
+
+        // Track Proceed to Checkout with Meta Pixel
+        $('.btn-checkout').on('click', function(e) {
+            // Track the InitiateCheckout event with Meta Pixel
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'InitiateCheckout', {
+                    content_type: 'product',
+                    num_items: parseInt($('.cart-count-overlay').text()) || 0,
+                    currency: 'PKR'
+                });
+            }
+        });
+
+        // Quantity update (debounced)
+        const updateQuantity = debounce(function(button, rowId, newQty) {
+            showLoading(button);
+            $.ajax({
+                url: '{{ route('cart.update') }}',
+                method: 'POST',
+                data: { rowId: rowId, quantity: newQty, _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        loadCartContent();
+                    } else {
+                        showFeedback('Error', response.message || 'Failed to update quantity', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Quantity update error:', xhr.responseText);
+                    showFeedback('Error', xhr.responseJSON?.message || 'Failed to update quantity', 'error');
+                },
+                complete: function() {
+                    hideLoading(button);
+                }
+            });
+        }, 300);
+
+        $(document).on('click', '.cart-qty-increase, .cart-qty-reduce', function() {
+            const $button = $(this);
+            const rowId = $button.data('row-id');
+            const $input = $button.siblings('.cart-qty-input');
+            const currentQty = parseInt($input.val());
+            const newQty = $button.hasClass('cart-qty-increase') ? currentQty + 1 : currentQty - 1;
+
+            if (newQty < 1) return; // Prevent negative quantities
+
+            updateQuantity($button, rowId, newQty);
+        });
+
+        // Remove item
+        $(document).on('click', '.cart-remove-item', function() {
+            const $button = $(this);
+            const rowId = $button.data('row-id');
+            showLoading($button);
+            $.ajax({
+                url: '{{ route('cart.remove') }}',
+                method: 'POST',
+                data: { rowId: rowId, _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        loadCartContent();
+                        showFeedback('Success', 'Item removed from cart', 'success');
+                    } else {
+                        showFeedback('Error', response.message || 'Failed to remove item', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Remove item error:', xhr.responseText);
+                    showFeedback('Error', xhr.responseJSON?.message || 'Failed to remove item', 'error');
+                },
+                complete: function() {
+                    hideLoading($button);
+                }
+            });
+        });
+
+        // Clear cart
+        $(document).on('click', '#clear-cart', function() {
+            const $button = $(this);
+            showLoading($button);
+            $.ajax({
+                url: '{{ route('cart.clear') }}',
+                method: 'POST',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        loadCartContent();
+                        $('#cartModal').modal('hide');
+                        showFeedback('Success', 'Cart cleared successfully', 'success');
+                    } else {
+                        showFeedback('Error', response.message || 'Failed to clear cart', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Clear cart error:', xhr.responseText);
+                    showFeedback('Error', xhr.responseJSON?.message || 'Failed to clear cart', 'error');
+                },
+                complete: function() {
+                    hideLoading($button);
+                }
+            });
+        });
+
+        // Apply coupon
+        $(document).on('click', '#apply-coupon', function() {
+            const $button = $(this);
+            const couponCode = $('#coupon-code').val();
+            if (!couponCode) {
+                showFeedback('Error', 'Please enter a coupon code', 'error');
+                return;
+            }
+            showLoading($button);
+            $.ajax({
+                url: '{{ route('cart.applyCoupon') }}',
+                method: 'POST',
+                data: { coupon_code: couponCode, _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        loadCartContent();
+                        showFeedback('Success', 'Coupon applied successfully', 'success');
+                    } else {
+                        showFeedback('Error', response.message || 'Failed to apply coupon', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Apply coupon error:', xhr.responseText);
+                    showFeedback('Error', xhr.responseJSON?.message || 'Failed to apply coupon', 'error');
+                },
+                complete: function() {
+                    hideLoading($button);
+                }
+            });
+        });
+
+        // Remove coupon
+        $(document).on('click', '#remove-coupon', function() {
+            const $button = $(this);
+            showLoading($button);
+            $.ajax({
+                url: '{{ route('cart.removeCoupon') }}',
+                method: 'POST',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        loadCartContent();
+                        showFeedback('Success', 'Coupon removed successfully', 'success');
+                    } else {
+                        showFeedback('Error', response.message || 'Failed to remove coupon', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Remove coupon error:', xhr.responseText);
+                    showFeedback('Error', xhr.responseJSON?.message || 'Failed to remove coupon', 'error');
+                },
+                complete: function() {
+                    hideLoading($button);
+                }
+            });
+        });
+    });
+})();
+            </script>
+
+ @stack("scripts")
 </body>
 </html>

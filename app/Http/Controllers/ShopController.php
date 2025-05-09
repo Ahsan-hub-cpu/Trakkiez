@@ -11,7 +11,7 @@ class ShopController extends Controller
 {
     public function index(Request $request)
     {
-        $productsQuery = Product::query()->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'created_at', 'featured', 'category_id')
+        $productsQuery = Product::query()->select('id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity', 'created_at', 'featured', 'category_id')
                                        ->with(['category', 'productVariations.size']);
         
         if ($request->query('filter') === 'featured') {
@@ -89,7 +89,7 @@ class ShopController extends Controller
                          ->firstOrFail();
 
         $rproducts = Product::where('slug', '<>', $product_slug)
-                           ->select('id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'category_id')
+                           ->select('id', 'name', 'image' , 'slug', 'regular_price', 'sale_price', 'quantity', 'category_id')
                            ->with(['category', 'productVariations.size'])
                            ->inRandomOrder()
                            ->take(8)

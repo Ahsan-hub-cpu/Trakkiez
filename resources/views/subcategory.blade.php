@@ -32,22 +32,22 @@
     opacity: 1;
   }
 
-  .pc__img-hover {
+  /* .pc__img-hover {
     position: absolute;
     top: 0;
     left: 0;
     opacity: 0;
-  }
+  } */
 
-  .product-card:hover .pc__img-primary,
+  /* .product-card:hover .pc__img-primary,
   .product-card.active .pc__img-primary {
     opacity: 0;
-  }
+  } */
 
-  .product-card:hover .pc__img-hover,
+  /* .product-card:hover .pc__img-hover,
   .product-card.active .pc__img-hover {
     opacity: 1;
-  }
+  } */
 
   .sold-out-badge {
       position: absolute;
@@ -219,7 +219,6 @@
             <div class="pc__img-wrapper">
               <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" aria-label="View details for {{ $product->name }}">
                 <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" width="200" height="auto" alt="{{ $product->name }}" class="pc__img pc__img-primary">
-                <img loading="lazy" src="{{ asset('uploads/products/' . $product->hover_image) }}" width="200" height="auto" alt="{{ $product->name }} hover" class="pc__img pc__img-hover">
               </a>
               @if($product->quantity <= 0)
                 <div class="sold-out-badge">Sold Out</div>

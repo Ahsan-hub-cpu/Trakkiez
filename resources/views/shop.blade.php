@@ -13,9 +13,9 @@
     width: 90%; 
     margin: 0 auto; 
   }
-  .product-card:hover { 
+  /* .product-card:hover { 
     transform: translateY(-3px); 
-  }
+  } */
 
   .pc__img-wrapper { 
     overflow: hidden; 
@@ -32,7 +32,7 @@
     image-rendering: crisp-edges; 
   }
 
-  .product-card:hover .pc__img { 
+  /* .product-card:hover .pc__img { 
     transform: scale(1.05); 
   }
   .secondary-img { 
@@ -46,20 +46,20 @@
     object-fit: cover; 
     border-radius: 8px; 
     image-rendering: crisp-edges; 
-  }
- 
+  } */
+/*  
   .pc__img-wrapper:hover .primary-img { 
     opacity: 0; 
   }
   .pc__img-wrapper:hover .secondary-img { 
     opacity: 1; 
-  }
+  } */
   .pc__atc { font-size: 0.875rem; padding: 0.375rem 0.75rem; opacity: 0; transition: opacity 0.3s ease, background-color 0.3s ease; }
-  .product-card:hover .pc__atc { opacity: 1; }
+  /* .product-card:hover .pc__atc { opacity: 1; } */
   .pc__btn-wl { opacity: 0; transition: opacity 0.3s ease; }
-  .product-card:hover .pc__btn-wl { opacity: 1; }
+  /* .product-card:hover .pc__btn-wl { opacity: 1; } */
   .pc__title { font-size: 1rem; font-weight: 500; color: #333; transition: color 0.3s ease; }
-  .pc__title:hover { color: #ff6f61; }
+  /* .pc__title:hover { color: #ff6f61; } */
   .product-card__price { font-size: 0.9375rem; }
   .money.price { color: #333; }
   .money.price s { color: #999; }
@@ -145,12 +145,6 @@
                     <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" 
                         alt="{{ $product->name }}" 
                         class="pc__img primary-img card-img-top rounded">
-                    @if($product->hover_image && $product->hover_image !== 'default-hover.jpg')
-                        <img loading="lazy" src="{{ asset('uploads/products/' . $product->hover_image) }}" 
-                            width="330" height="400" 
-                            alt="{{ $product->name }}" 
-                            class="secondary-img">
-                    @endif
                 </a>
                 @if($product->quantity <= 0)
                   <div class="sold-out-badge">Sold Out</div>
