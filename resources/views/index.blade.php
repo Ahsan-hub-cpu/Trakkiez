@@ -347,13 +347,13 @@
         @endforeach
     @else
         <div class="col-12">
-            <p class="text-center text-muted">Koi subcategories nahi hain.</p>
+            <p class="text-center text-muted">No Subcategory Available</p>
         </div>
     @endif
     </div>
   </section>
 </main>
-<script defer src="{{ asset('js/banner-slider.js') }}"></script>
+<script defer src="{{ asset('assets/js/banner-slider.js') }}"></script>
 @endsection
 
 <style>

@@ -22,4 +22,5 @@ yarn-error.log
 .htaccess
 .env
 .env.production
-.env.example.env.save
+.env.example
+.env.save
