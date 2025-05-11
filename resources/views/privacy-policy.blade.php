@@ -23,7 +23,7 @@
   <h2 style="text-align: center; margin-bottom: 25px; margin-top: -15px;">Privacy Policy</h2>
 <p>
   This Privacy Policy describes how your personal information is collected, used, and shared when you visit or make a purchase from 
-  <strong>trakkiezstore@gmail.com</strong> (the “Site”).
+  <strong>trakkiez.com</strong> (the “Site”).
 </p>
     
     <p>

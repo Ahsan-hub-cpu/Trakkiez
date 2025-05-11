@@ -440,14 +440,20 @@ class CartController extends Controller
     /**
      * Place an order.
      */
-    public function place_order(Request $request)
+public function place_order(Request $request)
     {
         try {
+            // Log form data and address session for debugging
+            Log::info('Form data', ['data' => $request->all()]);
+            Log::info('Address session', ['address' => session('address')]);
+
+            // Check if cart is empty
             $cartItems = Cart::instance('cart')->content();
             if ($cartItems->isEmpty()) {
                 return redirect()->route('cart.index')->with('error', 'Your cart is empty. Please add items to proceed.');
             }
 
+            // Define validation rules
             $address = session()->get('address');
             $validationRules = [
                 'mode' => 'required|in:card,paypal,cod',
@@ -466,33 +472,32 @@ class CartController extends Controller
                 ]);
             }
 
+            // Validate the request
             $request->validate($validationRules, [
-                'email.required' => 'Email is required.',
+                'email.required' => 'The email field is required.',
                 'email.email' => 'Please enter a valid email address.',
-                'name.required' => 'Full name is required.',
-                'phone.required' => 'Phone number is required.',
-                'phone.min' => 'Phone number must be at least 10 characters.',
-                'zip.required' => 'Postal code is required.',
-                'zip.min' => 'Postal code must be at least 5 characters.',
-                'state.required' => 'State is required.',
-                'city.required' => 'City is required.',
-                'address.required' => 'Address is required.',
-                'locality.required' => 'Locality is required.',
+                'name.required' => 'The full name field is required.',
+                'phone.required' => 'The phone number field is required.',
+                'phone.min' => 'The phone number must be at least 10 characters.',
+                'zip.required' => 'The postal code field is required.',
+                'zip.min' => 'The postal code must be at least 5 characters.',
+                'state.required' => 'The state field is required.',
+                'city.required' => 'The city field is required.',
+                'address.required' => 'The address field is required.',
+                'locality.required' => 'The locality field is required.',
                 'mode.required' => 'Please select a payment method.',
                 'mode.in' => 'Invalid payment method selected.',
             ]);
 
-            $this->setAmountForCheckout();
-            $checkout = session()->get('checkout');
-            if (!$checkout) {
-                return redirect()->route('cart.checkout')->with('error', 'Checkout data is missing. Please try again.');
-            }
+            // Calculate checkout amounts
+            $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
+            $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
+            $subtotal = $cartSubtotal;
+            $discount = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['discount']) : 0;
+            $tax = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['tax']) : (float) str_replace(',', '', Cart::instance('cart')->tax());
+            $total = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['total']) + $shippingCost : (float) str_replace(',', '', Cart::instance('cart')->total()) + $shippingCost;
 
-            $subtotal = (float) str_replace(',', '', $checkout['subtotal']);
-            $discount = (float) str_replace(',', '', $checkout['discount']);
-            $tax = (float) str_replace(',', '', $checkout['tax']);
-            $total = (float) str_replace(',', '', $checkout['total']);
-
+            // Validate product stock
             foreach ($cartItems as $item) {
                 $product = Product::find($item->id);
                 if (!$product) {
@@ -512,9 +517,7 @@ class CartController extends Controller
                 }
             }
 
-            $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-            $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
-
+            // Create order
             $order = new Order();
             $order->email = $address ? $address->email : $request->email;
             $order->subtotal = $subtotal;
@@ -532,6 +535,7 @@ class CartController extends Controller
             $order->zip = $address ? $address->zip : $request->zip;
             $order->save();
 
+            // Process order items and update stock
             foreach ($cartItems as $item) {
                 $product = Product::find($item->id);
                 $size = Sizes::where('name', $item->options->size)->first();
@@ -556,6 +560,7 @@ class CartController extends Controller
                 $orderItem->save();
             }
 
+            // Handle payment (COD only for now)
             if ($request->mode === 'cod') {
                 $transaction = new Transaction();
                 $transaction->order_id = $order->id;
@@ -564,10 +569,7 @@ class CartController extends Controller
                 $transaction->save();
             }
 
-            Cart::instance('cart')->destroy();
-            session()->forget(['checkout', 'coupon', 'discounts']);
-            session()->put('order_id', $order->id);
-
+            // Send order confirmation email
             try {
                 Mail::to($order->email)->send(new OrderConfirmation($order));
                 Log::info('Order confirmation email sent', ['order_id' => $order->id, 'email' => $order->email]);
@@ -575,12 +577,21 @@ class CartController extends Controller
                 Log::error('Error sending email: ' . $e->getMessage(), ['order_id' => $order->id]);
             }
 
+            // Clear cart and session
+            Cart::instance('cart')->destroy();
+            session()->forget(['checkout', 'coupon', 'discounts']);
+            session()->put('order_id', $order->id);
+
             return redirect()->route('cart.confirmation')->with('success', 'Order placed successfully!')->with('order_id', $order->id);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation failed', ['errors' => $e->errors()]);
+            return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             Log::error('placeOrder error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->route('cart.checkout')->with('error', 'Order could not be placed: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Display order confirmation.

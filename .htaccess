@@ -1,6 +1,5 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /
 
     # Redirect Trailing Slashes If Not A Folder
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -11,10 +10,9 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Send requests to index.php
+    # Laravel Rewrite: send everything except existing files/folders to index.php
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
-
 

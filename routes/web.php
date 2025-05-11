@@ -57,9 +57,9 @@ Route::post('/wishlist/move-to-cart/{rowId}',[WishlistController::class,'move_to
 Route::get('/contact-us',[HomeController::class,'contact'])->name('home.contact');
 Route::post('/contact/store',[HomeController::class,'contact_store'])->name('home.contact.store');
 
-Route::get('/about-us', function () {
-    return view('about-us'); 
-})->name('about.us');
+// Route::get('/about-us', function () {
+//     return view('about-us'); 
+// })->name('about.us');
 
 Route::get('/privacy-policy', function () {
     return view('privacy-policy'); 

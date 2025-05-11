@@ -39,17 +39,13 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;600;700;800;900&family=Allura&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/swiper.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
 
-    <!-- Move jQuery to top to ensure dependencies load correctly -->
     <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
 
-    <!-- Meta Pixel Code -->
 <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -59,7 +55,7 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1009532437953033'); // Replace with your actual pixel ID
+  fbq('init', '1009532437953033');
   fbq('track', 'PageView');
 </script>
 <noscript>
@@ -77,16 +73,16 @@
 
 .cart-bag-icon {
     display: block;
-    color: white; /* Adjust the icon color as needed */
+    color: white; 
 }
 
 .cart-count-overlay {
     position: absolute;
-    top: -5px; /* Adjust to position the count on the bag */
-    right: -5px; /* Adjust to position the count on the bag */
-    width: 16px; /* Size of the count circle */
-    height: 16px; /* Size of the count circle */
-    font-size: 10px; /* Size of the count text */
+    top: -5px;
+    right: -5px; 
+    width: 16px; 
+    height: 16px; 
+    font-size: 10px; 
     font-weight: bold;
     line-height: 1;
 }
@@ -351,7 +347,6 @@
 </a>
         </div>
 
-        <!-- Mobile Navigation -->
         <nav class="navbar navbar-expand-lg d-lg-none">
             <div class="collapse navbar-collapse flex-column bg-body shadow-sm z-3 position-absolute top-100 start-0 w-100" id="mobileNav" style="max-height: 90vh; overflow-y: auto;">
                 <div class="container">
@@ -393,12 +388,10 @@
                             </li>
                         @endforeach
 
-                        <li class="mb-2"><a href="{{ route('about.us') }}" class="nav-link">About</a></li>
                         <li class="mb-2"><a href="{{ route('home.contact') }}" class="nav-link">Contact</a></li>
                     </ul>
                 </div>
 
-                <!-- Social Icons -->
                 <div class="container pb-4">
                     <ul class="list-unstyled d-flex gap-3">
                         <li>
@@ -581,7 +574,6 @@
                 <div class="footer-column footer-menu mb-4 mb-lg-0">
                     <h6 class="sub-menu__title text-uppercase">Company</h6>
                     <ul class="sub-menu__list list-unstyled">
-                        <li class="sub-menu__item"><a href="{{ route('about.us') }}" class="menu-link menu-link_us-s">About Us</a></li>
                         <li class="sub-menu__item"><a href="{{ route('home.contact') }}" class="menu-link menu-link_us-s">Contact Us</a></li>
                     </ul>
                 </div>
@@ -618,7 +610,6 @@
                 <div class="footer-settings d-md-flex align-items-center">
                     <a href="{{ route('privacy.policy') }}">Privacy Policy</a>  | 
                     <a href="{{ route('terms.condition') }}">Terms & Conditions</a>  | 
-                    <a href="https://www.shopify.com/?utm_campaign=poweredby&utm_medium=shopify&utm_source=onlinestore">Powered By Shopify</a>  | 
                     <a href="{{ route('return.policy') }}">Return Policy</a>
                 </div>
             </div>
@@ -676,7 +667,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Shopping</button>
-                    <a href="{{ route('cart.checkout') }}" class="btn btn-primary btn-checkout">Proceed to Checkout</a>
+                    <a href="{{ route('cart.checkout') }}" class="btn btn-primary btn-checkout">Go Next to Confirm the Order</a>
                     <button type="button" class="btn btn-danger" id="clear-cart">Clear Cart</button>
                 </div>
             </div>
@@ -741,23 +732,21 @@
         });
     }
 
-    // Load cart content
+
     function loadCartContent() {
         return $.ajax({
             url: '{{ route('cart.partial') }}',
             method: 'GET'
         }).then(response => {
             $('#cart-modal-content').html(response);
-            return updateCartCount(); // Chain cart count update
+            return updateCartCount();
         }).catch(xhr => {
             console.error('Cart content error:', xhr.responseText);
             $('#cart-modal-content').html('<p class="text-danger">Unable to load cart content.</p>');
         });
     }
 
-    // Initialize on DOM ready
     $(document).ready(function() {
-        // FAB Button Toggle
         const fabButton = document.getElementById('fabButton');
         const fabIcons = document.getElementById('fabIcons');
         if (fabButton && fabIcons) {
@@ -773,7 +762,6 @@
             });
         }
 
-        // Mobile Navigation
         const mobileNav = document.getElementById('mobileNav');
         const navbarToggler = document.querySelector('.navbar-toggler');
         if (mobileNav && navbarToggler) {
@@ -793,14 +781,12 @@
             });
         }
 
-        // Swiper Initialization
         const swiperElements = document.querySelectorAll('.js-swiper-slider');
         swiperElements.forEach(element => {
             const settings = JSON.parse(element.dataset.settings || '{}');
             new Swiper(element, settings);
         });
 
-        // Search Functionality (debounced)
         const searchHandler = debounce(function() {
             const searchQuery = $('#search-input').val();
             if (searchQuery.length > 2) {
@@ -847,7 +833,6 @@
 
         $('#search-input').on('keyup', searchHandler);
 
-        // Toggle Search Popup
         $('.js-search-popup').on('click', function(e) {
             e.preventDefault();
             $('.search-popup').toggleClass('js-hidden-content');
@@ -862,10 +847,8 @@
             $('.search-popup').addClass('js-hidden-content');
         });
 
-        // Cart Initialization
         updateCartCount();
 
-        // Open cart modal
         $('.cart-icon-container').on('click', function(e) {
             e.preventDefault();
             loadCartContent().then(() => {
@@ -873,14 +856,11 @@
             });
         });
 
-        // Handle modal close focus
         $('#cartModal').on('hidden.bs.modal', function() {
             $('.cart-icon-container').first().focus();
         });
 
-        // Track Proceed to Checkout with Meta Pixel
         $('.btn-checkout').on('click', function(e) {
-            // Track the InitiateCheckout event with Meta Pixel
             if (typeof fbq !== 'undefined') {
                 fbq('track', 'InitiateCheckout', {
                     content_type: 'product',
@@ -890,7 +870,6 @@
             }
         });
 
-        // Quantity update (debounced)
         const updateQuantity = debounce(function(button, rowId, newQty) {
             showLoading(button);
             $.ajax({
@@ -921,7 +900,7 @@
             const currentQty = parseInt($input.val());
             const newQty = $button.hasClass('cart-qty-increase') ? currentQty + 1 : currentQty - 1;
 
-            if (newQty < 1) return; // Prevent negative quantities
+            if (newQty < 1) return; 
 
             updateQuantity($button, rowId, newQty);
         });
@@ -953,7 +932,7 @@
             });
         });
 
-        // Clear cart
+
         $(document).on('click', '#clear-cart', function() {
             const $button = $(this);
             showLoading($button);
