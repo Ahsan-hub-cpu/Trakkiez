@@ -315,7 +315,7 @@
    
     <div class="top-bar">
         <div class="container">
-            <p class="top-bar__text">Free shipping on orders more than PKR 6999!</p>
+            <p class="top-bar__text">Free shipping on orders more than PKR 5999!</p>
         </div>
     </div>
 

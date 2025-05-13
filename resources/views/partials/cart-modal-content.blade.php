@@ -1,7 +1,7 @@
 @if (Cart::instance('cart')->content()->count() > 0)
     @php
         $subtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-        $shippingCost = ($subtotal > 6999) ? 0 : 250;
+        $shippingCost = ($subtotal > 5999) ? 0 : 250;
         $tax = (float) str_replace(',', '', Cart::instance('cart')->tax());
         $finalTotal = (float) str_replace(',', '', Cart::instance('cart')->total()) + $shippingCost;
     @endphp

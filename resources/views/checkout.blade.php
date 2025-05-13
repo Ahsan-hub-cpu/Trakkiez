@@ -149,7 +149,7 @@
 
                 @php
                     $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-                    $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
+                    $shippingCost = ($cartSubtotal > 5999) ? 0 : 250;
                 @endphp
 
                 <div class="checkout__totals-wrapper">

@@ -26,7 +26,7 @@ class CartController extends Controller
         try {
             $cartItems = Cart::instance('cart')->content();
             $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-            $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
+            $shippingCost = ($cartSubtotal > 5999) ? 0 : 250;
             $subtotal = $cartSubtotal;
             $tax = (float) str_replace(',', '', Cart::instance('cart')->tax());
             $total = (float) str_replace(',', '', Cart::instance('cart')->total());
@@ -378,7 +378,7 @@ class CartController extends Controller
     {
         try {
             $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-            $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
+            $shippingCost = ($cartSubtotal > 5999) ? 0 : 250;
 
             if (Cart::instance('cart')->count() > 0) {
                 if (session()->has('coupon')) {
@@ -417,7 +417,7 @@ class CartController extends Controller
         try {
             $address = session()->get('address');
             $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-            $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
+            $shippingCost = ($cartSubtotal > 5999) ? 0 : 250;
             $subtotal = $cartSubtotal;
             $tax = (float) str_replace(',', '', Cart::instance('cart')->tax());
             $total = (float) str_replace(',', '', Cart::instance('cart')->total());
@@ -491,7 +491,7 @@ public function place_order(Request $request)
 
             // Calculate checkout amounts
             $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-            $shippingCost = ($cartSubtotal > 6999) ? 0 : 250;
+            $shippingCost = ($cartSubtotal > 5999) ? 0 : 250;
             $subtotal = $cartSubtotal;
             $discount = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['discount']) : 0;
             $tax = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['tax']) : (float) str_replace(',', '', Cart::instance('cart')->tax());
