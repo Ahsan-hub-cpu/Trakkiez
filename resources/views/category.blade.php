@@ -213,9 +213,17 @@
         <div class="col-lg-3 col-md-4 col-sm-6">
           <div class="product-card product-card_style3" style="position: relative;">
             <div class="pc__img-wrapper">
-              <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" aria-label="View details for {{ $product->name }}">
-                <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" width="200" height="auto" alt="{{ $product->name }}" class="pc__img pc__img-primary">
-              </a>
+           <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" 
+   class="product-link" 
+   data-product-id="{{ $product->id }}"
+   data-product-name="{{ $product->name }}"
+   data-product-price="{{ $product->sale_price ?? $product->regular_price }}"
+   data-product-category="{{ $category->name ?? 'unknown category' }}"
+$GLOBALS["__SELF__"]->wrapFunction(array(null,'aria-label'))="View details for {{ $product->name }}">
+    <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" 
+         width="200" height="auto" alt="{{ $product->name }}" 
+         class="pc__img pc__img-primary">
+</a>
               @if($product->quantity <= 0)
                 <div class="sold-out-badge">Sold Out</div>
               @endif
@@ -283,6 +291,7 @@
     <p>No products available in this category.</p>
   @endif
 </main>
+<script defer src="{{ asset('assets/js/facebook-pixel.js') }}"></script>
 @endsection
 
 @push('scripts')
