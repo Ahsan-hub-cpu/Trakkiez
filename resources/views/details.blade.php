@@ -523,6 +523,9 @@
 @endsection
 
 @push('scripts')
+html
+
+Copy
 <script>
 $(document).ready(function() {
     const $quantityInput = $('input.qty-control__number');
@@ -531,6 +534,13 @@ $(document).ready(function() {
     const $addToCartBtn = $('.btn-addtocart');
     let selectedSize = null;
     let cartItems = [];
+
+    // Catalog product IDs
+    const catalog_content_ids = [
+        '3u8uo21xiu', '907d1j48ca', 'iov4y9yskk', 'yr6p3ff89v', 'to0hdqaajw', 'o5b92itjj8', 'kd0ezgobi4', '72apcf9ubz', 'quswejalwx', '40nmsrb1cr', 'vmz2jx7hx3', '7ao9urd1q2',
+        'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
+        '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
+    ];
 
     // Fetch initial cart items on page load
     $.ajax({
@@ -559,8 +569,9 @@ $(document).ready(function() {
                     contents: cartItems.map(item => ({
                         id: item.id,
                         quantity: item.quantity,
-                        name: item.name
-                    }))
+                        content_name: item.name
+                    })),
+                    catalog_content_ids: catalog_content_ids
                 });
             }
         },
@@ -652,7 +663,6 @@ $(document).ready(function() {
                     $('#cart-modal-content').html(response.content);
                     $('#cartModal').modal('show');
 
-                    // Update cart items from response
                     cartItems = response.cartItems || cartItems;
                     if (cartItems.length > 0 && typeof fbq !== 'undefined') {
                         console.log('Updated Cart Items:', cartItems);
@@ -666,8 +676,9 @@ $(document).ready(function() {
                             contents: cartItems.map(item => ({
                                 id: item.id,
                                 quantity: item.quantity,
-                                name: item.name
-                            }))
+                                content_name: item.name
+                            })),
+                            catalog_content_ids: catalog_content_ids
                         });
                     }
                 } else {

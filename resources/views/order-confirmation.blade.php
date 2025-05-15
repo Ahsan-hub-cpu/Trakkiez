@@ -30,10 +30,10 @@
         </div>
         <div class="order-complete">
           <div class="order-complete__message">
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="Catalog IDs" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="40" cy="40" r="40" fill="#B9A16B" />
               <path
-                d="M52.9743 35.7612C52.9743 35.3426 52.8069 34.9241 52.5056 34.6228L50.2288 32.346C49.9275 32.0446 49.5089 31.8772 49.0904 31.8772C48.6719 31.8772 48.2533 32.0446 47.952 32.346L36.9699 43.3449L32.048 38.4062C31.7467 38.1049 31.3281 37.9375 30.9096 37.9375C30.4911 37.9375 30.0725 38.1049 29.7712 38.4062L27.4944 40.683C27.1931 40.9844 27.0257 41.4029 27.0257 41.8214C27.0257 42.24 27.1931 42.6585 27.4944 42.9598L33.5547 49.0201L35.8315 51.2969C36.1328 51.5982 36.5513 51.7656 36.9699 51.7656C37.3884 51.7656 37.8069 51.5982 38.1083 51.2969L40.385 49.0201L52.5056 36.8996C52.8069 36.5982 52.9743 36.1797 52.9743 35.7612Z"
+                d="M52.9743 35.7612C52.9743 35.3426 52.8069 34.9241 52.5056 34.6228L50.2288 32.346C49.9275 32.0446 49.5089 31.8772 49.0904 31.8772C48.6719 31.8772 48.2533 32.0446 47.952 32.346L36.9699 43.3449L32.048 38.4062C31.7467 38.1049 31.3281 37.9375 30.9096 37.9375C30.4911 37.9375 30.0725 38.1049 29.7712 38.4062L27.4944 40.683C27.1931 40.9844 27.0257 41.4029 27.0257 41.8214C27.0257 42.24 27.1931 42.6585 27.4944 42.9598L33.5547 49.0201L35.8315 51.2969C36.1328 51.5982 36.5513 51.7656 36.9699 51.7656C37.3884 51.7656 37.8069 51.5982 38.1083 51.2969L40.385 49.0201L52.5056 36.8996C52.8069 36.5982 52.974 ECONOMY3 36.1797 52.9743 35.7612Z"
                 fill="white" />
             </svg>
             <h3>Your order is completed!</h3>
@@ -116,38 +116,46 @@
     </section>
   </main>
   @if(isset($order) && $order->orderItems->isNotEmpty())
-    <script>
-      // Ensure fbq is defined
-      if (typeof fbq === 'function') {
-        fbq('track', 'Purchase', {
-          value: {{ $order->total }},
-          currency: 'PKR',
-          contents: [
-            @foreach($order->orderItems as $item)
-              {
-                id: '{{ addslashes($item->product->id) }}',
-                quantity: {{ $item->quantity }},
-                item_price: {{ $item->quantity > 0 ? ($item->price / $item->quantity) : 0 }}
-              }@if (!$loop->last),@endif
-            @endforeach
-          ],
-          content_type: 'product',
-          content_ids: [
-            @foreach($order->orderItems as $item)
-              '{{ addslashes($item->product->id) }}'@if (!$loop->last),@endif
-            @endforeach
-          ],
-          order_id: '{{ addslashes($order->id) }}',
-          eventID: '{{ addslashes($order->id . '-' . time()) }}',
-          num_items: {{ $order->orderItems->sum('quantity') }}
-        });
-      } else {
-        console.warn('Meta Pixel not initialized.');
-      }
-    </script>
+  <script>
+    // Catalog product IDs
+    const catalog_content_ids = [
+      '3u8uo21xiu', '907d1j48ca', 'iov4y9yskk', 'yr6p3ff89v', 'to0hdqaajw', 'o5b92itjj8', 'kd0ezgobi4', '72apcf9ubz', 'quswejalwx', '40nmsrb1cr', 'vmz2jx7hx3', '7ao9urd1q2',
+      'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
+      '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
+    ];
+
+    if (typeof fbq === 'function') {
+      fbq('track', 'Purchase', {
+        value: {{ $order->total }},
+        currency: 'PKR',
+        content_type: 'product',
+        content_ids: [
+          @foreach($order->orderItems as $item)
+            '{{ addslashes($item->product->id) }}'@if(!$loop->last),@endif
+          @endforeach
+        ],
+        contents: [
+          @foreach($order->orderItems as $item)
+            {
+              id: '{{ addslashes($item->product->id) }}',
+              quantity: {{ $item->quantity }},
+              item_price: {{ $item->quantity > 0 ? ($item->price / $item->quantity) : 0 }},
+              content_name: '{{ addslashes($item->product->name) }}'
+            }@if(!$loop->last),@endif
+          @endforeach
+        ],
+        order_id: '{{ addslashes($order->id) }}',
+        eventID: '{{ addslashes($order->id . '-' . time()) }}',
+        num_items: {{ $order->orderItems->sum('quantity') }},
+        catalog_content_ids: catalog_content_ids
+      });
+    } else {
+      console.warn('Meta Pixel not initialized.');
+    }
+  </script>
   @else
-    <script>
-      console.warn('Order data is missing or incomplete. Order ID: {{ $order->id ?? "N/A" }}');
-    </script>
+  <script>
+    console.warn('Order data is missing or incomplete. Order ID: {{ $order->id ?? 'N/A' }}');
+  </script>
   @endif
 @endsection

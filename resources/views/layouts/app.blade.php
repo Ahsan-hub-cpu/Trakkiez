@@ -60,7 +60,7 @@
 </script>
 <noscript>
   <img height="1" width="1"
-  src="https://www.facebook.com/tr?id=123456789012345&ev=PageView&noscript=1"/>
+  src="https://www.facebook.com/tr?id=678618305092613&ev=PageView&noscript=1"/>
 </noscript>
 <!-- End Meta Pixel Code -->
 
@@ -687,7 +687,7 @@
 
     <!-- Consolidated JavaScript -->
          <!-- Consolidated JavaScript -->
-         <script>
+     <script>
 (function() {
     // Utility to debounce functions
     function debounce(func, wait) {
@@ -731,7 +731,6 @@
             $('.cart-count-overlay').text('0');
         });
     }
-
 
     function loadCartContent() {
         return $.ajax({
@@ -860,14 +859,58 @@
             $('.cart-icon-container').first().focus();
         });
 
+        // Catalog product IDs
+        const catalog_content_ids = [
+            '3u8uo21xiu', '907d1j48ca', 'iov4y9yskk', 'yr6p3ff89v', 'to0hdqaajw', 'o5b92itjj8', 'kd0ezgobi4', '72apcf9ubz', 'quswejalwx', '40nmsrb1cr', 'vmz2jx7hx3', '7ao9urd1q2',
+            'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
+            '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
+        ];
+
         $('.btn-checkout').on('click', function(e) {
-            if (typeof fbq !== 'undefined') {
-                fbq('track', 'InitiateCheckout', {
-                    content_type: 'product',
-                    num_items: parseInt($('.cart-count-overlay').text()) || 0,
-                    currency: 'PKR'
-                });
-            }
+            // Fetch cart items via AJAX to get the latest cart data
+            $.ajax({
+                url: '{{ route('cart.partial') }}',
+                method: 'GET',
+                async: false, // Synchronous to ensure data is loaded before tracking
+                success: function(response) {
+                    const $cartContent = $(response);
+                    const cartItems = $cartContent.find('.cart-item').map(function() {
+                        return {
+                            id: $(this).data('id'),
+                            name: $(this).data('name'),
+                            price: $(this).data('price'),
+                            quantity: $(this).data('quantity')
+                        };
+                    }).get();
+
+                    if (cartItems.length > 0 && typeof fbq !== 'undefined') {
+                        const contentIds = cartItems.map(item => item.id);
+                        const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
+                        const totalItems = cartItems.reduce((sum, item) => sum + parseInt(item.quantity), 0);
+
+                        fbq('track', 'InitiateCheckout', {
+                            content_type: 'product',
+                            content_ids: contentIds,
+                            content_name: cartItems.map(item => item.name),
+                            value: totalValue,
+                            currency: 'PKR',
+                            num_items: totalItems,
+                            contents: cartItems.map(item => ({
+                                id: item.id,
+                                quantity: item.quantity,
+                                content_name: item.name
+                            })),
+                            catalog_content_ids: catalog_content_ids
+                        });
+                    } else {
+                        console.warn('No cart items found or Meta Pixel not initialized.');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Failed to load cart data:', xhr.responseText);
+                    console.warn('InitiateCheckout tracking skipped due to cart load failure.');
+                }
+            });
         });
 
         const updateQuantity = debounce(function(button, rowId, newQty) {
@@ -905,7 +948,6 @@
             updateQuantity($button, rowId, newQty);
         });
 
-        // Remove item
         $(document).on('click', '.cart-remove-item', function() {
             const $button = $(this);
             const rowId = $button.data('row-id');
@@ -931,7 +973,6 @@
                 }
             });
         });
-
 
         $(document).on('click', '#clear-cart', function() {
             const $button = $(this);
@@ -959,7 +1000,6 @@
             });
         });
 
-        // Apply coupon
         $(document).on('click', '#apply-coupon', function() {
             const $button = $(this);
             const couponCode = $('#coupon-code').val();
@@ -990,7 +1030,6 @@
             });
         });
 
-        // Remove coupon
         $(document).on('click', '#remove-coupon', function() {
             const $button = $(this);
             showLoading($button);
@@ -1008,7 +1047,7 @@
                 },
                 error: function(xhr) {
                     console.error('Remove coupon error:', xhr.responseText);
-                    showFeedback('Error', xhr.responseJSON?.message || 'Failed to remove coupon', 'error');
+                    showFeedback('Error', xhr.responseJSON?.message || 'Failed to apply coupon', 'error');
                 },
                 complete: function() {
                     hideLoading($button);
@@ -1017,8 +1056,7 @@
         });
     });
 })();
-            </script>
-
+</script>
  @stack("scripts")
 </body>
 </html>
