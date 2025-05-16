@@ -17,7 +17,7 @@ class ShopController extends Controller
         if ($request->query('filter') === 'featured') {
             $productsQuery->where('featured', true);
         } elseif ($request->query('filter') === 'new-arrivals') {
-            $productsQuery->where('created_at', '>=', now()->subDays(30));
+            $productsQuery->where('created_at', '>=', now()->subDays(90));
         } elseif ($request->query('filter') === 'hot-deals') {
             $productsQuery->whereNotNull('sale_price');
         }

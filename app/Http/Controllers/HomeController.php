@@ -55,7 +55,7 @@ class HomeController extends Controller
 
         $newArrivals = Product::with(['productVariations.size'])
             ->select('id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity', 'created_at')
-            ->where('created_at', '>=', Carbon::now()->subDays(15))
+            ->where('created_at', '>=', Carbon::now()->subDays(90))
             ->orderBy('created_at', 'DESC')
             ->take(8)
             ->get();
