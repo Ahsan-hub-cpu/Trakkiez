@@ -249,37 +249,7 @@ $GLOBALS["__SELF__"]->wrapFunction(array(null,'aria-label'))="View details for {
       @endforeach
     </div>
 
-    <!-- Price Filter Modal -->
-    <!--
-    <div class="modal fade" id="priceFilterModal" tabindex="-1" aria-labelledby="priceFilterModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="priceFilterModalLabel">Filter by Price</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="price-from-modal" class="form-label">Price From</label>
-              <input type="number" class="form-control" id="price-from-modal" placeholder="Enter minimum price" value="{{ request('price_from') }}">
-            </div>
-            <div class="mb-3">
-              <label for="price-to-modal" class="form-label">Price To</label>
-              <input type="number" class="form-control" id="price-to-modal" placeholder="Enter maximum price" value="{{ request('price_to') }}">
-            </div>
-            <div class="mb-3">
-              <small class="text-muted">Highest price is PKR {{ $maxPrice }}</small>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="apply-price-filter-modal">Apply</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    -->
-
+   
     <!-- Pagination -->
     @if(!request()->has('size') && !request()->has('sort') && !request()->has('subcategory'))
       <div class="divider"></div>

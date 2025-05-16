@@ -746,6 +746,46 @@
     }
 
     $(document).ready(function() {
+        // Catalog product IDs
+        const catalog_content_ids = [
+            '3u8uo21xiu', '907d1j48ca', 'iov4y9yskk', 'yr6p3ff89v', 'to0hdqaajw', 'o5b92itjj8', 'kd0ezgobi4', '72apcf9ubz', 'quswejalwx', '40nmsrb1cr', 'vmz2jx7hx3', '7ao9urd1q2',
+            'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
+            '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
+        ];
+
+        // ViewContent tracking for product links
+        $(document).on('click', '.product-link', function(e) {
+            const $link = $(this);
+            // Check if product is sold out
+            const $productCard = $link.closest('.product-card');
+            if ($productCard.length && $productCard.find('.sold-out-badge').length) {
+                return; // Skip tracking for sold-out products
+            }
+
+            // Get product details from data attributes
+            const productId = $link.data('product-id');
+            const productName = $link.data('product-name');
+            const productPrice = parseFloat($link.data('product-price'));
+            const productCategory = $link.data('product-category');
+
+            // Track ViewContent event
+            if (productId && productName && productPrice && productCategory && typeof fbq !== 'undefined') {
+                fbq('track', 'ViewContent', {
+                    content_ids: catalog_content_ids,
+                    content_name: productName,
+                    content_type: 'product',
+                    value: productPrice,
+                    currency: 'PKR',
+                    content_category: productCategory,
+                    catalog_content_ids: catalog_content_ids
+                });
+            } else {
+                console.warn('ViewContent tracking failed: Missing data or Meta Pixel not initialized', {
+                    productId, productName, productPrice, productCategory, fbqDefined: typeof fbq !== 'undefined'
+                });
+            }
+        });
+
         const fabButton = document.getElementById('fabButton');
         const fabIcons = document.getElementById('fabIcons');
         if (fabButton && fabIcons) {
@@ -858,13 +898,6 @@
         $('#cartModal').on('hidden.bs.modal', function() {
             $('.cart-icon-container').first().focus();
         });
-
-        // Catalog product IDs
-        const catalog_content_ids = [
-            '3u8uo21xiu', '907d1j48ca', 'iov4y9yskk', 'yr6p3ff89v', 'to0hdqaajw', 'o5b92itjj8', 'kd0ezgobi4', '72apcf9ubz', 'quswejalwx', '40nmsrb1cr', 'vmz2jx7hx3', '7ao9urd1q2',
-            'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
-            '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
-        ];
 
         $('.btn-checkout').on('click', function(e) {
             // Fetch cart items via AJAX to get the latest cart data

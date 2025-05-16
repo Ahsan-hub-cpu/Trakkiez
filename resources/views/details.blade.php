@@ -223,8 +223,8 @@
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 <div class="swiper-slide product-single__image-item">
-                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $product->image) }}" width="674" height="674" alt="{{ $product->name }}" />
-                  <a data-fancybox="gallery" href="{{ asset('uploads/products/' . $product->image) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
+                  <img loading="lazy" class="h-auto" src="{{ asset('Uploads/products/' . $product->image) }}" width="674" height="674" alt="{{ $product->name }}" />
+                  <a data-fancybox="gallery" href="{{ asset('Uploads/products/' . $product->image) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <use href="#icon_zoom" />
                     </svg>
@@ -232,8 +232,8 @@
                 </div>
                 @foreach(explode(',', $product->images) as $gimg)
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $gimg) }}" width="674" height="674" alt="{{ $product->name }}" />
-                    <a data-fancybox="gallery" href="{{ asset('uploads/products/' . $gimg) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
+                    <img loading="lazy" class="h-auto" src="{{ asset('Uploads/products/' . $gimg) }}" width="674" height="674" alt="{{ $product->name }}" />
+                    <a data-fancybox="gallery" href="{{ asset('Uploads/products/' . $gimg) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <use href="#icon_zoom" />
                       </svg>
@@ -257,11 +257,11 @@
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 <div class="swiper-slide product-single__image-item">
-                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $product->image) }}" width="104" height="104" alt="{{ $product->name }}" />
+                  <img loading="lazy" class="h-auto" src="{{ asset('Uploads/products/thumbnails/' . $product->image) }}" width="104" height="104" alt="{{ $product->name }}" />
                 </div>
                 @foreach(explode(',', $product->images) as $gimg)
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $gimg) }}" width="104" height="104" alt="{{ $product->name }}" />
+                    <img loading="lazy" class="h-auto" src="{{ asset('Uploads/products/' . $gimg) }}" width="104" height="104" alt="{{ $product->name }}" />
                   </div>
                 @endforeach
               </div>
@@ -412,7 +412,7 @@
             <span class="close" onclick="closeLightbox()">×</span>
             <div class="lightbox-images">
               @foreach(explode(',', $product->size_chart) as $chartImage)
-                <img class="lightbox-image" src="{{ asset('uploads/products/' . $chartImage) }}" alt="Size Chart">
+                <img class="lightbox-image" src="{{ asset('Uploads/products/' . $chartImage) }}" alt="Size Chart">
               @endforeach
             </div>
           </div>
@@ -460,7 +460,7 @@
             <div class="swiper-slide product-card" style="position: relative;">
               <div class="pc__img-wrapper">
                 <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">
-                  <img loading="lazy" src="{{ asset('uploads/products/' . $rproduct->image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
+                  <img loading="lazy" src="{{ asset('Uploads/products/' . $rproduct->image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
                 </a>
                 @if($rproduct->quantity <= 0)
                   <div class="sold-out-label">Sold Out</div>
@@ -523,9 +523,6 @@
 @endsection
 
 @push('scripts')
-html
-
-Copy
 <script>
 $(document).ready(function() {
     const $quantityInput = $('input.qty-control__number');
@@ -541,6 +538,32 @@ $(document).ready(function() {
         'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
         '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
     ];
+
+    // ViewContent tracking for product page load
+    if (typeof fbq !== 'undefined') {
+        const productId = '{{ $product->id }}';
+        const productName = '{{ addslashes($product->name) }}';
+        const productPrice = parseFloat('{{ $product->sale_price ?: $product->regular_price }}');
+        const productCategory = '{{ addslashes($product->category->name) }}';
+
+        if (productId && productName && productPrice && productCategory) {
+            fbq('track', 'ViewContent', {
+                content_ids: catalog_content_ids,
+                content_name: productName,
+                content_type: 'product',
+                value: productPrice,
+                currency: 'PKR',
+                content_category: productCategory,
+                catalog_content_ids: catalog_content_ids
+            });
+        } else {
+            console.warn('ViewContent tracking failed: Missing product data', {
+                productId, productName, productPrice, productCategory
+            });
+        }
+    } else {
+        console.warn('ViewContent tracking failed: Meta Pixel not initialized');
+    }
 
     // Fetch initial cart items on page load
     $.ajax({
@@ -558,11 +581,11 @@ $(document).ready(function() {
             }).get();
 
             if (cartItems.length > 0 && typeof fbq !== 'undefined') {
-                console.log('Initial Cart Items:', cartItems);
-                const contentIds = cartItems.map(item => item.id);
+                // console.log('Initial Cart Items:', cartItems);
+                // const contentIds = cartItems.map(item => item.id);
                 const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
                 fbq('track', 'AddToCart', {
-                    content_ids: contentIds,
+                    content_ids: catalog_content_ids,
                     content_type: 'product',
                     value: totalValue,
                     currency: 'PKR',
@@ -579,9 +602,6 @@ $(document).ready(function() {
             console.error('Failed to load initial cart:', xhr.responseText);
         }
     });
-
-
-    
 
     $('.size-btn').on('click', function() {
         const $btn = $(this);
@@ -672,7 +692,7 @@ $(document).ready(function() {
                         const contentIds = cartItems.map(item => item.id);
                         const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
                         fbq('track', 'AddToCart', {
-                            content_ids: contentIds,
+                            content_ids: catalog_content_ids,
                             content_type: 'product',
                             value: totalValue,
                             currency: 'PKR',
@@ -707,25 +727,25 @@ $(document).ready(function() {
             }
         });
     });
-});
 
-function openLightbox() {
-    const lightbox = document.getElementById('size-chart-lightbox');
-    lightbox.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function closeLightbox() {
-    const lightbox = document.getElementById('size-chart-lightbox');
-    lightbox.style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-document.addEventListener('click', function(event) {
-    const lightbox = document.getElementById('size-chart-lightbox');
-    if (event.target === lightbox) {
-        closeLightbox();
+    function openLightbox() {
+        const lightbox = document.getElementById('size-chart-lightbox');
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById('size-chart-lightbox');
+        lightbox.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('click', function(event) {
+        const lightbox = document.getElementById('size-chart-lightbox');
+        if (event.target === lightbox) {
+            closeLightbox();
+        }
+    });
 });
 </script>
 @endpush
