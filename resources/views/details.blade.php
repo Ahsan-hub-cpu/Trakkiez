@@ -580,6 +580,9 @@ $(document).ready(function() {
         }
     });
 
+
+    
+
     $('.size-btn').on('click', function() {
         const $btn = $(this);
         if ($btn.hasClass('sold-out') || $btn.prop('disabled')) return;
