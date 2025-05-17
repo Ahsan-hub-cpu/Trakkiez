@@ -1,41 +1,64 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Catalog product IDs
-    const catalog_content_ids = [
-        '3u8uo21xiu', '907d1j48ca', 'iov4y9yskk', 'yr6p3ff89v', 'to0hdqaajw', 'o5b92itjj8', 'kd0ezgobi4', '72apcf9ubz', 'quswejalwx', '40nmsrb1cr', 'vmz2jx7hx3', '7ao9urd1q2',
-        'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
-        '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
-    ];
+    const catalogIdMapping = {
+        "7": "lzcxdcwcjq",
+        "8": "vvdkpfyo97",
+        "9": "r6hbm1fys5",
+        "10": "78okh2lki8",
+        "11": "kpcuffj8qf",
+        "12": "n37sgyamlh",
+        "13": "o71vv7yw03",
+        "14": "i5hyrhxj5u",
+        "15": "cxsgtz0uaa",
+        "16": "9svfprctuj",
+        "17": "8yior2enng",
+        "18": "95gwctlrqb",
+        "19": "ok8gk6giow",
+        "20": "m265cq9rfy",
+        "21": "h5nkmf7z7j",
+        "22": "kqgnmnpetl",
+        "23": "zuc6dz8spm",
+        "24": "htratecte3",
+        "25": "3249vkp896",
+        "26": "s5sk2qd9t9",
+        "27": "btvi71orfs",
+        "28": "x641eyppw2",
+        "29": "rdeiaok8if",
+        "30": "moi7fdic3w",
+        "31": "yti5zvhg08",
+        "32": "yti5zvhg08",
+        "33": "lkdawofeo8",
+        "34": "2mo4k3xeit",
+        "35": "khdxo55zun",
+        "36": "uktf65qy1r",
+        "37": "5908gpou8j"
+    };
 
-    // Use event delegation to handle clicks on product links
     document.addEventListener('click', function (e) {
         const link = e.target.closest('.product-link');
         if (link) {
-            // Check if product is sold out
             const productCard = link.closest('.product-card');
             if (productCard && productCard.querySelector('.sold-out-badge')) {
-                return; // Skip tracking for sold-out products
+                return; // Don't track sold out products
             }
 
-            // Get product details from data attributes
             const productId = link.getAttribute('data-product-id');
+            const catalogId = catalogIdMapping[productId];
             const productName = link.getAttribute('data-product-name');
             const productPrice = parseFloat(link.getAttribute('data-product-price'));
             const productCategory = link.getAttribute('data-product-category');
 
-            // Track ViewContent event
-            if (productId && productName && productPrice && productCategory && typeof fbq !== 'undefined') {
+            if (catalogId && productName && productPrice && productCategory && typeof fbq !== 'undefined') {
                 fbq('track', 'ViewContent', {
-                    content_ids: catalog_content_ids,
+                    content_ids: [catalogId],
                     content_name: productName,
                     content_type: 'product',
                     value: productPrice,
                     currency: 'PKR',
-                    content_category: productCategory,
-                    catalog_content_ids: catalog_content_ids
+                    content_category: productCategory
                 });
             } else {
-                console.warn('ViewContent tracking failed: Missing data or Meta Pixel not initialized', {
-                    productId, productName, productPrice, productCategory, fbqDefined: typeof fbq !== 'undefined'
+                console.warn('ViewContent tracking failed:', {
+                    productId, catalogId, productName, productPrice, productCategory
                 });
             }
         }

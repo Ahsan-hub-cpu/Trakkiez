@@ -117,23 +117,57 @@
   </main>
   @if(isset($order) && $order->orderItems->isNotEmpty())
   <script>
-    // Catalog product IDs
-    const catalog_content_ids = [
-      '3u8uo21xiu', '907d1j48ca', 'iov4y9yskk', 'yr6p3ff89v', 'to0hdqaajw', 'o5b92itjj8', 'kd0ezgobi4', '72apcf9ubz', 'quswejalwx', '40nmsrb1cr', 'vmz2jx7hx3', '7ao9urd1q2',
-      'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
-      '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
-    ];
+    // Catalog ID mapping for products
+    const catalogIdMapping = {
+        "7": "lzcxdcwcjq",
+        "8": "vvdkpfyo97",
+        "9": "r6hbm1fys5",
+        "10": "78okh2lki8",
+        "11": "kpcuffj8qf",
+        "12": "n37sgyamlh",
+        "13": "o71vv7yw03",
+        "14": "i5hyrhxj5u",
+        "15": "cxsgtz0uaa",
+        "16": "9svfprctuj",
+        "17": "8yior2enng",
+        "18": "95gwctlrqb",
+        "19": "ok8gk6giow",
+        "20": "m265cq9rfy",
+        "21": "h5nkmf7z7j",
+        "22": "kqgnmnpetl",
+        "23": "zuc6dz8spm",
+        "24": "htratecte3",
+        "25": "3249vkp896",
+        "26": "s5sk2qd9t9",
+        "27": "btvi71orfs",
+        "28": "x641eyppw2",
+        "29": "rdeiaok8if",
+        "30": "moi7fdic3w",
+        "31": "yti5zvhg08",
+        "32": "yti5zvhg08",
+        "33": "lkdawofeo8",
+        "34": "2mo4k3xeit",
+        "35": "khdxo55zun",
+        "36": "uktf65qy1r",
+        "37": "5908gpou8j"
+    };
 
     if (typeof fbq === 'function') {
+      const contentIds = [
+        @foreach($order->orderItems as $item)
+          catalogIdMapping['{{ addslashes($item->product->id) }}'] || '{{ addslashes($item->product->id) }}'@if(!$loop->last),@endif
+        @endforeach
+      ].filter(id => id); // Remove undefined/null IDs
+
       fbq('track', 'Purchase', {
         value: {{ $order->total }},
         currency: 'PKR',
         content_type: 'product',
-        content_ids: catalog_content_ids,
+        content_ids: contentIds,
         contents: [
           @foreach($order->orderItems as $item)
             {
-              id: '{{ addslashes($item->product->id) }}',
+              id: catalogIdMapping['{{ addslashes($item->product->id) }}'] || '{{ addslashes($item->product->id) }}',
               quantity: {{ $item->quantity }},
               item_price: {{ $item->quantity > 0 ? ($item->price / $item->quantity) : 0 }},
               content_name: '{{ addslashes($item->product->name) }}'
@@ -142,8 +176,7 @@
         ],
         order_id: '{{ addslashes($order->id) }}',
         eventID: '{{ addslashes($order->id . '-' . time()) }}',
-        num_items: {{ $order->orderItems->sum('quantity') }},
-        catalog_content_ids: catalog_content_ids
+        num_items: {{ $order->orderItems->sum('quantity') }}
       });
     } else {
       console.warn('Meta Pixel not initialized.');

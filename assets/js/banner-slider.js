@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Reset auto-slide timer
             clearInterval(autoSlideInterval);
             autoSlideInterval = setInterval(autoSlide, slideInterval);
-            console.log(`Dot clicked: Slide ${index + 1}`);
         });
     });
 
@@ -59,6 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     slider.addEventListener('mouseleave', () => {
         autoSlideInterval = setInterval(autoSlide, slideInterval);
-        console.log('Slider resumed');
+      
     });
 });

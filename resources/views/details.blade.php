@@ -372,7 +372,7 @@
                 </svg>
                 <span>Add to Wishlist</span>
               </a>
-            </form>
+            </form slum
           @endif
           <share-button class="share-button"></share-button>
           <div class="product-single__meta-info">
@@ -532,38 +532,66 @@ $(document).ready(function() {
     let selectedSize = null;
     let cartItems = [];
 
-    // Catalog product IDs
-    const catalog_content_ids = [
-        '3u8uo21xiu', '907d1j48ca', 'iov4y9yskk', 'yr6p3ff89v', 'to0hdqaajw', 'o5b92itjj8', 'kd0ezgobi4', '72apcf9ubz', 'quswejalwx', '40nmsrb1cr', 'vmz2jx7hx3', '7ao9urd1q2',
-        'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
-        '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
-    ];
+    // Catalog ID mapping for products
+    const catalogIdMapping = {
+        "7": "lzcxdcwcjq",
+        "8": "vvdkpfyo97",
+        "9": "r6hbm1fys5",
+        "10": "78okh2lki8",
+        "11": "kpcuffj8qf",
+        "12": "n37sgyamlh",
+        "13": "o71vv7yw03",
+        "14": "i5hyrhxj5u",
+        "15": "cxsgtz0uaa",
+        "16": "9svfprctuj",
+        "17": "8yior2enng",
+        "18": "95gwctlrqb",
+        "19": "ok8gk6giow",
+        "20": "m265cq9rfy",
+        "21": "h5nkmf7z7j",
+        "22": "kqgnmnpetl",
+        "23": "zuc6dz8spm",
+        "24": "htratecte3",
+        "25": "3249vkp896",
+        "26": "s5sk2qd9t9",
+        "27": "btvi71orfs",
+        "28": "x641eyppw2",
+        "29": "rdeiaok8if",
+        "30": "moi7fdic3w",
+        "31": "yti5zvhg08",
+        "32": "yti5zvhg08",
+        "33": "lkdawofeo8",
+        "34": "2mo4k3xeit",
+        "35": "khdxo55zun",
+        "36": "uktf65qy1r",
+        "37": "5908gpou8j"
+    };
 
     // ViewContent tracking for product page load
-    if (typeof fbq !== 'undefined') {
-        const productId = '{{ $product->id }}';
-        const productName = '{{ addslashes($product->name) }}';
-        const productPrice = parseFloat('{{ $product->sale_price ?: $product->regular_price }}');
-        const productCategory = '{{ addslashes($product->category->name) }}';
+    // if (typeof fbq !== 'undefined') {
+    //     const productId = '{{ $product->id }}';
+    //     const catalogId = catalogIdMapping[productId] || null;
+    //     const productName = '{{ addslashes($product->name) }}';
+    //     const productPrice = parseFloat('{{ $product->sale_price ?: $product->regular_price }}');
+    //     const productCategory = '{{ addslashes($product->category->name) }}';
 
-        if (productId && productName && productPrice && productCategory) {
-            fbq('track', 'ViewContent', {
-                content_ids: catalog_content_ids,
-                content_name: productName,
-                content_type: 'product',
-                value: productPrice,
-                currency: 'PKR',
-                content_category: productCategory,
-                catalog_content_ids: catalog_content_ids
-            });
-        } else {
-            console.warn('ViewContent tracking failed: Missing product data', {
-                productId, productName, productPrice, productCategory
-            });
-        }
-    } else {
-        console.warn('ViewContent tracking failed: Meta Pixel not initialized');
-    }
+    //     if (catalogId && productName && productPrice && productCategory) {
+    //         fbq('track', 'ViewContent', {
+    //             content_ids: [catalogId],
+    //             content_name: productName,
+    //             content_type: 'product',
+    //             value: productPrice,
+    //             currency: 'PKR',
+    //             content_category: productCategory
+    //         });
+    //     } else {
+    //         console.warn('ViewContent tracking failed: Missing product data', {
+    //             productId, catalogId, productName, productPrice, productCategory
+    //         });
+    //     }
+    // } else {
+    //     console.warn('ViewContent tracking failed: Meta Pixel not initialized');
+    // }
 
     // Fetch initial cart items on page load
     $.ajax({
@@ -581,20 +609,17 @@ $(document).ready(function() {
             }).get();
 
             if (cartItems.length > 0 && typeof fbq !== 'undefined') {
-                // console.log('Initial Cart Items:', cartItems);
-                // const contentIds = cartItems.map(item => item.id);
                 const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
                 fbq('track', 'AddToCart', {
-                    content_ids: catalog_content_ids,
+                    content_ids: cartItems.map(item => catalogIdMapping[item.id] || item.id),
                     content_type: 'product',
                     value: totalValue,
                     currency: 'PKR',
                     contents: cartItems.map(item => ({
-                        id: item.id,
+                        id: catalogIdMapping[item.id] || item.id,
                         quantity: item.quantity,
                         content_name: item.name
-                    })),
-                    catalog_content_ids: catalog_content_ids
+                    }))
                 });
             }
         },
@@ -688,20 +713,22 @@ $(document).ready(function() {
 
                     cartItems = response.cartItems || cartItems;
                     if (cartItems.length > 0 && typeof fbq !== 'undefined') {
-                        console.log('Updated Cart Items:', cartItems);
-                        const contentIds = cartItems.map(item => item.id);
-                        const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
+                        const productId = '{{ $product->id }}';
+                        const catalogId = catalogIdMapping[productId] || productId;
+                        const productName = '{{ addslashes($product->name) }}';
+                        const productPrice = parseFloat('{{ $product->sale_price ?: $product->regular_price }}');
+                        const quantity = parseInt($quantityInput.val()) || 1;
+
                         fbq('track', 'AddToCart', {
-                            content_ids: catalog_content_ids,
+                            content_ids: [catalogId],
                             content_type: 'product',
-                            value: totalValue,
+                            value: productPrice * quantity,
                             currency: 'PKR',
-                            contents: cartItems.map(item => ({
-                                id: item.id,
-                                quantity: item.quantity,
-                                content_name: item.name
-                            })),
-                            catalog_content_ids: catalog_content_ids
+                            contents: [{
+                                id: catalogId,
+                                quantity: quantity,
+                                content_name: productName
+                            }]
                         });
                     }
                 } else {

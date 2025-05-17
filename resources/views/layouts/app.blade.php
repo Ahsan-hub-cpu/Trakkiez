@@ -726,66 +726,67 @@
             method: 'GET'
         }).then(response => {
             $('.cart-count-overlay').text(response.count).attr('aria-label', `Cart contains ${response.count} items`);
+            console.log('Cart count updated:', response.count);
         }).catch(xhr => {
             console.error('Cart count error:', xhr.responseText);
             $('.cart-count-overlay').text('0');
+            return Promise.reject(xhr);
         });
     }
 
+    // Load cart content
     function loadCartContent() {
         return $.ajax({
             url: '{{ route('cart.partial') }}',
             method: 'GET'
         }).then(response => {
             $('#cart-modal-content').html(response);
+            console.log('Cart content loaded successfully');
             return updateCartCount();
         }).catch(xhr => {
             console.error('Cart content error:', xhr.responseText);
             $('#cart-modal-content').html('<p class="text-danger">Unable to load cart content.</p>');
+            return Promise.reject(xhr);
         });
     }
 
     $(document).ready(function() {
-        // Catalog product IDs
-        const catalog_content_ids = [
-            '3u8uo21xiu', '907d1j48ca', 'iov4y9yskk', 'yr6p3ff89v', 'to0hdqaajw', 'o5b92itjj8', 'kd0ezgobi4', '72apcf9ubz', 'quswejalwx', '40nmsrb1cr', 'vmz2jx7hx3', '7ao9urd1q2',
-            'b4rjfyp60j', '5nisf03qgp', '2z71q9pnk3', 'mzs5mver13', 'n58ff4phyo', 'pteix2o8l4', '0998cbv8um', 'c7q35ex74g', 'jc0zqvr255', '62nmi11ihc', 'aaudleo6yo',
-            '1o04my2ey2', 'kdv7dnd481', 'emhbophar8', 'ohdp2r3eup', 'be4ta8zg54', '7mepqbl4bu', 'gpn1uz623j', 'cq8sxjx5bc'
-        ];
+        // Catalog ID mapping for products
+        const catalogIdMapping = {
+            "7": "lzcxdcwcjq",
+            "8": "vvdkpfyo97",
+            "9": "r6hbm1fys5",
+            "10": "78okh2lki8",
+            "11": "kpcuffj8qf",
+            "12": "n37sgyamlh",
+            "13": "o71vv7yw03",
+            "14": "i5hyrhxj5u",
+            "15": "cxsgtz0uaa",
+            "16": "9svfprctuj",
+            "17": "8yior2enng",
+            "18": "95gwctlrqb",
+            "19": "ok8gk6giow",
+            "20": "m265cq9rfy",
+            "21": "h5nkmf7z7j",
+            "22": "kqgnmnpetl",
+            "23": "zuc6dz8spm",
+            "24": "htratecte3",
+            "25": "3249vkp896",
+            "26": "s5sk2qd9t9",
+            "27": "btvi71orfs",
+            "28": "x641eyppw2",
+            "29": "rdeiaok8if",
+            "30": "moi7fdic3w",
+            "31": "yti5zvhg08",
+            "32": "yti5zvhg08",
+            "33": "lkdawofeo8",
+            "34": "2mo4k3xeit",
+            "35": "khdxo55zun",
+            "36": "uktf65qy1r",
+            "37": "5908gpou8j"
+        };
 
-        // ViewContent tracking for product links
-        $(document).on('click', '.product-link', function(e) {
-            const $link = $(this);
-            // Check if product is sold out
-            const $productCard = $link.closest('.product-card');
-            if ($productCard.length && $productCard.find('.sold-out-badge').length) {
-                return; // Skip tracking for sold-out products
-            }
-
-            // Get product details from data attributes
-            const productId = $link.data('product-id');
-            const productName = $link.data('product-name');
-            const productPrice = parseFloat($link.data('product-price'));
-            const productCategory = $link.data('product-category');
-
-            // Track ViewContent event
-            if (productId && productName && productPrice && productCategory && typeof fbq !== 'undefined') {
-                fbq('track', 'ViewContent', {
-                    content_ids: catalog_content_ids,
-                    content_name: productName,
-                    content_type: 'product',
-                    value: productPrice,
-                    currency: 'PKR',
-                    content_category: productCategory,
-                    catalog_content_ids: catalog_content_ids
-                });
-            } else {
-                console.warn('ViewContent tracking failed: Missing data or Meta Pixel not initialized', {
-                    productId, productName, productPrice, productCategory, fbqDefined: typeof fbq !== 'undefined'
-                });
-            }
-        });
-
+        // FAB button toggle
         const fabButton = document.getElementById('fabButton');
         const fabIcons = document.getElementById('fabIcons');
         if (fabButton && fabIcons) {
@@ -801,6 +802,7 @@
             });
         }
 
+        // Mobile nav collapse
         const mobileNav = document.getElementById('mobileNav');
         const navbarToggler = document.querySelector('.navbar-toggler');
         if (mobileNav && navbarToggler) {
@@ -820,12 +822,14 @@
             });
         }
 
+        // Initialize Swiper sliders
         const swiperElements = document.querySelectorAll('.js-swiper-slider');
         swiperElements.forEach(element => {
             const settings = JSON.parse(element.dataset.settings || '{}');
             new Swiper(element, settings);
         });
 
+        // Search handler
         const searchHandler = debounce(function() {
             const searchQuery = $('#search-input').val();
             if (searchQuery.length > 2) {
@@ -838,7 +842,7 @@
                         const $searchResults = $('#box-content-search').empty();
                         $.each(data, function(index, item) {
                             const url = '{{ route('shop.product.details', ['product_slug' => '__slug__']) }}'.replace('__slug__', item.slug);
-                            const imageUrl = '{{ asset('Uploads/products/thumbnails') }}/' + item.image;
+                            const imageUrl = '{{ asset('uploads/products/thumbnails') }}/' + item.image;
                             $searchResults.append(`
                                 <li>
                                     <ul>
@@ -872,6 +876,7 @@
 
         $('#search-input').on('keyup', searchHandler);
 
+        // Search popup toggle
         $('.js-search-popup').on('click', function(e) {
             e.preventDefault();
             $('.search-popup').toggleClass('js-hidden-content');
@@ -886,66 +891,93 @@
             $('.search-popup').addClass('js-hidden-content');
         });
 
+        // Initial cart count update
         updateCartCount();
 
+        // Cart icon click handler
         $('.cart-icon-container').on('click', function(e) {
             e.preventDefault();
             loadCartContent().then(() => {
                 $('#cartModal').modal('show');
+            }).catch(() => {
+                showFeedback('Error', 'Failed to load cart', 'error');
             });
         });
 
+        // Cart modal close focus
         $('#cartModal').on('hidden.bs.modal', function() {
             $('.cart-icon-container').first().focus();
         });
 
+        // InitiateCheckout tracking
         $('.btn-checkout').on('click', function(e) {
-            // Fetch cart items via AJAX to get the latest cart data
+            console.log('InitiateCheckout button clicked');
             $.ajax({
                 url: '{{ route('cart.partial') }}',
-                method: 'GET',
-                async: false, // Synchronous to ensure data is loaded before tracking
-                success: function(response) {
-                    const $cartContent = $(response);
-                    const cartItems = $cartContent.find('.cart-item').map(function() {
-                        return {
-                            id: $(this).data('id'),
-                            name: $(this).data('name'),
-                            price: $(this).data('price'),
-                            quantity: $(this).data('quantity')
-                        };
-                    }).get();
+                method: 'GET'
+            }).then(response => {
+                console.log('Cart partial loaded:', response);
+                const $cartContent = $(response);
+                const cartItems = $cartContent.find('.cart-item').map(function() {
+                    const id = $(this).data('id');
+                    return {
+                        id: id,
+                        name: $(this).data('name'),
+                        price: $(this).data('price'),
+                        quantity: $(this).data('quantity')
+                    };
+                }).get();
 
-                    if (cartItems.length > 0 && typeof fbq !== 'undefined') {
-                        const contentIds = cartItems.map(item => item.id);
-                        const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
-                        const totalItems = cartItems.reduce((sum, item) => sum + parseInt(item.quantity), 0);
+                console.log('Cart items:', cartItems);
 
-                        fbq('track', 'InitiateCheckout', {
-                            content_type: 'product',
-                            content_ids: contentIds,
-                            content_name: cartItems.map(item => item.name),
-                            value: totalValue,
-                            currency: 'PKR',
-                            num_items: totalItems,
-                            contents: cartItems.map(item => ({
-                                id: item.id,
-                                quantity: item.quantity,
-                                content_name: item.name
-                            })),
-                            catalog_content_ids: catalog_content_ids
-                        });
-                    } else {
-                        console.warn('No cart items found or Meta Pixel not initialized.');
-                    }
-                },
-                error: function(xhr) {
-                    console.error('Failed to load cart data:', xhr.responseText);
-                    console.warn('InitiateCheckout tracking skipped due to cart load failure.');
+                if (cartItems.length === 0) {
+                    console.warn('No items in cart for InitiateCheckout');
+                    showFeedback('Info', 'Cart is empty', 'info');
+                    return;
                 }
+
+                if (typeof fbq === 'undefined') {
+                    console.error('Meta Pixel (fbq) not initialized');
+                    showFeedback('Error', 'Tracking not available', 'error');
+                    return;
+                }
+
+                const contentIds = cartItems
+                    .map(item => catalogIdMapping[item.id] || item.id)
+                    .filter(id => id);
+                const totalValue = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
+                const totalItems = cartItems.reduce((sum, item) => sum + parseInt(item.quantity), 0);
+
+                console.log('InitiateCheckout event data:', {
+                    content_ids: contentIds,
+                    content_name: cartItems.map(item => item.name),
+                    value: totalValue,
+                    num_items: totalItems
+                });
+
+                fbq('track', 'InitiateCheckout', {
+                    content_type: 'product',
+                    content_ids: contentIds,
+                    content_name: cartItems.map(item => item.name),
+                    value: totalValue,
+                    currency: 'PKR',
+                    num_items: totalItems,
+                    contents: cartItems.map(item => ({
+                        id: catalogIdMapping[item.id] || item.id,
+                        quantity: item.quantity,
+                        content_name: item.name
+                    })),
+                    test_event_code: 'TEST12345' // For debugging in Meta Events Manager
+                });
+
+                console.log('InitiateCheckout event fired');
+            }).catch(xhr => {
+                console.error('Failed to load cart data:', xhr.responseText);
+                showFeedback('Error', 'Failed to load cart for tracking', 'error');
             });
         });
 
+        // Update quantity handler
         const updateQuantity = debounce(function(button, rowId, newQty) {
             showLoading(button);
             $.ajax({
@@ -969,6 +1001,7 @@
             });
         }, 300);
 
+        // Quantity increase/decrease
         $(document).on('click', '.cart-qty-increase, .cart-qty-reduce', function() {
             const $button = $(this);
             const rowId = $button.data('row-id');
@@ -976,11 +1009,12 @@
             const currentQty = parseInt($input.val());
             const newQty = $button.hasClass('cart-qty-increase') ? currentQty + 1 : currentQty - 1;
 
-            if (newQty < 1) return; 
+            if (newQty < 1) return;
 
             updateQuantity($button, rowId, newQty);
         });
 
+        // Remove item from cart
         $(document).on('click', '.cart-remove-item', function() {
             const $button = $(this);
             const rowId = $button.data('row-id');
@@ -1007,6 +1041,7 @@
             });
         });
 
+        // Clear cart
         $(document).on('click', '#clear-cart', function() {
             const $button = $(this);
             showLoading($button);
@@ -1033,6 +1068,7 @@
             });
         });
 
+        // Apply coupon
         $(document).on('click', '#apply-coupon', function() {
             const $button = $(this);
             const couponCode = $('#coupon-code').val();
@@ -1063,6 +1099,7 @@
             });
         });
 
+        // Remove coupon
         $(document).on('click', '#remove-coupon', function() {
             const $button = $(this);
             showLoading($button);
