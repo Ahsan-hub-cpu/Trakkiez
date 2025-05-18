@@ -567,32 +567,6 @@ $(document).ready(function() {
         "37": "5908gpou8j"
     };
 
-    // ViewContent tracking for product page load
-    // if (typeof fbq !== 'undefined') {
-    //     const productId = '{{ $product->id }}';
-    //     const catalogId = catalogIdMapping[productId] || null;
-    //     const productName = '{{ addslashes($product->name) }}';
-    //     const productPrice = parseFloat('{{ $product->sale_price ?: $product->regular_price }}');
-    //     const productCategory = '{{ addslashes($product->category->name) }}';
-
-    //     if (catalogId && productName && productPrice && productCategory) {
-    //         fbq('track', 'ViewContent', {
-    //             content_ids: [catalogId],
-    //             content_name: productName,
-    //             content_type: 'product',
-    //             value: productPrice,
-    //             currency: 'PKR',
-    //             content_category: productCategory
-    //         });
-    //     } else {
-    //         console.warn('ViewContent tracking failed: Missing product data', {
-    //             productId, catalogId, productName, productPrice, productCategory
-    //         });
-    //     }
-    // } else {
-    //     console.warn('ViewContent tracking failed: Meta Pixel not initialized');
-    // }
-
     // Fetch initial cart items on page load
     $.ajax({
         url: '{{ route('cart.partial') }}',
@@ -652,7 +626,7 @@ $(document).ready(function() {
         }
         const currentVal = parseInt($quantityInput.val()) || 1;
         if (currentVal < selectedSize.quantity) {
-            $quantityInput.val(currentVal);
+            $quantityInput.val(currentVal + 1);
             $qtyError.text('');
         } else {
             $qtyError.text(`Only ${selectedSize.quantity} items available`);
@@ -662,7 +636,7 @@ $(document).ready(function() {
     $('.qty-control__reduce').on('click', function() {
         const currentVal = parseInt($quantityInput.val()) || 1;
         if (currentVal > 1) {
-            $quantityInput.val(currentVal);
+            $quantityInput.val(currentVal - 1);
             $qtyError.text('');
         }
     });
@@ -755,22 +729,40 @@ $(document).ready(function() {
         });
     });
 
-    function openLightbox() {
-        const lightbox = document.getElementById('size-chart-lightbox');
-        lightbox.style.display = 'flex';
+    // Size chart button click handler
+    $('.size-chart-btn').on('click', function() {
+        console.log('Size chart button clicked');
+        const $lightbox = $('#size-chart-lightbox');
+        if ($lightbox.length === 0) {
+            console.error('Size chart lightbox not found in DOM');
+            return;
+        }
+        $lightbox.css('display', 'flex');
         document.body.style.overflow = 'hidden';
-    }
+        console.log('Lightbox opened');
+    });
 
-    function closeLightbox() {
-        const lightbox = document.getElementById('size-chart-lightbox');
-        lightbox.style.display = 'none';
+    // Close lightbox handler
+    $('.close').on('click', function() {
+        console.log('Close button clicked');
+        const $lightbox = $('#size-chart-lightbox');
+        if ($lightbox.length === 0) {
+            console.error('Size chart lightbox not found in DOM');
+            return;
+        }
+        $lightbox.css('display', 'none');
         document.body.style.overflow = 'auto';
-    }
+        console.log('Lightbox closed');
+    });
 
-    document.addEventListener('click', function(event) {
-        const lightbox = document.getElementById('size-chart-lightbox');
-        if (event.target === lightbox) {
-            closeLightbox();
+    // Close lightbox on outside click
+    $(document).on('click', '#size-chart-lightbox', function(event) {
+        if ($(event.target).is('#size-chart-lightbox')) {
+            console.log('Clicked outside lightbox content');
+            const $lightbox = $('#size-chart-lightbox');
+            $lightbox.css('display', 'none');
+            document.body.style.overflow = 'auto';
+            console.log('Lightbox closed');
         }
     });
 });
