@@ -626,7 +626,7 @@ $(document).ready(function() {
         }
         const currentVal = parseInt($quantityInput.val()) || 1;
         if (currentVal < selectedSize.quantity) {
-            $quantityInput.val(currentVal + 1);
+            $quantityInput.val(currentVal);
             $qtyError.text('');
         } else {
             $qtyError.text(`Only ${selectedSize.quantity} items available`);
@@ -636,7 +636,7 @@ $(document).ready(function() {
     $('.qty-control__reduce').on('click', function() {
         const currentVal = parseInt($quantityInput.val()) || 1;
         if (currentVal > 1) {
-            $quantityInput.val(currentVal - 1);
+            $quantityInput.val(currentVal);
             $qtyError.text('');
         }
     });
