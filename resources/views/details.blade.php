@@ -185,7 +185,7 @@
     padding: 10px 20px;
     font-size: 0.9rem;
     font-weight: 500;
-    width: 30%; /* Full width for consistency */
+    width: 17.5rem; /* Full width for consistency */
     margin-top: 10px; /* Space above button */
     height:4rem;
   }

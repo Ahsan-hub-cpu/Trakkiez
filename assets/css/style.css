@@ -8807,7 +8807,7 @@ img {
 
 .btn-primary {
   color: #fff;
-  background-color: #222222;
+  background-color: black;
   border-color: #222222;
   box-shadow: none; }
   .btn-primary:hover {
