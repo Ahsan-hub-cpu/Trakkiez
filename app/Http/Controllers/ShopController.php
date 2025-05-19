@@ -81,20 +81,30 @@ class ShopController extends Controller
         return view('shop', compact('products', 'categories', 'sizes', 'maxPrice'));
     }
 
-    public function product_details($product_slug)
+    public function product_details(Request $request, $product_slug)
     {
         $product = Product::where('slug', $product_slug)
-                         ->select('size_chart','id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'description', 'short_description', 'SKU', 'category_id')
-                         ->with(['category', 'productVariations.size'])
+                         ->select('size_chart', 'id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'description', 'short_description', 'SKU', 'category_id')
+                         ->with(['category', 'productVariations.size', 'reviews' => function ($query) {
+                             $query->where('is_approved', true); // Only load approved reviews
+                         }])
                          ->firstOrFail();
 
+        $reviews = $product->reviews()->where('is_approved', true)->paginate(5); // Paginate with 5 reviews per page
+        $averageRating = $product->reviews->avg('rating') ?? 0; // Default to 0 if no reviews
+        $reviewCount = $product->reviews->count();
+
         $rproducts = Product::where('slug', '<>', $product_slug)
-                           ->select('id', 'name', 'image' , 'slug', 'regular_price', 'sale_price', 'quantity', 'category_id')
+                           ->select('id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity', 'category_id')
                            ->with(['category', 'productVariations.size'])
                            ->inRandomOrder()
                            ->take(8)
                            ->get();
 
-        return view('details', compact('product', 'rproducts'));
+        if ($request->ajax()) {
+            return view('partials.reviews-list', compact('reviews'))->render();
+        }
+
+        return view('details', compact('product', 'rproducts', 'reviews', 'averageRating', 'reviewCount'));
     }
 }

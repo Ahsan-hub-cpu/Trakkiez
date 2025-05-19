@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -142,8 +143,12 @@ Route::middleware(['auth',AuthAdmin::class])->group(function(){
     Route::get('/admin/search',[AdminController::class,'search'])->name('admin.search');
     Route::get('/admin/getSubcategories/{category_id}', [AdminController::class, 'getSubcategories'])->name('admin.getSubcategories');
 
-
+    Route::get('/admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');
+    Route::put('/admin/reviews/{id}/approve', [AdminController::class, 'approve_review'])->name('admin.approve.review');
+    Route::delete('/admin/reviews/{id}', [AdminController::class, 'delete_review'])->name('admin.delete.review');
 
 
 });
+//reviews
 
+Route::post('/products/{productId}/reviews', [ReviewController::class, 'store'])->name('reviews.store');

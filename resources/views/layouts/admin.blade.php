@@ -136,6 +136,12 @@
                                         <div class="text">Messages</div>
                                     </a>
                                 </li>
+                                 <li class="menu-item">
+                                    <a href="{{ route('admin.reviews') }}">
+                                        <div class="icon"><i class="icon-mail"></i></div>
+                                        <div class="text">Reviews</div>
+                                    </a>
+                                </li>
                                 <li class="menu-item">
                                     <form method="POST" action="{{ route('logout') }}" id="logout-form">
                                         @csrf

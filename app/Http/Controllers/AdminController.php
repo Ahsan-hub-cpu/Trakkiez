@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
+use App\Models\Review;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -814,5 +815,24 @@ public function search(Request $request){
     return response()->json($results);
 }
 
+ public function reviews()
+    {
+        $reviews = Review::with('product')->orderBy('created_at', 'DESC')->paginate(10);
+        return view('admin.review', compact('reviews'));
+    }
+
+    public function approve_review($id)
+    {
+        $review = Review::findOrFail($id);
+        $review->update(['is_approved' => true]);
+        return redirect()->route('admin.reviews')->with('status', 'Review approved successfully!');
+    }
+
+    public function delete_review($id)
+    {
+        $review = Review::findOrFail($id);
+        $review->delete();
+        return redirect()->route('admin.reviews')->with('status', 'Review deleted successfully!');
+    }
 
 }

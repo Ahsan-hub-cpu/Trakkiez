@@ -149,68 +149,56 @@
     color: #ccc;
   }
 
+  /* Reviews Section Styles */
+  .reviews-section { padding: 20px 0; border-top: 1px solid #ddd; margin-top: 20px; }
+  .review-summary { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+  .average-rating { font-size: 2rem; font-weight: bold; }
+  .star-rating .fa-star { color: #ccc; }
+  .star-rating .fa-star.checked { color: #f39c12; }
+  .rating-breakdown { flex: 1; }
+  .rating-bar { background: #ddd; height: 5px; border-radius: 5px; overflow: hidden; margin: 5px 0; }
+  .rating-bar-fill { background: #dc3545; height: 100%; }
+  .write-review-btn { background: #ff9800; color: white; border: none; padding: 10px 20px; border-radius: 4px; }
+  .write-review-btn:hover { background: #e68900; }
+  .review-item { border-bottom: 1px solid #ddd; padding: 15px 0; }
+  .review-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .pagination { justify-content: center; margin-top: 20px; }
+  .pagination .page-link { color: #ff9800; }
+  .pagination .page-item.active .page-link { background-color: #ff9800; border-color: #ff9800; color: white; }
+
+  /* Modal Styles */
+  .review-modal .modal-content { border-radius: 8px; }
+  .review-modal .modal-header { background: #ff9800; color: white; }
+  .review-modal .modal-footer { border-top: none; }
+  .star-rating-input { display: flex; gap: 5px; }
+  .star-rating-input .fa-star { font-size: 1.5rem; cursor: pointer; }
+  .star-rating-input .fa-star.checked { color: #f39c12; } /* Added to make stars orange when clicked */
+  .review-form .error-message { color: #dc3545; font-size: 0.8rem; margin-top: 5px; display: none; }
+  #rating-error { color: #dc3545; } /* Added to ensure rating error is red */
+
+  /* Responsive Styles */
   @media (max-width: 768px) {
-    .size-chart-btn {
-      padding: 6px 12px;
-      font-size: 0.8rem;
-      margin-left: 5px;
-      margin-bottom: 1rem;
-    }
-
-    .lightbox-content {
-      max-width: 95%;
-      max-height: 85%;
-      padding: 15px;
-    }
-
-    .lightbox-images {
-      flex-direction: column;
-      align-items: center;
-      max-height: 70vh;
-    }
-
-    .lightbox-image {
-      max-height: 35vh;
-      width: 100%;
-    }
-
-    .gap-2 {
-      gap: 0.5rem !important;
-      margin-bottom: 1rem;
-    }
+    .size-chart-btn { padding: 6px 12px; font-size: 0.8rem; margin-left: 5px; margin-bottom: 1rem; }
+    .lightbox-content { max-width: 95%; max-height: 85%; padding: 15px; }
+    .lightbox-images { flex-direction: column; align-items: center; max-height: 70vh; }
+    .lightbox-image { max-height: 35vh; width: 100%; }
+    .gap-2 { gap: 0.5rem !important; margin-bottom: 1rem; }
+    .average-rating { font-size: 1.5rem; }
+    .review-summary { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .write-review-btn { width: 100%; text-align: center; }
   }
 
   @media (max-width: 480px) {
-    .size-chart-btn {
-      padding: 5px 10px;
-      font-size: 0.75rem;
-    }
-
-    .lightbox-content {
-      max-width: 98%;
-      max-height: 90%;
-      padding: 10px;
-    }
-
-    .lightbox-image {
-      max-height: 30vh;
-    }
+    .size-chart-btn { padding: 5px 10px; font-size: 0.75rem; }
+    .lightbox-content { max-width: 98%; max-height: 90%; padding: 10px; }
+    .lightbox-image { max-height: 30vh; }
+    .review-meta { flex-direction: column; align-items: flex-start; }
+    .star-rating-input .fa-star { font-size: 1.2rem; }
   }
 
-  .text-success {
-    color: black !important;
-  }
-
-  .gap-2 {
-    gap: 0.5rem !important;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-  }
-
-  .btn-addtocart.loading {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
+  .text-success { color: black !important; }
+  .gap-2 { gap: 0.5rem !important; margin-bottom: 1rem; margin-top: 1rem; }
+  .btn-addtocart.loading { opacity: 0.7; cursor: not-allowed; }
 </style>
 
 <main class="pt-90">
@@ -282,6 +270,7 @@
         </div>
         <h1 class="product-single__name">{{ $product->name }}</h1>
         <div class="product-single__rating">
+          <!-- Rating will be displayed in the reviews section below -->
         </div>
         <div class="product-single__price">
           <span class="current-price">
@@ -372,7 +361,7 @@
                 </svg>
                 <span>Add to Wishlist</span>
               </a>
-            </form slum
+            </form>
           @endif
           <share-button class="share-button"></share-button>
           <div class="product-single__meta-info">
@@ -403,6 +392,68 @@
               </div>
             </div>
           </div>
+
+          <!-- Reviews Section -->
+          <div class="reviews-section">
+            <h2 class="h3 text-uppercase mb-4">Customer <strong>Reviews</strong></h2>
+            @if(session('success'))
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            @endif
+            <div class="review-summary">
+              <div class="rating-overview">
+                <span class="average-rating">{{ number_format($averageRating, 1) }}</span>
+                <div class="star-rating d-inline-block">
+                  @for ($i = 1; $i <= 5; $i++)
+                    <i class="fas fa-star {{ $i <= round($averageRating) ? 'checked' : '' }}"></i>
+                  @endfor
+                </div>
+                <p class="review-count">({{ $reviewCount }} reviews)</p>
+              </div>
+              <!-- <div class="rating-breakdown">
+                @for ($i = 5; $i >= 1; $i--)
+                  @php
+                    $ratingCount = $product->reviews->where('rating', $i)->count();
+                    $ratingPercentage = $reviewCount > 0 ? ($ratingCount / $reviewCount) * 100 : 0;
+                  @endphp
+                  <div class="d-flex align-items-center">
+                    <span>{{ $i }} star</span>
+                    <div class="rating-bar flex-grow-1 mx-2">
+                      <div class="rating-bar-fill" style="width: {{ $ratingPercentage }}%;"></div>
+                    </div>
+                    <span>({{ $ratingCount }})</span>
+                  </div>
+                @endfor
+              </div> -->
+              <button class="write-review-btn" data-bs-toggle="modal" data-bs-target="#reviewModal">Write a Review</button>
+            </div>
+            <div class="reviews-list">
+              @if($reviews->count() > 0)
+                @foreach($reviews as $review)
+                  <div class="review-item">
+                    <div class="review-meta">
+                      <div class="star-rating">
+                        @for ($i = 1; $i <= 5; $i++)
+                          <i class="fas fa-star {{ $i <= $review->rating ? 'checked' : '' }}"></i>
+                        @endfor
+                      </div>
+                      <span class="reviewer-name">{{ $review->reviewer_name ?? 'Anonymous' }}</span>
+                      <span class="review-date">{{ $review->created_at->format('M d, Y') }}</span>
+                    </div>
+                    <p class="review-text">{{ $review->review }}</p>
+                  </div>
+                @endforeach
+                <nav aria-label="Reviews pagination">
+                  {{ $reviews->links('pagination::bootstrap-5') }}
+                </nav>
+              @else
+                <p>No reviews yet. Be the first to write a review!</p>
+              @endif
+            </div>
+          </div>
+          <!-- End Reviews Section -->
         </div>
       </div>
 
@@ -465,21 +516,6 @@
                 @if($rproduct->quantity <= 0)
                   <div class="sold-out-label">Sold Out</div>
                 @endif
-                <!-- Note: Add-to-cart form commented out as it lacks size selection. Uncomment and add size selector if needed. -->
-                <!-- @if($rproduct->quantity > 0)
-                  @if(Cart::instance("cart")->content()->where('id', $rproduct->id)->count() > 0)
-                    <a href="{{ route('cart.index') }}" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-warning mb-3">Go to Cart</a>
-                  @else
-                    <form method="POST" action="{{ route('cart.add') }}">
-                      @csrf
-                      <input type="hidden" name="id" value="{{ $rproduct->id }}" />
-                      <input type="hidden" name="name" value="{{ $rproduct->name }}" />
-                      <input type="hidden" name="quantity" value="1"/>
-                      <input type="hidden" name="price" value="{{ $rproduct->sale_price ?: $rproduct->regular_price }}" />
-                      <button type="submit" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-primary mb-3">Add to Cart</button>
-                    </form>
-                  @endif
-                @endif -->
               </div>
               <div class="pc__info position-relative">
                 <p class="pc__category">{{ $rproduct->category->name }}</p>
@@ -519,6 +555,44 @@
       <div class="products-pagination mt-4 mb-5 d-flex align-items-center justify-content-center"></div>
     </div>
   </section>
+
+  <!-- Review Modal -->
+  <div class="modal fade review-modal" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reviewModalLabel">Write a Review</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="review-form" method="POST">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $product->id }}">
+            <div class="mb-3">
+              <label for="rating" class="form-label">Your Rating</label>
+              <div class="star-rating-input" id="rating-input">
+                @for ($i = 1; $i <= 5; $i++)
+                  <i class="fas fa-star" data-value="{{ $i }}"></i>
+                @endfor
+              </div>
+              <input type="hidden" name="rating" id="rating" value="0">
+              <div class="error-message" id="rating-error"></div>
+            </div>
+            <div class="mb-3">
+              <label for="reviewer_name" class="form-label">Your Name</label>
+              <input type="text" class="form-control" id="reviewer_name" name="reviewer_name" maxlength="255">
+            </div>
+            <div class="mb-3">
+              <label for="review" class="form-label">Your Review</label>
+              <textarea class="form-control" id="review" name="review" rows="4" maxlength="1000" required></textarea>
+              <div class="error-message" id="review-error"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 @endsection
 
@@ -729,9 +803,8 @@ $(document).ready(function() {
         });
     });
 
-    // Size chart button click handler
-    $('.size-chart-btn').on('click', function() {
-        console.log('Size chart button clicked');
+    // Size chart lightbox handlers
+    window.openLightbox = function() {
         const $lightbox = $('#size-chart-lightbox');
         if ($lightbox.length === 0) {
             console.error('Size chart lightbox not found in DOM');
@@ -739,12 +812,9 @@ $(document).ready(function() {
         }
         $lightbox.css('display', 'flex');
         document.body.style.overflow = 'hidden';
-        console.log('Lightbox opened');
-    });
+    };
 
-    // Close lightbox handler
-    $('.close').on('click', function() {
-        console.log('Close button clicked');
+    window.closeLightbox = function() {
         const $lightbox = $('#size-chart-lightbox');
         if ($lightbox.length === 0) {
             console.error('Size chart lightbox not found in DOM');
@@ -752,18 +822,115 @@ $(document).ready(function() {
         }
         $lightbox.css('display', 'none');
         document.body.style.overflow = 'auto';
-        console.log('Lightbox closed');
-    });
+    };
 
-    // Close lightbox on outside click
     $(document).on('click', '#size-chart-lightbox', function(event) {
         if ($(event.target).is('#size-chart-lightbox')) {
-            console.log('Clicked outside lightbox content');
-            const $lightbox = $('#size-chart-lightbox');
-            $lightbox.css('display', 'none');
-            document.body.style.overflow = 'auto';
-            console.log('Lightbox closed');
+            closeLightbox();
         }
+    });
+
+    // Review submission via AJAX
+    $('#review-form').on('submit', function(e) {
+        e.preventDefault();
+        const $form = $(this);
+        const $submitBtn = $form.find('button[type="submit"]');
+        const $ratingError = $('#rating-error');
+        const $reviewError = $('#review-error');
+        $ratingError.hide();
+        $reviewError.hide();
+        $submitBtn.prop('disabled', true).text('Submitting...');
+
+        const rating = parseInt($('#rating').val());
+        const reviewText = $('#review').val().trim();
+
+        // Client-side validation
+        let hasError = false;
+        if (rating === 0) {
+            $ratingError.text('Please select a rating').show();
+            hasError = true;
+        }
+        if (!reviewText) {
+            $reviewError.text('Please write your review').show();
+            hasError = true;
+        }
+        if (hasError) {
+            $submitBtn.prop('disabled', false).text('Submit Review');
+            return;
+        }
+
+        $.ajax({
+            url: '{{ route('reviews.store', $product->id) }}',
+            method: 'POST',
+            data: $form.serialize(),
+            success: function(response) {
+                $submitBtn.prop('disabled', false).text('Submit Review');
+                if (response.success) {
+                    $('#reviewModal').modal('hide');
+                    $form[0].reset();
+                    $('#rating-input .fa-star').removeClass('checked');
+                    $('#rating').val(0);
+                    const $alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                        response.message +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                    $('.reviews-section').prepend($alert);
+                } else {
+                    $reviewError.text(response.message || 'Failed to submit review').show();
+                }
+            },
+            error: function(xhr) {
+                $submitBtn.prop('disabled', false).text('Submit Review');
+                const errorMessage = xhr.responseJSON?.message || 'An error occurred while submitting your review';
+                $reviewError.text(errorMessage).show();
+            }
+        });
+    });
+
+    // Star rating input handler
+    $('#rating-input .fa-star').on('click', function() {
+        const value = $(this).data('value');
+        $('#rating-input .fa-star').removeClass('checked');
+        $('#rating-input .fa-star').each(function() {
+            if ($(this).data('value') <= value) {
+                $(this).addClass('checked');
+            }
+        });
+        $('#rating').val(value);
+        $('#rating-error').hide();
+    });
+
+    // Handle pagination via AJAX
+    $(document).on('click', 'nav.pagination a', function(e) {
+        e.preventDefault();
+        const url = $(this).attr('href');
+        $.ajax({
+            url: url,
+            method: 'GET',
+            dataType: 'html',
+            success: function(data) {
+                $('.reviews-list').html(data);
+                // Re-bind the event handler to new pagination links
+                $(document).off('click', 'nav.pagination a').on('click', 'nav.pagination a', function(e) {
+                    e.preventDefault();
+                    const newUrl = $(this).attr('href');
+                    $.ajax({
+                        url: newUrl,
+                        method: 'GET',
+                        dataType: 'html',
+                        success: function(newData) {
+                            $('.reviews-list').html(newData);
+                        },
+                        error: function(xhr) {
+                            console.error('Pagination error:', xhr.responseText);
+                        }
+                    });
+                });
+                history.pushState({}, '', url);
+            },
+            error: function(xhr) {
+                console.error('Pagination error:', xhr.responseText);
+            }
+        });
     });
 });
 </script>

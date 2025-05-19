@@ -55,5 +55,10 @@ class Product extends Model
     {
         return $this->productVariations->sum('quantity');
     }
+
+     public function reviews()
+    {
+        return $this->hasMany(Review::class)->where('is_approved', true);
+    }
    
 }
