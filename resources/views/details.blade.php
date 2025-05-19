@@ -14,9 +14,9 @@
   }
 
   .size-btn.active {
-    background: #ff9800;
+    background:black;
     color: white;
-    border-color: #ff9800;
+    border-color:black;
   }
 
   .size-btn.sold-out {
@@ -78,11 +78,12 @@
     background-color: #000000;
     color: white;
     border: none;
-    border-radius: 4px;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 30%;
+    height:4rem;
   }
 
   .size-chart-btn:hover {
@@ -158,8 +159,8 @@
   .rating-breakdown { flex: 1; }
   .rating-bar { background: #ddd; height: 5px; border-radius: 5px; overflow: hidden; margin: 5px 0; }
   .rating-bar-fill { background: #dc3545; height: 100%; }
-  .write-review-btn { background: #ff9800; color: white; border: none; padding: 10px 20px; border-radius: 4px; }
-  .write-review-btn:hover { background: #e68900; }
+  .write-review-btn { background:black; color: white; border: none; padding: 10px 20px; border-radius: 4px; }
+  /* .write-review-btn:hover { background: #e68900; } */
   .review-item { border-bottom: 1px solid #ddd; padding: 15px 0; }
   .review-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
   .pagination { justify-content: center; margin-top: 20px; }
@@ -172,13 +173,37 @@
   .review-modal .modal-footer { border-top: none; }
   .star-rating-input { display: flex; gap: 5px; }
   .star-rating-input .fa-star { font-size: 1.5rem; cursor: pointer; }
-  .star-rating-input .fa-star.checked { color: #f39c12; } /* Added to make stars orange when clicked */
+  .star-rating-input .fa-star.checked { color: #f39c12; }
   .review-form .error-message { color: #dc3545; font-size: 0.8rem; margin-top: 5px; display: none; }
-  #rating-error { color: #dc3545; } /* Added to ensure rating error is red */
+  #rating-error { color: #dc3545; }
+
+  /* Buy It Now Button Styles */
+  .btn-buynow {
+    background-color:black; /* Match Add to Cart button color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    width: 30%; /* Full width for consistency */
+    margin-top: 10px; /* Space above button */
+    height:4rem;
+  }
+
+  
+
+  .btn-buynow.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 
   /* Responsive Styles */
   @media (max-width: 768px) {
-    .size-chart-btn { padding: 6px 12px; font-size: 0.8rem; margin-left: 5px; margin-bottom: 1rem; }
+    .size-chart-btn, .btn-buynow, .btn-addtocart {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+    }
     .lightbox-content { max-width: 95%; max-height: 85%; padding: 15px; }
     .lightbox-images { flex-direction: column; align-items: center; max-height: 70vh; }
     .lightbox-image { max-height: 35vh; width: 100%; }
@@ -189,7 +214,10 @@
   }
 
   @media (max-width: 480px) {
-    .size-chart-btn { padding: 5px 10px; font-size: 0.75rem; }
+    .size-chart-btn, .btn-buynow, .btn-addtocart {
+      padding: 5px 10px;
+      font-size: 0.75rem;
+    }
     .lightbox-content { max-width: 98%; max-height: 90%; padding: 10px; }
     .lightbox-image { max-height: 30vh; }
     .review-meta { flex-direction: column; align-items: flex-start; }
@@ -293,7 +321,7 @@
               <div class="d-flex align-items-center">
                 <label>Size:</label>
                 @if($product->size_chart)
-                  <button type="button" class="size-chart-btn" onclick="openLightbox()">View Size Chart</button>
+                  <button type="button" class="size-chart-btn" onclick="openLightbox()">Size Chart</button>
                 @endif
               </div>
               <div class="size-selector d-flex flex-wrap gap-2">
@@ -317,7 +345,7 @@
               <input type="hidden" name="size_id" id="selected_size" value="">
             </div>
 
-            <div class="product-single__addtocart">
+            <div class="product-single__addtocart d-flex flex-column align-items-start gap-2">
               <div class="qty-control position-relative">
                 <input type="number" name="quantity" value="1" min="1" class="qty-control__number text-center">
                 <div class="qty-control__reduce">-</div>
@@ -332,6 +360,7 @@
               <input type="hidden" name="name" value="{{ $product->name }}" />
               <input type="hidden" name="price" value="{{ $product->sale_price ?: $product->regular_price }}" />
               <button type="submit" class="btn btn-primary btn-addtocart">Add to Cart</button>
+              <button type="button" class="btn btn-buynow" onclick="buyNow()">Buy It Now</button>
               <span class="cart-status text-success ms-2" aria-live="polite"></span>
             </div>
           </form>
@@ -412,21 +441,6 @@
                 </div>
                 <p class="review-count">({{ $reviewCount }} reviews)</p>
               </div>
-              <!-- <div class="rating-breakdown">
-                @for ($i = 5; $i >= 1; $i--)
-                  @php
-                    $ratingCount = $product->reviews->where('rating', $i)->count();
-                    $ratingPercentage = $reviewCount > 0 ? ($ratingCount / $reviewCount) * 100 : 0;
-                  @endphp
-                  <div class="d-flex align-items-center">
-                    <span>{{ $i }} star</span>
-                    <div class="rating-bar flex-grow-1 mx-2">
-                      <div class="rating-bar-fill" style="width: {{ $ratingPercentage }}%;"></div>
-                    </div>
-                    <span>({{ $ratingCount }})</span>
-                  </div>
-                @endfor
-              </div> -->
               <button class="write-review-btn" data-bs-toggle="modal" data-bs-target="#reviewModal">Write a Review</button>
             </div>
             <div class="reviews-list">
@@ -603,6 +617,7 @@ $(document).ready(function() {
     const $qtyError = $('.qty-error');
     const $cartStatus = $('.cart-status');
     const $addToCartBtn = $('.btn-addtocart');
+    const $buyNowBtn = $('.btn-buynow');
     let selectedSize = null;
     let cartItems = [];
 
@@ -803,6 +818,39 @@ $(document).ready(function() {
         });
     });
 
+    // Buy It Now handler
+    window.buyNow = function() {
+        if (!selectedSize) {
+            $qtyError.text('Please select a size');
+            return;
+        }
+        const $form = $('#add-to-cart-form');
+        $buyNowBtn.addClass('loading').prop('disabled', true).text('Processing...');
+        $.ajax({
+            url: '{{ route('cart.add') }}',
+            method: 'POST',
+            data: $form.serialize(),
+            success: function(response) {
+                $buyNowBtn.removeClass('loading').prop('disabled', false).text('Buy It Now');
+                if (response.success) {
+                    $qtyError.text('');
+                    $quantityInput.val(1);
+                    $('.size-btn').removeClass('active');
+                    $('#selected_size').val('');
+                    selectedSize = null;
+                    window.location.href = '{{ route('cart.checkout') }}';
+                } else {
+                    $qtyError.text(response.message || 'Failed to add to cart');
+                }
+            },
+            error: function(xhr) {
+                console.error('Buy now error:', xhr.responseJSON || xhr.responseText);
+                $buyNowBtn.removeClass('loading').prop('disabled', false).text('Buy It Now');
+                $qtyError.text(xhr.responseJSON?.message || 'An error occurred while processing your request');
+            }
+        });
+    };
+
     // Size chart lightbox handlers
     window.openLightbox = function() {
         const $lightbox = $('#size-chart-lightbox');
@@ -871,7 +919,7 @@ $(document).ready(function() {
                     $('#rating-input .fa-star').removeClass('checked');
                     $('#rating').val(0);
                     const $alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
-                        response.message +
+                        'Review submitted successfully' +
                         '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                     $('.reviews-section').prepend($alert);
                 } else {
