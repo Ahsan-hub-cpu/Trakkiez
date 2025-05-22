@@ -63,7 +63,6 @@
   src="https://www.facebook.com/tr?id=678618305092613&ev=PageView&noscript=1"/>
 </noscript>
 <!-- End Meta Pixel Code -->
-
 </head>
 <style>
     .cart-icon-container {
@@ -86,9 +85,51 @@
     font-weight: bold;
     line-height: 1;
 }
+
+/* .notification-banner {
+    position: fixed;
+    bottom: 0;
+    left:26rem;
+    width: 50%;
+    color:red;
+    padding: 10px 20px;
+    text-align: center;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius:30px;
+    background-color:black;
+}
+.notification-banner span {
+    margin-right: 10px;
+}
+.notification-banner .close-btn {
+    cursor: pointer;
+    font-size: 18px;
+    color: #000;
+    border: none;
+    background: none;
+    padding: 0 5px;
+}
+@media (max-width: 768px) {
+   .notification-banner {
+        font-size: 14px;
+        padding: 8px 15px;
+        width: 80%;
+        left: 4rem;
+        margin-bottom: 3rem;
+    }
+    .notification-banner .close-btn {
+        font-size: 16px;
+    }
+} */
 </style>
 
 <body class="gradient-bg" >
+
   <svg class="d-none">
     <symbol id="icon_nav" viewBox="0 0 25 18">
       <rect width="25" height="2" />
@@ -313,6 +354,7 @@
     </symbol>
   </svg>
    
+
     <div class="top-bar">
         <div class="container">
             <p class="top-bar__text">Free shipping on orders more than PKR 5999!</p>
@@ -359,7 +401,7 @@
                                 </svg>
                             </button>
                             <button class="btn position-absolute top-0 end-0 mt-1 me-1" type="reset" aria-label="Clear search">
-                                <i class="fa fa-times"></i>
+                                <i class="fa fa-comment-dots"></i>
                             </button>
                         </div>
                     </form>
@@ -603,7 +645,7 @@
                             </a>
                         </div>
                         <div id="fabButton" class="fab-button">
-                            <i class="fas fa-times"></i>
+                            <i class="fas fa-comment-dots"></i>
                         </div>
                     </div>
                 </span>
@@ -677,6 +719,12 @@
     <div class="visually-hidden end-0"></div>
     <div class="page-overlay"></div>
 
+    <!-- Sticky Notification Banner -->
+    <!-- <div class="notification-banner" id="notificationBanner">
+        <span>Get 20% off your first order! Use code: FIRST20</span>
+        <button class="close-btn" id="closeBanner">&times;</button>
+    </div> -->
+
     <!-- Scripts (Moved after jQuery) -->
     <script src="{{ asset('assets/js/plugins/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/bootstrap-slider.min.js') }}"></script>
@@ -686,8 +734,7 @@
     <script src="{{ asset('assets/js/theme.js') }}"></script>
 
     <!-- Consolidated JavaScript -->
-         <!-- Consolidated JavaScript -->
-     <script>
+    <script>
 (function() {
     // Utility to debounce functions
     function debounce(func, wait) {
@@ -1124,6 +1171,11 @@
                 }
             });
         });
+
+        // Close notification banner
+        // $('#closeBanner').on('click', function() {
+        //     $('#notificationBanner').hide();
+        // });
     });
 })();
 </script>
