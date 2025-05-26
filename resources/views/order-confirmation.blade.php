@@ -30,13 +30,12 @@
         </div>
         <div class="order-complete">
           <div class="order-complete__message">
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="40" cy="40" r="40" fill="#B9A16B" />
-              <path
-                d="M52.9743 35.7612C52.9743 35.3426 52.8069 34.9241 52.5056 34.6228L50.2288 32.346C49.9275 32.0446 49.5089 31.8772 49.0904 31.8772C48.6719 31.8772 48.2533 32.0446 47.952 32.346L36.9699 43.3449L32.048 38.4062C31.7467 38.1049 31.3281 37.9375 30.9096 37.9375C30.4911 37.9375 30.0725 38.1049 29.7712 38.4062L27.4944 40.683C27.1931 40.9844 27.0257 41.4029 27.0257 41.8214C27.0257 42.24 27.1931 42.6585 27.4944 42.9598L33.5547 49.0201L35.8315 51.2969C36.1328 51.5982 36.5513 51.7656 36.9699 51.7656C37.3884 51.7656 37.8069 51.5982 38.1083 51.2969L40.385 49.0201L52.5056 36.8996C52.8069 36.5982 52.9743 36.1797 52.9743 35.7612Z"
-                fill="white" />
-            </svg>
             <h3>Your order is completed!</h3>
+            <!-- Alternative SVG with corrected path for testing -->
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+              <circle cx="40" cy="40" r="40" fill="#B9A16B" />
+              <path d="M53 36 C53 35.5 52.8 35 52.5 34.6 L50.2 32.3 C49.9 32 49.5 31.9 49.1 31.9 C48.7 31.9 48.3 32.3 L37 43.3 L32 38.4 C31.7 38.1 31.3 37.9 30.9 37.9 C30.5 37.9 30.1 38.1 29.8 38.4 L27.5 40.7 C27.2 41 27 41.4 27 41.8 C27 42.2 27.2 42.7 27.5 43 L33.6 49 L35.8 51.3 C36.1 51.6 36.5 51.8 37 51.8 C37.4 51.8 37.8 51.6 38.1 51.3 L40.4 49 L52.5 36.9 C52.8 36.6 53 36.2 53 36 Z" fill="white" />
+            </svg>
             <p>Thank you. Your order has been received.</p>
           </div>
           <div class="order-info">
@@ -117,22 +116,34 @@
   </main>
   @if(isset($order) && $order->orderItems->isNotEmpty())
   <script>
+    // Block all Meta tracking on localhost
+    const blockedHosts = ['localhost', '127.0.0.1'];
+    const isLocalhost = blockedHosts.includes(window.location.hostname);
+    if (isLocalhost) {
+      window.fbq = function() {
+        console.log('Meta Pixel blocked on localhost:', arguments);
+      };
+    }
+
     // Hardcoded Meta Pixel ID and Access Token
     const pixelId = '678618305092613';
     const accessToken = 'EAAPGeif5o1wBO6umaEGfgonCkNYlxRjTKmftZAXhgsIIjFRn2Y7VJGpZAjGG1S00j6UIlRwbZBSvXAZC6QHJupoqXZBu84yM0DV2tb2YpRKWWumTszW42AY1y6BuCfc1OZB8iIZC1p6AxCr0lIICGPbW2HhuhZCSupHlNh6xkLK1xrj7qtlz6Q1b17yoSVwUUlW6UwZDZD';
 
-    // Initialize Meta Pixel only if not already initialized
-    if (!window.fbq) {
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', pixelId);
-      fbq('track', 'PageView');
+    // Skip Meta Pixel initialization on localhost
+    if (!isLocalhost) {
+      // Initialize Meta Pixel only if not already initialized
+      if (!window.fbq) {
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', pixelId);
+        fbq('track', 'PageView');
+      }
     }
 
     // Catalog ID mapping for products
@@ -221,45 +232,51 @@
         num_items: {{ $order->orderItems->sum('quantity') }}
       });
 
-      // Send Meta Conversion API Purchase Event
-      fetch(`https://graph.facebook.com/v20.0/${pixelId}/events?access_token=${accessToken}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          data: [{
-            event_name: 'Purchase',
-            event_time: Math.floor(Date.now() / 1000),
-            event_id: eventId,
-            action_source: 'website',
-            event_source_url: window.location.href,
-            user_data: {
-              em: [hashedEmail],
-              client_ip_address: '{{ request()->ip() }}',
-              client_user_agent: navigator.userAgent,
-              fbc: document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]+)')?.pop() || '',
-              fbp: document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]+)')?.pop() || ''
+      // Send Meta Conversion API Purchase Event only if not on localhost
+      if (!isLocalhost) {
+        if (isLocalhost) {
+          console.warn('Conversion API call blocked on localhost');
+        } else {
+          fetch(`https://graph.facebook.com/v20.0/${pixelId}/events?access_token=${accessToken}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
             },
-            custom_data: {
-              value: orderValue,
-              currency: purchaseCurrency,
-              content_type: 'product',
-              content_ids: contentIds,
-              contents: apiContents,
-              order_id: '{{ addslashes($order->id) }}',
-              num_items: {{ $order->orderItems->sum('quantity') }}
-            }
-          }]
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Meta Conversion API Response:', data);
-      })
-      .catch(error => {
-        console.error('Meta Conversion API Error:', error);
-      });
+            body: JSON.stringify({
+              data: [{
+                event_name: 'Purchase',
+                event_time: Math.floor(Date.now() / 1000),
+                event_id: eventId,
+                action_source: 'website',
+                event_source_url: window.location.href,
+                user_data: {
+                  em: [hashedEmail],
+                  client_ip_address: '{{ request()->ip() }}',
+                  client_user_agent: navigator.userAgent,
+                  fbc: document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]+)')?.pop() || '',
+                  fbp: document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]+)')?.pop() || ''
+                },
+                custom_data: {
+                  value: orderValue,
+                  currency: purchaseCurrency,
+                  content_type: 'product',
+                  content_ids: contentIds,
+                  contents: apiContents,
+                  order_id: '{{ addslashes($order->id) }}',
+                  num_items: {{ $order->orderItems->sum('quantity') }}
+                }
+              }]
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Meta Conversion API Response:', data);
+          })
+          .catch(error => {
+            console.error('Meta Conversion API Error:', error);
+          });
+        }
+      }
     } else {
       console.warn('Meta Pixel not initialized.');
     }
