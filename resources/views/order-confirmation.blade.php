@@ -117,6 +117,24 @@
   </main>
   @if(isset($order) && $order->orderItems->isNotEmpty())
   <script>
+    // Hardcoded Meta Pixel ID and Access Token
+    const pixelId = '678618305092613';
+    const accessToken = 'EAAPGeif5o1wBO6umaEGfgonCkNYlxRjTKmftZAXhgsIIjFRn2Y7VJGpZAjGG1S00j6UIlRwbZBSvXAZC6QHJupoqXZBu84yM0DV2tb2YpRKWWumTszW42AY1y6BuCfc1OZB8iIZC1p6AxCr0lIICGPbW2HhuhZCSupHlNh6xkLK1xrj7qtlz6Q1b17yoSVwUUlW6UwZDZD';
+
+    // Initialize Meta Pixel only if not already initialized
+    if (!window.fbq) {
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', pixelId);
+      fbq('track', 'PageView');
+    }
+
     // Catalog ID mapping for products
     const catalogIdMapping = {
         "7": "lzcxdcwcjq",
@@ -152,31 +170,95 @@
         "37": "5908gpou8j"
     };
 
+    // Dynamic order data
+    const orderValue = parseFloat({{ $order->total }});
+    const purchaseCurrency = 'PKR'; // Avoid overwrite
+    const eventId = '{{ $order->id }}-{{ time() }}';
+    // Fetch email from Orders table, fallback to User table
+    const hashedEmail = '{{ hash('sha256', $order->email ?? ($order->user->email ?? '')) }}';
+
+    // Send Meta Pixel and Conversion API Events
     if (typeof fbq === 'function') {
+      // Content IDs for both Pixel and API
       const contentIds = [
         @foreach($order->orderItems as $item)
-          catalogIdMapping['{{ addslashes($item->product->id) }}'] || '{{ addslashes($item->product->id) }}'@if(!$loop->last),@endif
+          catalogIdMapping['{{ addslashes($item->product_id) }}'] || '{{ addslashes($item->product_id) }}'@if(!$loop->last),@endif
         @endforeach
       ].filter(id => id); // Remove undefined/null IDs
 
+      // Contents for Pixel (with content_name)
+      const pixelContents = [
+        @foreach($order->orderItems as $item)
+          {
+            id: catalogIdMapping['{{ addslashes($item->product_id) }}'] || '{{ addslashes($item->product_id) }}',
+            quantity: {{ $item->quantity }},
+            item_price: parseFloat({{ $item->quantity > 0 ? ($item->price / $item->quantity) : 0 }}),
+            content_name: '{{ addslashes($item->product->name ?? 'Unknown') }}'
+          }@if(!$loop->last),@endif
+        @endforeach
+      ];
+
+      // Contents for Conversion API (without content_name)
+      const apiContents = [
+        @foreach($order->orderItems as $item)
+          {
+            id: catalogIdMapping['{{ addslashes($item->product_id) }}'] || '{{ addslashes($item->product_id) }}',
+            quantity: {{ $item->quantity }},
+            item_price: parseFloat({{ $item->quantity > 0 ? ($item->price / $item->quantity) : 0 }})
+          }@if(!$loop->last),@endif
+        @endforeach
+      ];
+
+      // Send Meta Pixel Purchase Event
       fbq('track', 'Purchase', {
-        value: {{ $order->total }},
-        currency: 'PKR',
+        value: orderValue,
+        currency: purchaseCurrency,
         content_type: 'product',
         content_ids: contentIds,
-        contents: [
-          @foreach($order->orderItems as $item)
-            {
-              id: catalogIdMapping['{{ addslashes($item->product->id) }}'] || '{{ addslashes($item->product->id) }}',
-              quantity: {{ $item->quantity }},
-              item_price: {{ $item->quantity > 0 ? ($item->price / $item->quantity) : 0 }},
-              content_name: '{{ addslashes($item->product->name) }}'
-            }@if(!$loop->last),@endif
-          @endforeach
-        ],
+        contents: pixelContents,
         order_id: '{{ addslashes($order->id) }}',
-        eventID: '{{ addslashes($order->id . '-' . time()) }}',
+        eventID: eventId,
         num_items: {{ $order->orderItems->sum('quantity') }}
+      });
+
+      // Send Meta Conversion API Purchase Event
+      fetch(`https://graph.facebook.com/v20.0/${pixelId}/events?access_token=${accessToken}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          data: [{
+            event_name: 'Purchase',
+            event_time: Math.floor(Date.now() / 1000),
+            event_id: eventId,
+            action_source: 'website',
+            event_source_url: window.location.href,
+            user_data: {
+              em: [hashedEmail],
+              client_ip_address: '{{ request()->ip() }}',
+              client_user_agent: navigator.userAgent,
+              fbc: document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]+)')?.pop() || '',
+              fbp: document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]+)')?.pop() || ''
+            },
+            custom_data: {
+              value: orderValue,
+              currency: purchaseCurrency,
+              content_type: 'product',
+              content_ids: contentIds,
+              contents: apiContents,
+              order_id: '{{ addslashes($order->id) }}',
+              num_items: {{ $order->orderItems->sum('quantity') }}
+            }
+          }]
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Meta Conversion API Response:', data);
+      })
+      .catch(error => {
+        console.error('Meta Conversion API Error:', error);
       });
     } else {
       console.warn('Meta Pixel not initialized.');
