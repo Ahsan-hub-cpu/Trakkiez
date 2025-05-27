@@ -14,5 +14,6 @@ class SizeSeeder extends Seeder
         Sizes::create(['name' => 'Medium']);
         Sizes::create(['name' => 'Large']);
         Sizes::create(['name' => 'XL']);
+        Sizes::create(['name' => 'XXL']);
     }
 }
