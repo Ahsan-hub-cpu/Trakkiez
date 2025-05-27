@@ -324,9 +324,17 @@
                   <button type="button" class="size-chart-btn" onclick="openLightbox()">Size Chart</button>
                 @endif
               </div>
-              <div class="size-selector d-flex flex-wrap gap-2">
+  <div class="size-selector d-flex flex-wrap gap-2">
                 @if($product->productVariations && $product->productVariations->count() > 0)
-                  @foreach($product->productVariations as $variation)
+                  @php
+                    // Define the desired order of sizes
+                    $sizeOrder = ['Small', 'Medium', 'Large', 'XL', 'XXL'];
+                    // Sort the product variations based on the size order
+                    $sortedVariations = $product->productVariations->sortBy(function($variation) use ($sizeOrder) {
+                      return array_search($variation->size->name, $sizeOrder);
+                    });
+                  @endphp
+                  @foreach($sortedVariations as $variation)
                     <button type="button" 
                       class="size-btn btn btn-outline-secondary {{ $variation->quantity <= 0 ? 'sold-out' : '' }}"
                       data-size-id="{{ $variation->size->id }}"
