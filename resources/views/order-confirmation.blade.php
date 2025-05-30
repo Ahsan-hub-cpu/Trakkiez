@@ -129,12 +129,27 @@
     const pixelId = '678618305092613';
     const accessToken = 'EAAPGeif5o1wBO6umaEGfgonCkNYlxRjTKmftZAXhgsIIjFRn2Y7VJGpZAjGG1S00j6UIlRwbZBSvXAZC6QHJupoqXZBu84yM0DV2tb2YpRKWWumTszW42AY1y6BuCfc1OZB8iIZC1p6AxCr0lIICGPbW2HhuhZCSupHlNh6xkLK1xrj7qtlz6Q1b17yoSVwUUlW6UwZDZD';
 
+    // Function to get URL parameter
+    function getUrlParameter(name) {
+      const regex = new RegExp('[?&]' + name + '=([^&#]*)');
+      const results = regex.exec(window.location.href);
+      return results ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
+    }
+
+    // Check for fbclid in the URL and set _fbc cookie if not present
+    const fbclid = getUrlParameter('fbclid');
+    if (fbclid && !document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]+)')) {
+      const timestamp = Math.floor(Date.now() / 1000);
+      const fbcValue = `fb.1.${timestamp}.${fbclid}`;
+      document.cookie = `_fbc=${fbcValue}; path=/; max-age=${60 * 60 * 24 * 90}; SameSite=Lax`; // 90-day expiry
+    }
+
     // Skip Meta Pixel initialization on localhost
     if (!isLocalhost) {
       // Initialize Meta Pixel only if not already initialized
       if (!window.fbq) {
         !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        {if(f lucreturn;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};
         if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
         n.queue=[];t=b.createElement(e);t.async=!0;
@@ -251,6 +266,7 @@
                 event_source_url: window.location.href,
                 user_data: {
                   em: [hashedEmail],
+                  external_id: '{{ hash('sha256', $order->id) }}', // Use hashed order ID as external_id
                   client_ip_address: '{{ request()->ip() }}',
                   client_user_agent: navigator.userAgent,
                   fbc: document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]+)')?.pop() || '',
