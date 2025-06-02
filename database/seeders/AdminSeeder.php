@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
             ['email' => 'trakkiezstore@gmail.com'],
             [
                 'name'              => 'Admin',
-                'password'          => Hash::make('ahsan@3435'),
+                'password'          => Hash::make('mohsin@3435'),
                 'utype'             => 'ADM', 
                 'email_verified_at' => now(),
                 'remember_token'    => Str::random(10),
