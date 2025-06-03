@@ -441,157 +441,165 @@ class CartController extends Controller
      * Place an order.
      */
 public function place_order(Request $request)
-    {
-        try {
-            // Log form data and address session for debugging
-            Log::info('Form data', ['data' => $request->all()]);
-            Log::info('Address session', ['address' => session('address')]);
+{
+    try {
+        // Log form data and address session for debugging
+        Log::info('Form data', ['data' => $request->all()]);
+        Log::info('Address session', ['address' => session('address')]);
 
-            // Check if cart is empty
-            $cartItems = Cart::instance('cart')->content();
-            if ($cartItems->isEmpty()) {
-                return redirect()->route('cart.index')->with('error', 'Your cart is empty. Please add items to proceed.');
-            }
-
-            // Define validation rules
-            $address = session()->get('address');
-            $validationRules = [
-                'mode' => 'required|in:card,paypal,cod',
-            ];
-
-            if (!$address) {
-                $validationRules = array_merge($validationRules, [
-                    'email' => 'required|email|max:255',
-                    'name' => 'required|string|max:100',
-                    'phone' => 'required|string|min:10|max:15',
-                    'zip' => 'required|string|min:5|max:10',
-                    'state' => 'required|string|max:100',
-                    'city' => 'required|string|max:100',
-                    'address' => 'required|string|max:255',
-                    'locality' => 'required|string|max:255',
-                ]);
-            }
-
-            // Validate the request
-            $request->validate($validationRules, [
-                'email.required' => 'The email field is required.',
-                'email.email' => 'Please enter a valid email address.',
-                'name.required' => 'The full name field is required.',
-                'phone.required' => 'The phone number field is required.',
-                'phone.min' => 'The phone number must be at least 10 characters.',
-                'zip.required' => 'The postal code field is required.',
-                'zip.min' => 'The postal code must be at least 5 characters.',
-                'state.required' => 'The state field is required.',
-                'city.required' => 'The city field is required.',
-                'address.required' => 'The address field is required.',
-                'locality.required' => 'The locality field is required.',
-                'mode.required' => 'Please select a payment method.',
-                'mode.in' => 'Invalid payment method selected.',
-            ]);
-
-            // Calculate checkout amounts
-            $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
-            $shippingCost = ($cartSubtotal > 5999) ? 0 : 250;
-            $subtotal = $cartSubtotal;
-            $discount = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['discount']) : 0;
-            $tax = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['tax']) : (float) str_replace(',', '', Cart::instance('cart')->tax());
-            $total = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['total']) + $shippingCost : (float) str_replace(',', '', Cart::instance('cart')->total()) + $shippingCost;
-
-            // Validate product stock
-            foreach ($cartItems as $item) {
-                $product = Product::find($item->id);
-                if (!$product) {
-                    return redirect()->route('cart.checkout')->with('error', "Product not found: {$item->name}.");
-                }
-
-                $size = Sizes::where('name', $item->options->size)->first();
-                if (!$size) {
-                    return redirect()->route('cart.checkout')->with('error', "Size not found for {$item->name}.");
-                }
-
-                $productVariation = Product_Variations::where('product_id', $item->id)
-                    ->where('size_id', $size->id)
-                    ->first();
-                if (!$productVariation || $productVariation->quantity < $item->qty) {
-                    return redirect()->route('cart.checkout')->with('error', "Sorry, the selected size for {$item->name} is out of stock.");
-                }
-            }
-
-            // Create order
-            $order = new Order();
-            $order->email = $address ? $address->email : $request->email;
-            $order->subtotal = $subtotal;
-            $order->discount = $discount;
-            $order->tax = $tax;
-            $order->total = $total;
-            $order->shipping_cost = $shippingCost;
-            $order->name = $address ? $address->name : $request->name;
-            $order->phone = $address ? $address->phone : $request->phone;
-            $order->locality = $address ? $address->locality : $request->locality;
-            $order->address = $address ? $address->address : $request->address;
-            $order->city = $address ? $address->city : $request->city;
-            $order->state = $address ? $address->state : $request->state;
-            $order->country = $address ? $address->country : 'N/A';
-            $order->zip = $address ? $address->zip : $request->zip;
-            $order->save();
-
-            // Process order items and update stock
-            foreach ($cartItems as $item) {
-                $product = Product::find($item->id);
-                $size = Sizes::where('name', $item->options->size)->first();
-                $productVariation = Product_Variations::where('product_id', $item->id)
-                    ->where('size_id', $size->id)
-                    ->first();
-
-                if ($productVariation) {
-                    $productVariation->quantity -= $item->qty;
-                    $productVariation->save();
-                }
-
-                $product->quantity -= $item->qty;
-                $product->save();
-
-                $orderItem = new OrderItem();
-                $orderItem->product_id = $item->id;
-                $orderItem->order_id = $order->id;
-                $orderItem->price = $item->price;
-                $orderItem->quantity = $item->qty;
-                $orderItem->product_variation_id = $productVariation ? $productVariation->id : null;
-                $orderItem->save();
-            }
-
-            // Handle payment (COD only for now)
-            if ($request->mode === 'cod') {
-                $transaction = new Transaction();
-                $transaction->order_id = $order->id;
-                $transaction->mode = 'cod';
-                $transaction->status = 'pending';
-                $transaction->save();
-            }
-
-            // Send order confirmation email
-            try {
-                Mail::to($order->email)->send(new OrderConfirmation($order));
-                Log::info('Order confirmation email sent', ['order_id' => $order->id, 'email' => $order->email]);
-            } catch (\Exception $e) {
-                Log::error('Error sending email: ' . $e->getMessage(), ['order_id' => $order->id]);
-            }
-
-            // Clear cart and session
-            Cart::instance('cart')->destroy();
-            session()->forget(['checkout', 'coupon', 'discounts']);
-            session()->put('order_id', $order->id);
-
-            return redirect()->route('cart.confirmation')->with('success', 'Order placed successfully!')->with('order_id', $order->id);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Validation failed', ['errors' => $e->errors()]);
-            return back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
-            Log::error('placeOrder error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return redirect()->route('cart.checkout')->with('error', 'Order could not be placed: ' . $e->getMessage());
+        // Check if cart is empty
+        $cartItems = Cart::instance('cart')->content();
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty. Please add items to proceed.');
         }
-    }
 
+        // Define validation rules
+        $address = session()->get('address');
+        $validationRules = [
+            'mode' => 'required|in:card,paypal,cod',
+        ];
+
+        if (!$address) {
+            $validationRules = array_merge($validationRules, [
+                'email' => 'required|email|max:255',
+                'name' => 'required|string|max:100',
+                'country_code' => 'required|string|regex:/^\+[0-9]{1,3}$/',
+                'phone' => 'required|string|regex:/^[0-9]{9,14}$/',
+                'zip' => 'required|string|min:5|max:10',
+                'state' => 'required|string|max:100',
+                'city' => 'required|string|max:100',
+                'address' => 'required|string|max:255',
+                'locality' => 'required|string|max:255',
+            ]);
+        }
+
+        // Validate the request
+        $request->validate($validationRules, [
+            'email.required' => 'The email field is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'name.required' => 'The full name field is required.',
+            'country_code.required' => 'Please select a country code.',
+            'country_code.regex' => 'Country code must start with + followed by 1-3 digits (e.g., +92).',
+            'phone.required' => 'The phone number field is required.',
+            'phone.regex' => 'Phone number must be 9-14 digits with no spaces or dashes (e.g., 3001234567).',
+            'zip.required' => 'The postal code field is required.',
+            'zip.min' => 'The postal code must be at least 5 characters.',
+            'state.required' => 'The state field is required.',
+            'city.required' => 'The city field is required.',
+            'address.required' => 'The address field is required.',
+            'locality.required' => 'The locality field is required.',
+            'mode.required' => 'Please select a payment method.',
+            'mode.in' => 'Invalid payment method selected.',
+        ]);
+
+        // Normalize phone number
+        $rawPhone = preg_replace('/[^0-9]/', '', $request->phone); // Remove non-digits
+        $cleanPhone = ltrim($rawPhone, '0'); // Remove leading zero(s)
+        $phone = $address ? $address->phone : $request->country_code . $cleanPhone;
+        Log::info('Normalized phone', ['phone' => $phone]);
+
+        // Calculate checkout amounts
+        $cartSubtotal = (float) str_replace(',', '', Cart::instance('cart')->subtotal());
+        $shippingCost = ($cartSubtotal > 5999) ? 0 : 250;
+        $subtotal = $cartSubtotal;
+        $discount = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['discount']) : 0;
+        $tax = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['tax']) : (float) str_replace(',', '', Cart::instance('cart')->tax());
+        $total = session()->has('discounts') ? (float) str_replace(',', '', session('discounts')['total']) + $shippingCost : (float) str_replace(',', '', Cart::instance('cart')->total()) + $shippingCost;
+
+        // Validate product stock
+        foreach ($cartItems as $item) {
+            $product = Product::find($item->id);
+            if (!$product) {
+                return redirect()->route('cart.checkout')->with('error', "Product not found: {$item->name}.");
+            }
+
+            $size = Sizes::where('name', $item->options->size)->first();
+            if (!$size) {
+                return redirect()->route('cart.checkout')->with('error', "Size not found for {$item->name}.");
+            }
+
+            $productVariation = Product_Variations::where('product_id', $item->id)
+                ->where('size_id', $size->id)
+                ->first();
+            if (!$productVariation || $productVariation->quantity < $item->qty) {
+                return redirect()->route('cart.checkout')->with('error', "Sorry, the selected size for {$item->name} is out of stock.");
+            }
+        }
+
+        // Create order
+        $order = new Order();
+        $order->email = $address ? $address->email : $request->email;
+        $order->subtotal = $subtotal;
+        $order->discount = $discount;
+        $order->tax = $tax;
+        $order->total = $total;
+        $order->shipping_cost = $shippingCost;
+        $order->name = $address ? $address->name : $request->name;
+        $order->phone = $phone; // Store normalized phone with country code
+        $order->locality = $address ? $address->locality : $request->locality;
+        $order->address = $address ? $address->address : $request->address;
+        $order->city = $address ? $address->city : $request->city;
+        $order->state = $address ? $address->state : $request->state;
+        $order->country = $address ? $address->country : 'N/A';
+        $order->zip = $address ? $address->zip : $request->zip;
+        $order->save();
+
+        // Process order items and update stock
+        foreach ($cartItems as $item) {
+            $product = Product::find($item->id);
+            $size = Sizes::where('name', $item->options->size)->first();
+            $productVariation = Product_Variations::where('product_id', $item->id)
+                ->where('size_id', $size->id)
+                ->first();
+
+            if ($productVariation) {
+                $productVariation->quantity -= $item->qty;
+                $productVariation->save();
+            }
+
+            $product->quantity -= $item->qty;
+            $product->save();
+
+            $orderItem = new OrderItem();
+            $orderItem->product_id = $item->id;
+            $orderItem->order_id = $order->id;
+            $orderItem->price = $item->price;
+            $orderItem->quantity = $item->qty;
+            $orderItem->product_variation_id = $productVariation ? $productVariation->id : null;
+            $orderItem->save();
+        }
+
+        // Handle payment (COD only for now)
+        if ($request->mode === 'cod') {
+            $transaction = new Transaction();
+            $transaction->order_id = $order->id;
+            $transaction->mode = 'cod';
+            $transaction->status = 'pending';
+            $transaction->save();
+        }
+
+        // Send order confirmation email
+        try {
+            Mail::to($order->email)->send(new OrderConfirmation($order));
+            Log::info('Order confirmation email sent', ['order_id' => $order->id, 'email' => $order->email]);
+        } catch (\Exception $e) {
+            Log::error('Error sending email: ' . $e->getMessage(), ['order_id' => $order->id]);
+        }
+
+        // Clear cart and session
+        Cart::instance('cart')->destroy();
+        session()->forget(['checkout', 'coupon', 'discounts']);
+        session()->put('order_id', $order->id);
+
+        return redirect()->route('cart.confirmation')->with('success', 'Order placed successfully!')->with('order_id', $order->id);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        Log::error('Validation failed', ['errors' => $e->errors()]);
+        return back()->withErrors($e->errors())->withInput();
+    } catch (\Exception $e) {
+        Log::error('placeOrder error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+        return redirect()->route('cart.checkout')->with('error', 'Order could not be placed: ' . $e->getMessage());
+    }
+}
 
     /**
      * Display order confirmation.

@@ -15,6 +15,43 @@
     .is-invalid ~ .invalid-feedback {
         display: block;
     }
+    .phone-group {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ced4da; /* Match Bootstrap form-control border */
+        border-radius: 0.25rem; /* Match Bootstrap form-control border-radius */
+        overflow: hidden; /* Ensure no gaps between elements */
+        background-color: #fff; /* Match input background */
+    }
+    .phone-group select {
+        width: 30%; /* Smaller width for country code */
+        border: none; /* Remove inner border */
+        border-right: 1px solid #ced4da; /* Separator between country code and phone */
+        border-radius: 0; /* No border-radius on select */
+        padding: 0 0.5rem; /* Adjust padding for smaller appearance */
+        font-size: 0.875rem; /* Smaller font for country code */
+        background-color: #f8f9fa; /* Light background to distinguish */
+        height: 100%; /* Match height of input */
+        appearance: none; /* Remove default dropdown arrow */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z'/%3E%3C/svg%3E"); /* Custom dropdown arrow */
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+        background-size: 12px;
+    }
+    .phone-group input {
+        border: none; /* Remove inner border */
+        border-radius: 0; /* No border-radius on input */
+        flex: 1; /* Take remaining space */
+        padding-left: 0.75rem; /* Match Bootstrap padding */
+        height: 58px; /* Match form-floating height */
+    }
+    .phone-group input:focus, .phone-group select:focus {
+        outline: none; /* Remove default focus outline */
+        box-shadow: none; /* Remove Bootstrap focus shadow */
+    }
+    .form-floating .phone-group {
+        height: 58px; /* Ensure consistent height with other inputs */
+    }
 </style>
 
 @if ($errors->any())
@@ -86,8 +123,20 @@
 
                             <div class="col-md-6">
                                 <div class="form-floating my-3">
-                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}">
-                                    <label for="phone">Phone Number *</label>
+                                    <div class="phone-group">
+                                        <select name="country_code" id="country_code" class="@error('country_code') is-invalid @enderror">
+                                            <option value="+92" {{ old('country_code') == '+92' ? 'selected' : '' }}>+92</option>
+                                            <option value="+1" {{ old('country_code') == '+1' ? 'selected' : '' }}>+1</option>
+                                            <option value="+44" {{ old('country_code') == '+44' ? 'selected' : '' }}>+44</option>
+                                            <option value="+91" {{ old('country_code') == '+91' ? 'selected' : '' }}>+91</option>
+                                            <!-- Add more countries as needed -->
+                                        </select>
+                                        <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}">
+                                    </div>
+                                    <label for="phone" style="top: -1.1rem;background-color: #fff;">Phone Number *</label>
+                                    @error('country_code')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                     @error('phone')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -110,7 +159,7 @@
                                     <label for="state">State *</label>
                                     @error('state')
                                         <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    @endif
                                 </div>
                             </div>
 
@@ -264,5 +313,24 @@
         </form>
     </section>
 </main>
+
+<script>
+    document.getElementById('phone').addEventListener('input', function(e) {
+        let value = e.target.value;
+        value = value.replace(/[^0-9]/g, ''); // Remove non-digits
+        e.target.value = value;
+        let feedback = document.getElementById('phone-feedback');
+        if (!feedback) {
+            feedback = document.createElement('div');
+            feedback.id = 'phone-feedback';
+            feedback.className = 'text-muted';
+            e.target.parentNode.appendChild(feedback);
+        }
+        if (value.length < 9 || value.length > 14) {
+            feedback.textContent = 'Enter 9-14 digits after the country code.';
+            feedback.style.color = 'red';
+        } 
+    });
+</script>
 
 @endsection

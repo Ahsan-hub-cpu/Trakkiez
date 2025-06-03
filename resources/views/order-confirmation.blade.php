@@ -31,11 +31,6 @@
         <div class="order-complete">
           <div class="order-complete__message">
             <h3>Your order is completed!</h3>
-            <!-- Alternative SVG with corrected path for testing -->
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-              <circle cx="40" cy="40" r="40" fill="#B9A16B" />
-              <path d="M53 36 C53 35.5 52.8 35 52.5 34.6 L50.2 32.3 C49.9 32 49.5 31.9 49.1 31.9 C48.7 31.9 48.3 32.3 L37 43.3 L32 38.4 C31.7 38.1 31.3 37.9 30.9 37.9 C30.5 37.9 30.1 38.1 29.8 38.4 L27.5 40.7 C27.2 41 27 41.4 27 41.8 C27 42.2 27.2 42.7 27.5 43 L33.6 49 L35.8 51.3 C36.1 51.6 36.5 51.8 37 51.8 C37.4 51.8 37.8 51.6 38.1 51.3 L40.4 49 L52.5 36.9 C52.8 36.6 53 36.2 53 36 Z" fill="white" />
-            </svg>
             <p>Thank you. Your order has been received.</p>
           </div>
           <div class="order-info">
@@ -115,7 +110,7 @@
     </section>
   </main>
   @if(isset($order) && $order->orderItems->isNotEmpty())
-  <script>
+ <script>
     // Block all Meta tracking on localhost
     const blockedHosts = ['localhost', '127.0.0.1'];
     const isLocalhost = blockedHosts.includes(window.location.hostname);
@@ -183,10 +178,22 @@
 
     // Dynamic order data
     const orderValue = parseFloat({{ $order->total }});
-    const purchaseCurrency = 'PKR'; // Avoid overwrite
+    const purchaseCurrency = 'PKR';
     const eventId = '{{ $order->id }}-{{ time() }}';
-    // Fetch email from Orders table, fallback to User table
-    const hashedEmail = '{{ hash('sha256', $order->email ?? ($order->user->email ?? '')) }}';
+
+
+    const hashedEmail = '{{ hash('sha256', $order->email ?? '') }}';
+    const hashedPhone = '{{ hash('sha256', $order->phone ?? '') }}'; // Phone already includes country code
+    const hashedName = '{{ hash('sha256', $order->name ?? '') }}';
+    const hashedCity = '{{ hash('sha256', strtolower($order->city ?? '')) }}';
+    const hashedState = '{{ hash('sha256', strtolower($order->state ?? '')) }}'; // Hash state
+    const hashedPostalCode = '{{ hash('sha256', $order->zip ?? '') }}'; // Hash postal code
+    const externalId = '{{ addslashes($order->id) }}'; // Use order_id as external ID since no User table
+  
+
+    // Extract fbclid from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const fbclid = urlParams.get('fbclid') || '';
 
     // Send Meta Pixel and Conversion API Events
     if (typeof fbq === 'function') {
@@ -251,10 +258,16 @@
                 event_source_url: window.location.href,
                 user_data: {
                   em: [hashedEmail],
+                  ph: [hashedPhone],
+                  fn: [hashedName],
+                  ct: [hashedCity],
+                  st: [hashedState], // Use hashed state
+                  zp: [hashedPostalCode], // Use hashed postal code
+                  external_id: [externalId],
                   client_ip_address: '{{ request()->ip() }}',
                   client_user_agent: navigator.userAgent,
-                  fbc: document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]+)')?.pop() || '',
-                  fbp: document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]+)')?.pop() || ''
+                  fbc: fbclid ? `fb.1.${Math.floor(Date.now() / 1000)}.${fbclid}` : '',
+                  fbp: document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]*)')?.[2] || ''
                 },
                 custom_data: {
                   value: orderValue,
