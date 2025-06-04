@@ -261,8 +261,8 @@
                   ph: [hashedPhone],
                   fn: [hashedName],
                   ct: [hashedCity],
-                  st: [hashedState], // Use hashed state
-                  zp: [hashedPostalCode], // Use hashed postal code
+                  st: [hashedState],
+                  zp: [hashedPostalCode],
                   external_id: [externalId],
                   client_ip_address: '{{ request()->ip() }}',
                   client_user_agent: navigator.userAgent,
