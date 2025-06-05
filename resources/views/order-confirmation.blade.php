@@ -110,7 +110,7 @@
     </section>
   </main>
   @if(isset($order) && $order->orderItems->isNotEmpty())
- <script>
+  <script>
     // Block all Meta tracking on localhost
     const blockedHosts = ['localhost', '127.0.0.1'];
     const isLocalhost = blockedHosts.includes(window.location.hostname);
@@ -181,7 +181,6 @@
     const purchaseCurrency = 'PKR';
     const eventId = '{{ $order->id }}-{{ time() }}';
 
-
     const hashedEmail = '{{ hash('sha256', $order->email ?? '') }}';
     const hashedPhone = '{{ hash('sha256', $order->phone ?? '') }}'; // Phone already includes country code
     const hashedName = '{{ hash('sha256', $order->name ?? '') }}';
@@ -189,11 +188,33 @@
     const hashedState = '{{ hash('sha256', strtolower($order->state ?? '')) }}'; // Hash state
     const hashedPostalCode = '{{ hash('sha256', $order->zip ?? '') }}'; // Hash postal code
     const externalId = '{{ addslashes($order->id) }}'; // Use order_id as external ID since no User table
-  
 
     // Extract fbclid from URL
     const urlParams = new URLSearchParams(window.location.search);
     const fbclid = urlParams.get('fbclid') || '';
+
+    // Get the client IP (prefer IPv6 if available)
+    const clientIp = '<?php
+      $ip = request()->ip();
+      if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+        echo $ip;
+      } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        $forwarded = request()->header('X-Forwarded-For');
+        if ($forwarded) {
+          $ips = explode(',', $forwarded);
+          foreach ($ips as $ip) {
+            $ip = trim($ip);
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+              echo $ip;
+              break;
+            }
+          }
+        }
+        echo $ip;
+      } else {
+        echo '';
+      }
+    ?>';
 
     // Send Meta Pixel and Conversion API Events
     if (typeof fbq === 'function') {
@@ -236,7 +257,8 @@
         contents: pixelContents,
         order_id: '{{ addslashes($order->id) }}',
         eventID: eventId,
-        num_items: {{ $order->orderItems->sum('quantity') }}
+        num_items: {{ $order->orderItems->sum('quantity') }},
+        fbc: fbclid ? `fb.1.${Math.floor(Date.now() / 1000)}.${fbclid}` : '' // Added fbc
       });
 
       // Send Meta Conversion API Purchase Event only if not on localhost
@@ -264,7 +286,7 @@
                   st: [hashedState],
                   zp: [hashedPostalCode],
                   external_id: [externalId],
-                  client_ip_address: '{{ request()->ip() }}',
+                  client_ip_address: clientIp, // Updated to prefer IPv6
                   client_user_agent: navigator.userAgent,
                   fbc: fbclid ? `fb.1.${Math.floor(Date.now() / 1000)}.${fbclid}` : '',
                   fbp: document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]*)')?.[2] || ''
