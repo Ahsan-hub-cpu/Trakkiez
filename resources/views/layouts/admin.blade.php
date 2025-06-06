@@ -52,18 +52,18 @@
                         <div class="center-item">
                             <ul class="menu-list">
                                 <li class="menu-item has-children">
-                                    <a href="javascript:void(0);" class="menu-item-button" onclick="checkProductPassword(event)">
+                                    <a href="javascript:void(0);" class="menu-item-button">
                                         <div class="icon"><i class="icon-shopping-cart"></i></div>
                                         <div class="text">Products</div>
                                     </a>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
-                                            <a href="{{ route('admin.product.add') }}" onclick="return validateProductAccess(event, '{{ route('admin.product.add') }}')">
+                                            <a href="{{ route('admin.product.add') }}">
                                                 <div class="text">Add Product</div>
                                             </a>
                                         </li>
                                         <li class="sub-menu-item">
-                                            <a href="{{ route('admin.products') }}" onclick="return validateProductAccess(event, '{{ route('admin.products') }}')">
+                                            <a href="{{ route('admin.products') }}">
                                                 <div class="text">Products</div>
                                             </a>
                                         </li>
@@ -204,6 +204,7 @@
                                         </button>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -213,6 +214,7 @@
                             <div class="body-text">Copyright © 2024 Trakkiez Store</div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -226,49 +228,6 @@
     <script src="{{ asset('js/main.js') }}"></script>
     <script>
         $(document).ready(function() {
-            // Variable to track if Products section is unlocked
-            let isProductsUnlocked = false;
-
-            // Function to check password and unlock Products section
-            window.checkProductPassword = function(event) {
-                if (isProductsUnlocked) {
-                    // If already unlocked, toggle sub-menu
-                    $(event.target).closest('.menu-item').find('.sub-menu').toggle();
-                    return;
-                }
-
-                var password = prompt("Please enter the password to access Products:");
-                var correctPassword = "kaneezahra123";
-                if (password === correctPassword) {
-                    isProductsUnlocked = true;
-                    $(event.target).closest('.menu-item').find('.sub-menu').toggle();
-                    swal("Success", "Products section unlocked!", "success");
-                } else {
-                    swal("Error", "Incorrect password. Access denied.", "error");
-                }
-            };
-
-            // Function to validate access to Product sub-menu links
-            window.validateProductAccess = function(event, url) {
-                if (isProductsUnlocked) {
-                    // If unlocked, allow navigation
-                    return true;
-                }
-
-                var password = prompt("Please enter the password to access Products:");
-                var correctPassword = "kaneezahra123";
-                if (password === correctPassword) {
-                    isProductsUnlocked = true;
-                    swal("Success", "Products section unlocked!", "success");
-                    // Navigate to the requested URL
-                    window.location.href = url;
-                    return true;
-                } else {
-                    swal("Error", "Incorrect password. Access denied.", "error");
-                    return false;
-                }
-            };
-
             $("#search-input").on("keyup", function() {
                 var searchQuery = $(this).val();
 
@@ -283,7 +242,7 @@
                             $.each(data, function(index, item) {
                                 var url = "{{ route('admin.product.edit', ':id') }}";
                                 url = url.replace(':id', item.id);
-                                var imageUrl = "{{ asset('Uploads/products/thumbnails') }}/" + item.image;
+                                var imageUrl = "{{ asset('uploads/products/thumbnails') }}/" + item.image;
                                 $("#box-content-search").append(`
                                     <li>
                                         <ul>
@@ -293,7 +252,7 @@
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">
-                                                        <a href="${url}" class="body-text" onclick="return validateProductAccess(event, '${url}')">${item.name}</a>
+                                                        <a href="${url}" class="body-text">${item.name}</a>
                                                     </div>
                                                 </div>
                                             </li>
