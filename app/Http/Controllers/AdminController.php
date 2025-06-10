@@ -616,11 +616,11 @@ public function GenerateThumbnailImage($img, $imgName)
         $image->scaleDown(1200, 1200); // Max 1200x1200 pixels
 
         // Save original as WebP with reduced quality
-        $image->toWebp(80)->save($destinationPath . '/' . $imgName);
+        $image->toWebp(100)->save($destinationPath . '/' . $imgName);
 
         // Create thumbnail from the same image instance
         $thumbnail = $image->cover(100, 100, 'center')
-                          ->toWebp(80)
+                          ->toWebp(100)
                           ->save($thumbnailPath . '/' . $imgName);
 
     } catch (\Exception $e) {
