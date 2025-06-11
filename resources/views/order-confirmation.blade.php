@@ -50,6 +50,10 @@
               <label>Payment Method</label>
               <span>{{ $order->transaction->mode ?? 'N/A' }}</span>
             </div>
+            <div class="order-info__item">
+              <label>Country</label>
+              <span>{{ $order->country ?? 'N/A' }}</span>
+            </div>
           </div>
           <div class="checkout__totals-wrapper">
             <div class="checkout__totals">
@@ -108,9 +112,9 @@
         <p>Sorry, we couldn't find your order. Please contact support if you believe this is an error.</p>
       @endif
     </section>
-  </main>
-  @if(isset($order) && $order->orderItems->isNotEmpty())
-  <script>
+</main>
+@if(isset($order) && $order->orderItems->isNotEmpty())
+<script>
     // Block all Meta tracking on localhost
     const blockedHosts = ['localhost', '127.0.0.1'];
     const isLocalhost = blockedHosts.includes(window.location.hostname);
@@ -181,17 +185,21 @@
     const purchaseCurrency = 'PKR';
     const eventId = '{{ $order->id }}-{{ time() }}';
 
+    
+
     const hashedEmail = '{{ hash('sha256', $order->email ?? '') }}';
     const hashedPhone = '{{ hash('sha256', $order->phone ?? '') }}'; // Phone already includes country code
     const hashedName = '{{ hash('sha256', $order->name ?? '') }}';
     const hashedCity = '{{ hash('sha256', strtolower($order->city ?? '')) }}';
-    const hashedState = '{{ hash('sha256', strtolower($order->state ?? '')) }}'; // Hash state
-    const hashedPostalCode = '{{ hash('sha256', $order->zip ?? '') }}'; // Hash postal code
-    const externalId = '{{ addslashes($order->id) }}'; // Use order_id as external ID since no User table
+    const hashedState = '{{ hash('sha256', strtolower($order->state ?? '')) }}';
+    const hashedPostalCode = '{{ hash('sha256', $order->zip ?? '') }}';
+    const hashedCountry = '{{ hash('sha256', strtolower($order->country ?? '')) }}'; // Hash country
+    const externalId = '{{ addslashes($order->id) }}'; // Use order_id as external ID
 
-    // Extract fbclid from URL
+    // Extract fbclid from URL and construct fbc
     const urlParams = new URLSearchParams(window.location.search);
     const fbclid = urlParams.get('fbclid') || '';
+    const fbc = fbclid ? `fb.1.${Math.floor(Date.now() / 1000)}.${fbclid}` : (document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]*)')?.[2] || '');
 
     // Get the client IP (prefer IPv6 if available)
     const clientIp = '<?php
@@ -258,67 +266,66 @@
         order_id: '{{ addslashes($order->id) }}',
         eventID: eventId,
         num_items: {{ $order->orderItems->sum('quantity') }},
-        fbc: fbclid ? `fb.1.${Math.floor(Date.now() / 1000)}.${fbclid}` : '' // Added fbc
-      });
+        fbc: fbc // Ensure fbc is included
+      }, { eventID: eventId });
 
       // Send Meta Conversion API Purchase Event only if not on localhost
       if (!isLocalhost) {
-        if (isLocalhost) {
-          console.warn('Conversion API call blocked on localhost');
-        } else {
-          fetch(`https://graph.facebook.com/v20.0/${pixelId}/events?access_token=${accessToken}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              data: [{
-                event_name: 'Purchase',
-                event_time: Math.floor(Date.now() / 1000),
-                event_id: eventId,
-                action_source: 'website',
-                event_source_url: window.location.href,
-                user_data: {
-                  em: [hashedEmail],
-                  ph: [hashedPhone],
-                  fn: [hashedName],
-                  ct: [hashedCity],
-                  st: [hashedState],
-                  zp: [hashedPostalCode],
-                  external_id: [externalId],
-                  client_ip_address: clientIp, // Updated to prefer IPv6
-                  client_user_agent: navigator.userAgent,
-                  fbc: fbclid ? `fb.1.${Math.floor(Date.now() / 1000)}.${fbclid}` : '',
-                  fbp: document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]*)')?.[2] || ''
-                },
-                custom_data: {
-                  value: orderValue,
-                  currency: purchaseCurrency,
-                  content_type: 'product',
-                  content_ids: contentIds,
-                  contents: apiContents,
-                  order_id: '{{ addslashes($order->id) }}',
-                  num_items: {{ $order->orderItems->sum('quantity') }}
-                }
-              }]
-            })
+        fetch(`https://graph.facebook.com/v20.0/${pixelId}/events?access_token=${accessToken}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: [{
+              event_name: 'Purchase',
+              event_time: Math.floor(Date.now() / 1000),
+              event_id: eventId,
+              action_source: 'website',
+              event_source_url: window.location.href,
+              user_data: {
+                em: [hashedEmail],
+                ph: [hashedPhone],
+                fn: [hashedName],
+                ct: [hashedCity],
+                st: [hashedState],
+                zp: [hashedPostalCode],
+                cn: [hashedCountry], // Add hashed country
+                external_id: [externalId],
+                client_ip_address: clientIp,
+                client_user_agent: navigator.userAgent,
+                fbc: fbc,
+                fbp: document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]*)')?.[2] || ''
+              },
+              custom_data: {
+                value: orderValue,
+                currency: purchaseCurrency,
+                content_type: 'product',
+                content_ids: contentIds,
+                contents: apiContents,
+                order_id: '{{ addslashes($order->id) }}',
+                num_items: {{ $order->orderItems->sum('quantity') }}
+              }
+            }]
           })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Meta Conversion API Response:', data);
-          })
-          .catch(error => {
-            console.error('Meta Conversion API Error:', error);
-          });
-        }
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Meta Conversion API Response:', data);
+        })
+        .catch(error => {
+          console.error('Meta Conversion API Error:', error);
+        });
+      } else {
+        console.warn('Conversion API call blocked on localhost');
       }
     } else {
       console.warn('Meta Pixel not initialized.');
     }
-  </script>
-  @else
-  <script>
+</script>
+@else
+<script>
     console.warn('Order data is missing or incomplete. Order ID: {{ $order->id ?? 'N/A' }}');
-  </script>
-  @endif
+</script>
+@endif
 @endsection

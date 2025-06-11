@@ -94,6 +94,7 @@
                                             <p>{{ $address->city }}, {{ $address->state }}, {{ $address->country }}</p>
                                             <p>{{ $address->zip }}</p>
                                             <p>Phone: {{ $address->phone }}</p>
+                                            <p>Locality: {{ $address->locality }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -123,6 +124,16 @@
 
                             <div class="col-md-6">
                                 <div class="form-floating my-3">
+                                    <input type="text" class="form-control @error('country') is-invalid @enderror" id="country" name="country" value="{{ old('country') }}">
+                                    <label for="country">Country *</label>
+                                    @error('country')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating my-3">
                                     <div class="phone-group">
                                         <select name="country_code" id="country_code" class="@error('country_code') is-invalid @enderror">
                                             <option value="+92" {{ old('country_code') == '+92' ? 'selected' : '' }}>+92</option>
@@ -131,7 +142,7 @@
                                             <option value="+91" {{ old('country_code') == '+91' ? 'selected' : '' }}>+91</option>
                                             <!-- Add more countries as needed -->
                                         </select>
-                                        <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}">
+                                        <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" placeholder="3XX XXXXXXX">
                                     </div>
                                     <label for="phone" style="top: -1.1rem;background-color: #fff;">Phone Number *</label>
                                     @error('country_code')
@@ -140,6 +151,7 @@
                                     @error('phone')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                    <div id="phone-feedback" class="text-muted"></div>
                                 </div>
                             </div>
 
@@ -301,7 +313,7 @@
                             </div>
                             @error('mode')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
+                            @endif
                             <div class="policy-text">
                                 Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="{{ route('privacy.policy') }}" target="_blank">privacy policy</a>.
                             </div>
@@ -316,20 +328,32 @@
 
 <script>
     document.getElementById('phone').addEventListener('input', function(e) {
-        let value = e.target.value;
-        value = value.replace(/[^0-9]/g, ''); // Remove non-digits
-        e.target.value = value;
+        let input = e.target;
+        let value = input.value.replace(/[^0-9]/g, ''); // Remove non-digits
+        input.value = value; // Update input with cleaned value
+
         let feedback = document.getElementById('phone-feedback');
         if (!feedback) {
             feedback = document.createElement('div');
             feedback.id = 'phone-feedback';
             feedback.className = 'text-muted';
-            e.target.parentNode.appendChild(feedback);
+            input.parentNode.appendChild(feedback);
         }
-        if (value.length < 9 || value.length > 14) {
-            feedback.textContent = 'Enter 9-14 digits after the country code.';
+
+        // Validation rules
+        if (value.length === 0) {
+            feedback.textContent = 'Enter a 10-digit phone number starting with 3 (e.g., 3XX XXXXXXX).';
+            feedback.style.color = 'gray';
+            input.classList.remove('is-invalid');
+        } else if (value.length !== 10 || !value.startsWith('3')) {
+            feedback.textContent = 'Phone number must be exactly 10 digits and start with 3 (e.g., 3XX XXXXXXX).';
             feedback.style.color = 'red';
-        } 
+            input.classList.add('is-invalid');
+        } else {
+            feedback.textContent = 'Valid phone number.';
+            feedback.style.color = 'green';
+            input.classList.remove('is-invalid');
+        }
     });
 </script>
 

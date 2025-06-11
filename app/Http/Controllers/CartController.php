@@ -443,7 +443,6 @@ class CartController extends Controller
 public function place_order(Request $request)
 {
     try {
-        // Log form data and address session for debugging
         Log::info('Form data', ['data' => $request->all()]);
         Log::info('Address session', ['address' => session('address')]);
 
@@ -464,12 +463,13 @@ public function place_order(Request $request)
                 'email' => 'required|email|max:255',
                 'name' => 'required|string|max:100',
                 'country_code' => 'required|string|regex:/^\+[0-9]{1,3}$/',
-                'phone' => 'required|string|regex:/^[0-9]{9,14}$/',
+                'phone' => 'required|string|regex:/^3[0-9]{9}$/', // Exactly 10 digits, starts with 3
                 'zip' => 'required|string|min:5|max:10',
                 'state' => 'required|string|max:100',
                 'city' => 'required|string|max:100',
                 'address' => 'required|string|max:255',
                 'locality' => 'required|string|max:255',
+                'country' => 'required|string|max:100', // Text input for country
             ]);
         }
 
@@ -481,13 +481,14 @@ public function place_order(Request $request)
             'country_code.required' => 'Please select a country code.',
             'country_code.regex' => 'Country code must start with + followed by 1-3 digits (e.g., +92).',
             'phone.required' => 'The phone number field is required.',
-            'phone.regex' => 'Phone number must be 9-14 digits with no spaces or dashes (e.g., 3001234567).',
+            'phone.regex' => 'Phone number must be exactly 10 digits and start with 3 (e.g., 3XXXXXXXXX).',
             'zip.required' => 'The postal code field is required.',
             'zip.min' => 'The postal code must be at least 5 characters.',
             'state.required' => 'The state field is required.',
             'city.required' => 'The city field is required.',
             'address.required' => 'The address field is required.',
             'locality.required' => 'The locality field is required.',
+            'country.required' => 'The country field is required.',
             'mode.required' => 'Please select a payment method.',
             'mode.in' => 'Invalid payment method selected.',
         ]);
@@ -540,7 +541,7 @@ public function place_order(Request $request)
         $order->address = $address ? $address->address : $request->address;
         $order->city = $address ? $address->city : $request->city;
         $order->state = $address ? $address->state : $request->state;
-        $order->country = $address ? $address->country : 'N/A';
+        $order->country = $address ? $address->country : $request->country; // Store country text
         $order->zip = $address ? $address->zip : $request->zip;
         $order->save();
 
