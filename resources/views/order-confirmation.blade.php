@@ -133,7 +133,7 @@
       // Initialize Meta Pixel only if not already initialized
       if (!window.fbq) {
         !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        {if(f.fbq)return;n=f.bq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};
         if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
         n.queue=[];t=b.createElement(e);t.async=!0;
@@ -185,8 +185,6 @@
     const purchaseCurrency = 'PKR';
     const eventId = '{{ $order->id }}-{{ time() }}';
 
-    
-
     const hashedEmail = '{{ hash('sha256', $order->email ?? '') }}';
     const hashedPhone = '{{ hash('sha256', $order->phone ?? '') }}'; // Phone already includes country code
     const hashedName = '{{ hash('sha256', $order->name ?? '') }}';
@@ -196,10 +194,22 @@
     const hashedCountry = '{{ hash('sha256', strtolower($order->country ?? '')) }}'; // Hash country
     const externalId = '{{ addslashes($order->id) }}'; // Use order_id as external ID
 
-    // Extract fbclid from URL and construct fbc
+    // Extract fbclid from URL and construct fbc with cookie storage
     const urlParams = new URLSearchParams(window.location.search);
     const fbclid = urlParams.get('fbclid') || '';
-    const fbc = fbclid ? `fb.1.${Math.floor(Date.now() / 1000)}.${fbclid}` : (document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]*)')?.[2] || '');
+    const fbcFromCookie = document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]*)')?.[2] || '';
+    const fbc = fbclid ? `fb.1.${Math.floor(Date.now() / 1000)}.${fbclid}` : fbcFromCookie;
+
+    // Store fbc in cookie if fbclid is present and no existing _fbc
+    if (fbclid && !fbcFromCookie) {
+        document.cookie = `_fbc=${fbc}; max-age=7776000; path=/;`; // 90 days in seconds
+    }
+
+    if (!fbc) {
+        console.warn('No fbc found, attribution may be incomplete.');
+    } else {
+        console.log('fbc:', fbc);
+    }
 
     // Get the client IP (prefer IPv6 if available)
     const clientIp = '<?php
@@ -266,7 +276,7 @@
         order_id: '{{ addslashes($order->id) }}',
         eventID: eventId,
         num_items: {{ $order->orderItems->sum('quantity') }},
-        fbc: fbc // Ensure fbc is included
+        fbc: fbc
       }, { eventID: eventId });
 
       // Send Meta Conversion API Purchase Event only if not on localhost
@@ -290,7 +300,7 @@
                 ct: [hashedCity],
                 st: [hashedState],
                 zp: [hashedPostalCode],
-                cn: [hashedCountry], // Add hashed country
+                cn: [hashedCountry],
                 external_id: [externalId],
                 client_ip_address: clientIp,
                 client_user_agent: navigator.userAgent,
