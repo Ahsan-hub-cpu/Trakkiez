@@ -130,7 +130,6 @@
 
     // Skip Meta Pixel initialization on localhost
     if (!isLocalhost) {
-      // Initialize Meta Pixel only if not already initialized
       if (!window.fbq) {
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.bq=function(){n.callMethod?
@@ -185,43 +184,34 @@
         "65": "vd1fjj1l0k",
         "66": "6v3cdj53hv",
         "67": "1wrwcm3s75",
-        "68": "wvuhanxezn",
-
-
+        "68": "wvuhanxezn"
     };
 
     // Dynamic order data
     const orderValue = parseFloat({{ $order->total }});
     const purchaseCurrency = 'PKR';
-    const eventId = '{{ $order->id }}-{{ time() }}';
+    const eventId = '{{ $order->id }}-{{ time() }}'; // Unique event ID
+    const externalId = '{{ addslashes($order->id) }}'; // Unique external ID
+    const fbp = document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]*)')?.[2] || '';
+    const country = '{{ hash('sha256', strtolower($order->country ?? '')) }}'; // Hashed country for Conversions API
 
     const hashedEmail = '{{ hash('sha256', $order->email ?? '') }}';
-    const hashedPhone = '{{ hash('sha256', $order->phone ?? '') }}'; // Phone already includes country code
+    const hashedPhone = '{{ hash('sha256', $order->phone ?? '') }}';
     const hashedName = '{{ hash('sha256', $order->name ?? '') }}';
     const hashedCity = '{{ hash('sha256', strtolower($order->city ?? '')) }}';
     const hashedState = '{{ hash('sha256', strtolower($order->state ?? '')) }}';
     const hashedPostalCode = '{{ hash('sha256', $order->zip ?? '') }}';
-    const hashedCountry = '{{ hash('sha256', strtolower($order->country ?? '')) }}'; // Hash country
-    const externalId = '{{ addslashes($order->id) }}'; // Use order_id as external ID
 
-    // Extract fbclid from URL and construct fbc with cookie storage
+    // Extract fbclid and construct fbc
     const urlParams = new URLSearchParams(window.location.search);
     const fbclid = urlParams.get('fbclid') || '';
     const fbcFromCookie = document.cookie.match('(^|;)\\s*_fbc\\s*=\\s*([^;]*)')?.[2] || '';
     const fbc = fbclid ? `fb.1.${Math.floor(Date.now() / 1000)}.${fbclid}` : fbcFromCookie;
 
-    // Store fbc in cookie if fbclid is present and no existing _fbc
     if (fbclid && !fbcFromCookie) {
-        document.cookie = `_fbc=${fbc}; max-age=7776000; path=/;`; // 90 days in seconds
+        document.cookie = `_fbc=${fbc}; max-age=7776000; path=/;`;
     }
 
-    if (!fbc) {
-        console.warn('No fbc found, attribution may be incomplete.');
-    } else {
-        console.log('fbc:', fbc);
-    }
-
-    // Get the client IP (prefer IPv6 if available)
     const clientIp = '<?php
       $ip = request()->ip();
       if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
@@ -244,29 +234,14 @@
       }
     ?>';
 
-    // Send Meta Pixel and Conversion API Events
     if (typeof fbq === 'function') {
-      // Content IDs for both Pixel and API
       const contentIds = [
         @foreach($order->orderItems as $item)
           catalogIdMapping['{{ addslashes($item->product_id) }}'] || '{{ addslashes($item->product_id) }}'@if(!$loop->last),@endif
         @endforeach
-      ].filter(id => id); // Remove undefined/null IDs
+      ].filter(id => id);
 
-      // Contents for Pixel (with content_name)
-      const pixelContents = [
-        @foreach($order->orderItems as $item)
-          {
-            id: catalogIdMapping['{{ addslashes($item->product_id) }}'] || '{{ addslashes($item->product_id) }}',
-            quantity: {{ $item->quantity }},
-            item_price: parseFloat({{ $item->quantity > 0 ? ($item->price / $item->quantity) : 0 }}),
-            content_name: '{{ addslashes($item->product->name ?? 'Unknown') }}'
-          }@if(!$loop->last),@endif
-        @endforeach
-      ];
-
-      // Contents for Conversion API (without content_name)
-      const apiContents = [
+      const contents = [
         @foreach($order->orderItems as $item)
           {
             id: catalogIdMapping['{{ addslashes($item->product_id) }}'] || '{{ addslashes($item->product_id) }}',
@@ -276,26 +251,25 @@
         @endforeach
       ];
 
-      // Send Meta Pixel Purchase Event
+      // Meta Pixel Purchase Event
       fbq('track', 'Purchase', {
         value: orderValue,
         currency: purchaseCurrency,
         content_type: 'product',
         content_ids: contentIds,
-        contents: pixelContents,
-        order_id: '{{ addslashes($order->id) }}',
+        contents: contents,
+        order_id: externalId,
         eventID: eventId,
         num_items: {{ $order->orderItems->sum('quantity') }},
+        fbp: fbp,
         fbc: fbc
       }, { eventID: eventId });
 
-      // Send Meta Conversion API Purchase Event only if not on localhost
+      // Conversion API Purchase Event
       if (!isLocalhost) {
         fetch(`https://graph.facebook.com/v20.0/${pixelId}/events?access_token=${accessToken}`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             data: [{
               event_name: 'Purchase',
@@ -310,37 +284,29 @@
                 ct: [hashedCity],
                 st: [hashedState],
                 zp: [hashedPostalCode],
-                cn: [hashedCountry],
+                country: [country], // Added country as per Meta format
                 external_id: [externalId],
+                fbp: [fbp],
+                fbc: [fbc],
                 client_ip_address: clientIp,
-                client_user_agent: navigator.userAgent,
-                fbc: fbc,
-                fbp: document.cookie.match('(^|;)\\s*_fbp\\s*=\\s*([^;]*)')?.[2] || ''
+                client_user_agent: navigator.userAgent
               },
               custom_data: {
                 value: orderValue,
                 currency: purchaseCurrency,
                 content_type: 'product',
                 content_ids: contentIds,
-                contents: apiContents,
-                order_id: '{{ addslashes($order->id) }}',
+                contents: contents,
+                order_id: externalId,
                 num_items: {{ $order->orderItems->sum('quantity') }}
               }
             }]
           })
         })
         .then(response => response.json())
-        .then(data => {
-          console.log('Meta Conversion API Response:', data);
-        })
-        .catch(error => {
-          console.error('Meta Conversion API Error:', error);
-        });
-      } else {
-        console.warn('Conversion API call blocked on localhost');
+        .then(data => console.log('Meta Conversion API Response:', data))
+        .catch(error => console.error('Meta Conversion API Error:', error));
       }
-    } else {
-      console.warn('Meta Pixel not initialized.');
     }
 </script>
 @else
