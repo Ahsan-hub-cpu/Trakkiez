@@ -62,7 +62,7 @@
 
   <section class="new-arrivals container mt-3">
       <div class="text-center mb-3">
-          <h2 class="section-title">New Arrivals <a href="{{ route('shop.index', ['filter' => 'new-arrivals']) }}">(View All)</a></h2>
+          <h2 class="section-title">Last Arrivals <a href="{{ route('shop.index', ['filter' => 'new-arrivals']) }}">(View All)</a></h2>
       </div>
       <div class="row justify-content-center">
           <div class="col-12">
