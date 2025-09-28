@@ -350,7 +350,7 @@
   <!-- Brands Section -->
   <section class="brands-section container mt-3">
       <div class="text-center mb-3">
-          <h2 class="section-title">Our Brands <a href="{{ route('shop.index') }}">(View All)</a></h2>
+          <h2 class="section-title">Our  <a href="{{ route('shop.index') }}">(View All)</a></h2>
       </div>
       <div class="row justify-content-center">
           <div class="col-12">
