@@ -314,7 +314,7 @@
   <!-- Featured Brands Section -->
   <section class="featured-brands-section container mt-5">
       <div class="text-center mb-4">
-          <h2 class="section-title">Featured Brands <a href="{{ route('shop.index') }}">(View All)</a></h2>
+          <h2 class="section-title">Brands of Mine<a href="{{ route('shop.index') }}">(View All)</a></h2>
       </div>
       <div class="row">
           @if($brands->isNotEmpty())
