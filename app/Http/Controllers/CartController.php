@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
 use App\Models\Order;
-use App\Models\Sizes;
+use App\Models\Colour;
 use App\Models\OrderItem;
-use App\Models\Product_Variations;
+use App\Models\ProductVariation;
 use App\Models\Product;
 use App\Models\Transaction;
 use Surfsidemedia\Shoppingcart\Facades\Cart;
@@ -55,16 +55,16 @@ class CartController extends Controller
             $request->validate([
                 'id' => 'required|integer|exists:products,id',
                 'quantity' => 'required|integer|min:1',
-                'size_id' => 'required|integer|exists:sizes,id',
+                'colour_id' => 'nullable|integer|exists:colours,id',
                 'name' => 'nullable|string',
                 'price' => 'nullable|numeric|min:0',
             ]);
     
             $product = Product::with(['productVariations' => function ($query) use ($request) {
-                $query->where('size_id', $request->size_id);
+                $query->where('colour_id', $request->colour_id ?? 1);
             }])->findOrFail($request->id);
     
-            $size = Sizes::findOrFail($request->size_id);
+            $colour = Colour::find($request->colour_id ?? 1); // Default to colour ID 1
             $variation = $product->productVariations->first();
     
             if (!$variation || $variation->quantity < $request->quantity) {
@@ -80,9 +80,9 @@ class CartController extends Controller
                 'qty' => $request->quantity,
                 'price' => $product->sale_price ?: $product->regular_price,
                 'options' => [
-                    'size' => $size->name,
-                    'size_id' => $size->id,
-                    'image' => $product->image,
+                    'colour' => $colour ? $colour->name : 'Default',
+                    'colour_id' => $colour ? $colour->id : 1,
+                    'image' => $product->main_image,
                     'slug' => $product->slug,
                 ],
             ]);
@@ -125,13 +125,13 @@ class CartController extends Controller
         try {
             $request->validate([
                 'product_id' => 'required|integer|exists:products,id',
-                'size_id' => 'required|integer|exists:sizes,id',
+                'colour_id' => 'nullable|integer|exists:colours,id',
             ]);
 
-            $size = Sizes::findOrFail($request->size_id);
+            $colour = Colour::find($request->colour_id ?? 1);
             $cartQuantity = Cart::instance('cart')->content()
                 ->where('id', $request->product_id)
-                ->where('options.size', $size->name)
+                ->where('options.colour', $colour ? $colour->name : 'Default')
                 ->sum('qty');
 
             return response()->json(['cartQuantity' => $cartQuantity]);
@@ -157,13 +157,13 @@ class CartController extends Controller
                 return response()->json(['success' => false, 'message' => 'Cart item not found.'], 404);
             }
 
-            $size = Sizes::where('name', $cartItem->options->size)->first();
-            if (!$size) {
-                return response()->json(['success' => false, 'message' => 'Size not found.'], 400);
+            $colour = Colour::where('name', $cartItem->options->colour)->first();
+            if (!$colour) {
+                return response()->json(['success' => false, 'message' => 'Colour not found.'], 400);
             }
 
-            $variation = Product_Variations::where('product_id', $cartItem->id)
-                ->where('size_id', $size->id)
+            $variation = ProductVariation::where('product_id', $cartItem->id)
+                ->where('colour_id', $colour->id)
                 ->first();
             if (!$variation || $variation->quantity < $request->quantity) {
                 return response()->json([
@@ -514,16 +514,16 @@ public function place_order(Request $request)
                 return redirect()->route('cart.checkout')->with('error', "Product not found: {$item->name}.");
             }
 
-            $size = Sizes::where('name', $item->options->size)->first();
-            if (!$size) {
-                return redirect()->route('cart.checkout')->with('error', "Size not found for {$item->name}.");
+            $colour = Colour::where('name', $item->options->colour)->first();
+            if (!$colour) {
+                return redirect()->route('cart.checkout')->with('error', "Colour not found for {$item->name}.");
             }
 
-            $productVariation = Product_Variations::where('product_id', $item->id)
-                ->where('size_id', $size->id)
+            $productVariation = ProductVariation::where('product_id', $item->id)
+                ->where('colour_id', $colour->id)
                 ->first();
             if (!$productVariation || $productVariation->quantity < $item->qty) {
-                return redirect()->route('cart.checkout')->with('error', "Sorry, the selected size for {$item->name} is out of stock.");
+                return redirect()->route('cart.checkout')->with('error', "Sorry, the selected colour for {$item->name} is out of stock.");
             }
         }
 
@@ -548,18 +548,15 @@ public function place_order(Request $request)
         // Process order items and update stock
         foreach ($cartItems as $item) {
             $product = Product::find($item->id);
-            $size = Sizes::where('name', $item->options->size)->first();
-            $productVariation = Product_Variations::where('product_id', $item->id)
-                ->where('size_id', $size->id)
+            $colour = Colour::where('name', $item->options->colour)->first();
+            $productVariation = ProductVariation::where('product_id', $item->id)
+                ->where('colour_id', $colour->id)
                 ->first();
 
             if ($productVariation) {
                 $productVariation->quantity -= $item->qty;
                 $productVariation->save();
             }
-
-            $product->quantity -= $item->qty;
-            $product->save();
 
             $orderItem = new OrderItem();
             $orderItem->product_id = $item->id;

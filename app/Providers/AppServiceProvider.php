@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
                 return;
             }
 
-            $categories = Category::with('subcategories')->whereIn('name', ['Men', 'Women'])->get();
+            $categories = Category::with('subcategories')->orderBy('name')->get();
             $view->with('categories', $categories);
         });
     }

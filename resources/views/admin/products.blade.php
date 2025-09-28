@@ -8,15 +8,15 @@
     .table-striped th:nth-child(2), .table-striped td:nth-child(2) {
         width: 250px;   
     }
-    .table-striped th:nth-child(10), .table-striped td:nth-child(10) {
-        width: 100px;   
+    .table-striped th:nth-child(9), .table-striped td:nth-child(9) {
+        width: 150px;   
     }
-    .size-chart-images, .gallery-images {
+    .gallery-images {
         display: flex;
         flex-wrap: wrap;
         gap: 5px;
     }
-    .size-chart-images img, .gallery-images img {
+    .gallery-images img {
         max-width: 50px;
         height: auto;
     }
@@ -45,7 +45,7 @@
                 <div class="wg-filter flex-grow">
                     <form class="form-search">
                         <fieldset class="name">
-                            <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
+                            <input type="text" placeholder="Search here..." class="" name="name" tabindex="2">
                         </fieldset>
                         <div class="button-submit">
                             <button class="" type="submit"><i class="icon-search"></i></button>
@@ -69,11 +69,9 @@
                             <th>Category</th>
                             <th>Subcategory</th>
                             <th>Brand</th>
-                            <th>Size</th>
-                            <th>Size Chart</th>
+                            <th>Variations (Colours)</th>
                             <th>Featured</th>
                             <th>Stock</th>
-                            <th>Quantity</th>
                             <th>Gallery</th>
                             <th>Action</th>
                         </tr>
@@ -81,82 +79,74 @@
                     <tbody>
                         @foreach ($products as $product)
                         <tr>
-                            <td>{{$product->id}}</td>
+                            <td>{{ $product->id }}</td>
                             <td>
                                 <div class="flex items-center">
                                     <div class="mr-3">
-                                        @if($product->image && file_exists(base_path('uploads/products/thumbnails/' . $product->image)))
-                                            <img src="{{asset('uploads/products/thumbnails/' . $product->image)}}" alt="{{$product->name}}" class="image">
+                                        @if ($product->main_image && file_exists(base_path('uploads/products/thumbnails/' . $product->main_image)))
+                                            <img src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" alt="{{ $product->name }}" class="image">
                                         @else
-                                            <span>Main Image Missing: {{$product->image ?? 'Not set'}}</span>
+                                            <span>Main Image Missing: {{ $product->main_image ?? 'Not set' }}</span>
                                         @endif
                                     </div>
                                     <div>
-                                        <a href="#" class="body-title-2">{{$product->name}}</a>
-                                        <div class="text-tiny mt-3">{{$product->slug}}</div>
+                                        <a href="#" class="body-title-2">{{ $product->name }}</a>
+                                        <div class="text-tiny mt-3">{{ $product->slug }}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td>PKR {{$product->regular_price}}</td>
-                            <td>PKR {{$product->sale_price ?? 'N/A'}}</td>
-                            <td>{{$product->SKU}}</td>
-                            <td>{{$product->category->name}}</td>
+                            <td>PKR {{ $product->regular_price }}</td>
+                            <td>PKR {{ $product->sale_price ?? 'N/A' }}</td>
+                            <td>{{ $product->SKU ?? 'N/A' }}</td>
+                            <td>{{ $product->category->name ?? 'N/A' }}</td>
+                            <td>{{ $product->subcategory->name ?? 'N/A' }}</td>
+                            <td>{{ $product->brand->name ?? 'N/A' }}</td>
                             <td>
-                                @if($product->subcategory)
-                                    {{$product->subcategory->name}}
-                                @else
-                                    N/A
-                                @endif
-                            </td>
-                            <td>{{$product->brand->name}}</td>
-                            <td>
-                                @foreach($product->productVariations as $variation)
+                                @foreach ($product->productVariations as $variation)
                                     <div>
-                                        <span>({{$variation->size->name}})</span>
+                                        <span>
+                                            {{ $variation->colour->name ?? 'N/A' }} - Qty: {{ $variation->quantity }}
+                                        </span>
                                     </div>
                                 @endforeach
                             </td>
+                            <td>{{ $product->featured == 0 ? "No" : "Yes" }}</td>
+                            <td>{{ $product->stock_status }}</td>
                             <td>
-                                @if($product->size_chart)
-                                    <div class="size-chart-images">
-                                        @foreach(explode(',', $product->size_chart) as $chart)
-                                            @if(file_exists(base_path('uploads/products/thumbnails/' . $chart)))
-                                                <img src="{{asset('uploads/products/thumbnails/' . $chart)}}" alt="Size Chart" class="image">
-                                            @else
-                                                <span>Chart Missing: {{$chart}}</span>
-                                            @endif
-                                        @endforeach
-                                    </div>
-                                @else
-                                    N/A
-                                @endif
-                            </td>
-                            <td>{{$product->featured == 0 ? "No" : "Yes"}}</td>
-                            <td>{{$product->stock_status}}</td>
-                            <td>{{$product->quantity}}</td>
-                            <td>
-                                @if($product->images)
-                                    <div class="gallery-images">
-                                        @foreach(explode(',', $product->images) as $img)
-                                            @if(file_exists(base_path('uploads/products/thumbnails/' . $img)))
-                                                <img src="{{asset('uploads/products/thumbnails/' . $img)}}" alt="Gallery Image" class="image">
-                                            @else
-                                                <span>Gallery Image Missing: {{$img}}</span>
-                                            @endif
-                                        @endforeach
-                                    </div>
+                                @if ($product->gallery_images)
+                                    @php
+                                        // Handle JSON string or array
+                                        $galleryImages = is_array($product->gallery_images) 
+                                            ? $product->gallery_images 
+                                            : (is_string($product->gallery_images) 
+                                                ? json_decode($product->gallery_images, true) ?? [] 
+                                                : []);
+                                    @endphp
+                                    @if (!empty($galleryImages))
+                                        <div class="gallery-images">
+                                            @foreach ($galleryImages as $img)
+                                                @if (file_exists(base_path('uploads/products/thumbnails/' . $img)))
+                                                    <img src="{{asset('uploads/products/thumbnails/' . $img) }}" alt="Gallery Image" class="image">
+                                                @else
+                                                    <span>Gallery Image Missing: {{ $img }}</span>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        N/A
+                                    @endif
                                 @else
                                     N/A
                                 @endif
                             </td>
                             <td>
                                 <div class="list-icon-function">
-                                    <a href="{{route('admin.product.edit', ['id' => $product->id])}}">
+                                    <a href="{{ route('admin.product.edit', ['id' => $product->id]) }}">
                                         <div class="item edit">
                                             <i class="icon-edit-3"></i>
                                         </div>
                                     </a>
-                                    <form action="{{route('admin.product.delete', ['id' => $product->id])}}" method="POST">
+                                    <form action="{{ route('admin.product.delete', ['id' => $product->id]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <div class="item text-danger delete">
@@ -173,7 +163,7 @@
             
             <div class="divider"></div>
             <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">                
-                {{$products->links('pagination::bootstrap-5')}}
+                {{ $products->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

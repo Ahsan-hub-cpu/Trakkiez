@@ -1,54 +1,52 @@
 <?php
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'name', 'slug', 'short_description', 'description', 'regular_price',
-        'sale_price', 'SKU', 'stock_status', 'featured', 'quantity',
-        'image', 'images', 'size_chart', 'category_id', 'brand_id', 'subcategory_id'
+        'name',
+        'slug',
+        'description',
+        'regular_price',
+        'sale_price',
+        'stock_status',
+        'featured',
+        'main_image',
+        'gallery_images',
+        'category_id',
+        'subcategory_id',
+        'brand_id',
+        'SKU',
     ];
 
-    public function getHoverImageAttribute()
-    {
-        if (!empty($this->images)) {
-            $galleryImages = explode(',', $this->images);
-            return count($galleryImages) > 0 ? trim($galleryImages[0]) : 'default-hover.jpg';
-        }
-        return 'default-hover.jpg';
-    }
-    
+    protected $casts = [
+        'gallery_images' => 'array',
+    ];
 
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id');
-    }
-
-    public function brand()
-    {
-        return $this->belongsTo(Brand::class, 'brand_id');
+        return $this->belongsTo(Category::class);
     }
 
     public function subcategory()
     {
-        return $this->belongsTo(SubCategory::class, 'subcategory_id');
+        return $this->belongsTo(SubCategory::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 
     public function productVariations()
     {
-        return $this->hasMany(Product_Variations::class);
-    }
-
-    public function sizes()
-    {
-        return $this->belongsToMany(Sizes::class, 'product_variations', 'product_id', 'size_id');
-    }
-
-    public function isOutOfStock()
-    {
-        return $this->quantity <= 0;
+        return $this->hasMany(ProductVariation::class);
     }
 
     public function getTotalQuantityAttribute()
@@ -56,9 +54,13 @@ class Product extends Model
         return $this->productVariations->sum('quantity');
     }
 
-     public function reviews()
+    public function isOutOfStock()
+    {
+        return $this->total_quantity <= 0;
+    }
+
+    public function reviews()
     {
         return $this->hasMany(Review::class)->where('is_approved', true);
     }
-   
 }

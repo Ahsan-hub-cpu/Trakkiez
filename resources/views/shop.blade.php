@@ -86,22 +86,42 @@
 
 <div class="container mb-4">
   <div class="row">
-    <div class="col-md-3">
-      <select id="size-filter" class="form-select">
-        <option value="">Filter by Size</option>
-        @foreach($sizes as $size)
-          <option value="{{ $size->id }}" {{ request('size') == $size->id ? 'selected' : '' }}>{{ $size->name }}</option>
+    <div class="col-md-3 col-sm-6 mb-3">
+      <select id="category-filter" class="form-select">
+        <option value="">Filter by Category</option>
+        @foreach($categories as $category)
+          <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
         @endforeach
       </select>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-6 mb-3">
+      <select id="brand-filter" class="form-select">
+        <option value="">Filter by Brand</option>
+        @foreach($brands as $brand)
+          <option value="{{ $brand->id }}" {{ request('brand') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+        @endforeach
+      </select>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <select id="color-filter" class="form-select">
+        <option value="">Filter by Color</option>
+        @foreach(\App\Models\Colour::all() as $color)
+          <option value="{{ $color->id }}" {{ request('color') == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
+        @endforeach
+      </select>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
       <button type="button" class="btn btn-outline-secondary w-100" data-bs-toggle="modal" data-bs-target="#priceFilterModal">
           Filter by Price
       </button>
     </div>
-
-    <div class="col-md-3">
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 col-sm-6 mb-3">
       <select id="sort-by" class="form-select">
         <option value="">Sort By</option>
         <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest to Oldest</option>
@@ -115,7 +135,7 @@
   </div>
 </div>
 
-@if(request()->has('category') || request()->has('size') || request()->has('price_from') || request()->has('price_to') || request()->has('sort'))
+@if(request()->has('category') || request()->has('brand') || request()->has('color') || request()->has('price_from') || request()->has('price_to') || request()->has('sort'))
   <div class="text-center mt-3">
     <a href="{{ route('shop.index') }}" class="btn btn-outline-dark">Clear Filter</a>
   </div>
@@ -142,11 +162,11 @@
         <div class="product-card card h-100 border-0 bg-transparent">
             <div class="pc__img-wrapper position-relative">
                 <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                    <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" 
+                    <img loading="lazy" src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" 
                         alt="{{ $product->name }}" 
                         class="pc__img primary-img card-img-top rounded">
                 </a>
-                @if($product->quantity <= 0)
+                @if($product->stock_status === 'out_of_stock')
                   <div class="sold-out-badge">Sold Out</div>
                 @endif
             </div>
@@ -197,7 +217,7 @@
   </div>
 </div>
 
-@if(!request()->has('size') && !request()->has('price_from') && !request()->has('price_to') && !request()->has('sort') && !request()->has('category'))
+@if(!request()->has('color') && !request()->has('price_from') && !request()->has('price_to') && !request()->has('sort') && !request()->has('category') && !request()->has('brand'))
   <div class="divider"></div>
   <div class="flex items-center justify-between flex-wrap gap10 wgp pagination">
     {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
@@ -294,8 +314,16 @@ $(function(){
     });
 
     // Filter and sort handlers
-    $('#size-filter').on('change', function() {
-        updateUrl('size', $(this).val());
+    $('#category-filter').on('change', function() {
+        updateUrl('category', $(this).val());
+    });
+
+    $('#brand-filter').on('change', function() {
+        updateUrl('brand', $(this).val());
+    });
+
+    $('#color-filter').on('change', function() {
+        updateUrl('color', $(this).val());
     });
 
     $('#sort-by').on('change', function() {

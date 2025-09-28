@@ -80,20 +80,7 @@
                                             <h4>{{ $cartItem->name }}</h4>
                                             <ul class="shopping-cart__product-item__options">
                                                 <li>
-                                                    Size:
-                                                    @if(isset($cartItem->model->availableSizes))
-                                                        <select class="size-select" data-rowid="{{ $cartItem->rowId }}">
-                                                            @foreach($cartItem->model->availableSizes as $size => $availableQty)
-                                                                <option value="{{ $size }}"
-                                                                    data-quantity="{{ $availableQty }}"
-                                                                    {{ (strtolower($cartItem->options['size'] ?? '') == strtolower($size)) ? 'selected' : '' }}>
-                                                                    {{ strtoupper($size) }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    @else
-                                                        {{ strtoupper($cartItem->options['size'] ?? 'N/A') }}
-                                                    @endif
+                                                    Color: {{ $cartItem->options['colour'] ?? 'Default' }}
                                                 </li>
                                             </ul>
                                         </div>

@@ -220,11 +220,11 @@
    data-product-price="{{ $product->sale_price ?? $product->regular_price }}"
    data-product-category="{{ $category->name ?? 'unknown category' }}"
 $GLOBALS["__SELF__"]->wrapFunction(array(null,'aria-label'))="View details for {{ $product->name }}">
-    <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" 
+    <img loading="lazy" src="{{ asset('uploads/products/' . $product->main_image) }}" 
          width="200" height="auto" alt="{{ $product->name }}" 
          class="pc__img pc__img-primary">
 </a>
-              @if($product->quantity <= 0)
+              @if($product->stock_status === 'out_of_stock')
                 <div class="sold-out-badge">Sold Out</div>
               @endif
             </div>

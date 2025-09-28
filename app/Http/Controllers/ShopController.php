@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Brand;
 use App\Models\Sizes;
 use Illuminate\Http\Request;
 
@@ -11,8 +12,8 @@ class ShopController extends Controller
 {
     public function index(Request $request)
     {
-        $productsQuery = Product::query()->select('id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity', 'created_at', 'featured', 'category_id')
-                                       ->with(['category', 'productVariations.size']);
+        $productsQuery = Product::query()->select('id', 'name', 'main_image', 'slug', 'regular_price', 'sale_price', 'stock_status', 'created_at', 'featured', 'category_id')
+                                       ->with(['category', 'productVariations.colour']);
         
         if ($request->query('filter') === 'featured') {
             $productsQuery->where('featured', true);
@@ -24,6 +25,10 @@ class ShopController extends Controller
 
         if ($request->has('category')) {
             $productsQuery->where('category_id', $request->category);
+        }
+
+        if ($request->has('brand')) {
+            $productsQuery->where('brand_id', $request->brand);
         }
 
         if ($request->has('size')) {
@@ -70,22 +75,22 @@ class ShopController extends Controller
         }
 
         $categories = Category::all();
-        $sizes = Sizes::all();
+        $brands = Brand::all();
         $maxPrice = max(Product::max('regular_price'), Product::whereNotNull('sale_price')->max('sale_price') ?? 0);
 
         $products = ($request->has('size') || $request->has('price') || $request->has('price_from') || 
-                     $request->has('price_to') || $request->has('sort') || $request->has('category'))
+                     $request->has('price_to') || $request->has('sort') || $request->has('category') || $request->has('brand'))
             ? $productsQuery->get()
             : $productsQuery->paginate(12);
       
-        return view('shop', compact('products', 'categories', 'sizes', 'maxPrice'));
+        return view('shop', compact('products', 'categories', 'brands', 'maxPrice'));
     }
 
     public function product_details(Request $request, $product_slug)
     {
         $product = Product::where('slug', $product_slug)
-                         ->select('size_chart', 'id', 'name', 'image', 'images', 'slug', 'regular_price', 'sale_price', 'quantity', 'description', 'short_description', 'SKU', 'category_id')
-                         ->with(['category', 'productVariations.size', 'reviews' => function ($query) {
+                         ->select('id', 'name', 'main_image', 'gallery_images', 'slug', 'regular_price', 'sale_price', 'stock_status', 'description', 'SKU', 'category_id')
+                         ->with(['category', 'productVariations.colour', 'reviews' => function ($query) {
                              $query->where('is_approved', true); // Only load approved reviews
                          }])
                          ->firstOrFail();
@@ -95,8 +100,8 @@ class ShopController extends Controller
         $reviewCount = $product->reviews->count();
 
         $rproducts = Product::where('slug', '<>', $product_slug)
-                           ->select('id', 'name', 'image', 'slug', 'regular_price', 'sale_price', 'quantity', 'category_id')
-                           ->with(['category', 'productVariations.size'])
+                           ->select('id', 'name', 'main_image', 'slug', 'regular_price', 'sale_price', 'stock_status', 'category_id')
+                           ->with(['category', 'productVariations.colour'])
                            ->inRandomOrder()
                            ->take(8)
                            ->get();

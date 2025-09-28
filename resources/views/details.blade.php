@@ -19,6 +19,36 @@
     border-color:black;
   }
 
+  .color-btn {
+    min-width: 80px;
+    position: relative;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+  }
+
+  .color-btn.active {
+    border-color: #000;
+    border-width: 3px;
+    transform: scale(1.05);
+  }
+
+  .color-btn.sold-out {
+    opacity: 0.6;
+    cursor: not-allowed;
+    position: relative;
+  }
+
+  .color-btn.sold-out::after {
+    content: "______";
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2em;
+  }
+
   .size-btn.sold-out {
     opacity: 0.6;
     cursor: not-allowed;
@@ -239,23 +269,30 @@
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 <div class="swiper-slide product-single__image-item">
-                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $product->image) }}" width="674" height="674" alt="{{ $product->name }}" />
-                  <a data-fancybox="gallery" href="{{ asset('uploads/products/' . $product->image) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
+                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" width="674" height="674" alt="{{ $product->name }}" />
+                  <a data-fancybox="gallery" href="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <use href="#icon_zoom" />
                     </svg>
                   </a>
                 </div>
-                @foreach(explode(',', $product->images) as $gimg)
+                @if($product->gallery_images)
+                  @php
+                    $galleryImages = is_array($product->gallery_images) 
+                        ? $product->gallery_images 
+                        : json_decode($product->gallery_images, true) ?? [];
+                  @endphp
+                  @foreach($galleryImages as $gimg)
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $gimg) }}" width="674" height="674" alt="{{ $product->name }}" />
-                    <a data-fancybox="gallery" href="{{ asset('uploads/products/' . $gimg) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
+                    <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $gimg) }}" width="674" height="674" alt="{{ $product->name }}" />
+                    <a data-fancybox="gallery" href="{{ asset('uploads/products/thumbnails/' . $gimg) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <use href="#icon_zoom" />
                       </svg>
                     </a>
                   </div>
                 @endforeach
+                @endif
               </div>
               <div class="swiper-button-prev">
                 <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg">
@@ -273,13 +310,29 @@
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 <div class="swiper-slide product-single__image-item">
-                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $product->image) }}" width="104" height="104" alt="{{ $product->name }}" />
+                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" width="104" height="104" alt="{{ $product->name }}" />
                 </div>
-                @foreach(explode(',', $product->images) as $gimg)
+                @if($product->gallery_images)
+                  @php
+                    $galleryImages = is_array($product->gallery_images) 
+                      ? $product->gallery_images 
+                      : json_decode($product->gallery_images, true) ?? [];
+                    // Debug: Log gallery images for troubleshooting
+                    \Illuminate\Support\Facades\Log::info('Gallery Images Debug', [
+                      'product_id' => $product->id,
+                      'gallery_images_raw' => $product->gallery_images,
+                      'gallery_images_parsed' => $galleryImages,
+                      'count' => count($galleryImages)
+                    ]);
+                  @endphp
+                  @if(!empty($galleryImages))
+                    @foreach($galleryImages as $gimg)
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $gimg) }}" width="104" height="104" alt="{{ $product->name }}" />
+                        <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $gimg) }}" width="104" height="104" alt="{{ $product->name }}" />
                   </div>
                 @endforeach
+                  @endif
+                @endif
               </div>
             </div>
           </div>
@@ -310,47 +363,52 @@
           </span>
         </div>
         <div class="product-single__short-desc">
-          <p>{{ $product->short_description }}</p>
+          <p>{{ \Illuminate\Support\Str::limit($product->description, 150) }}</p>
         </div>
-        @if($product->quantity <= 0)
+        @if($product->stock_status === 'out_of_stock')
           <span class="btn btn-secondary mb-3">Sold Out</span>
         @else
           <form id="add-to-cart-form" method="POST" action="{{ route('cart.add') }}">
             @csrf
             <div class="product-single__options">
-              <div class="d-flex align-items-center">
-                <label>Size:</label>
-                @if($product->size_chart)
-                  <button type="button" class="size-chart-btn" onclick="openLightbox()">Size Chart</button>
-                @endif
-              </div>
-  <div class="size-selector d-flex flex-wrap gap-2">
-                @if($product->productVariations && $product->productVariations->count() > 0)
-                  @php
-                    // Define the desired order of sizes
-                    $sizeOrder = ['Small', 'Medium', 'Large', 'XL', 'XXL'];
-                    // Sort the product variations based on the size order
-                    $sortedVariations = $product->productVariations->sortBy(function($variation) use ($sizeOrder) {
-                      return array_search($variation->size->name, $sizeOrder);
-                    });
+              <!-- Color Selection -->
+              @if($product->productVariations && $product->productVariations->where('colour_id', '!=', null)->count() > 0)
+                <div class="mb-3">
+                  <label class="mb-2">Color:</label>
+                  <div class="color-selector d-flex flex-wrap gap-2">
+                    @php
+                      $availableColors = $product->productVariations->where('colour_id', '!=', null)->groupBy('colour_id');
                   @endphp
-                  @foreach($sortedVariations as $variation)
+                    @foreach($availableColors as $colorId => $variations)
+                      @php
+                        $color = $variations->first()->colour;
+                        $totalStock = $variations->sum('quantity');
+                      @endphp
                     <button type="button" 
-                      class="size-btn btn btn-outline-secondary {{ $variation->quantity <= 0 ? 'sold-out' : '' }}"
-                      data-size-id="{{ $variation->size->id }}"
-                      data-quantity="{{ $variation->quantity }}"
-                      {{ $variation->quantity <= 0 ? 'disabled' : '' }}>
-                      {{ $variation->size->name }}
-                      @if($variation->quantity <= 0)
+                        class="color-btn btn btn-outline-secondary {{ $totalStock <= 0 ? 'sold-out' : '' }}"
+                        data-color-id="{{ $color->id }}"
+                        data-color-name="{{ $color->name }}"
+                        data-color-code="{{ $color->code }}"
+                        data-total-stock="{{ $totalStock }}"
+                        {{ $totalStock <= 0 ? 'disabled' : '' }}
+                        style="{{ $color->code ? 'background-color: ' . $color->code . '; color: ' . (strlen($color->code) > 4 ? 'white' : 'black') . ';' : '' }}">
+                        {{ $color->name }}
+                        @if($totalStock <= 0)
                         <span class="sold-out-text">(Sold Out)</span>
                       @endif
                     </button>
                   @endforeach
-                @else
-                  <div class="text-muted">No sizes available</div>
+                  </div>
+                  <input type="hidden" name="colour_id" id="selected_color" value="">
+                </div>
                 @endif
+
+              <div class="d-flex align-items-center">
+                <label>Size:</label>
+                <!-- Size chart removed as not in database schema -->
               </div>
-              <input type="hidden" name="size_id" id="selected_size" value="">
+  <!-- Size selection removed - using colors only -->
+              <input type="hidden" name="size_id" id="selected_size" value="1">
             </div>
 
             <div class="product-single__addtocart d-flex flex-column align-items-start gap-2">
@@ -479,18 +537,7 @@
         </div>
       </div>
 
-      @if($product->size_chart)
-        <div id="size-chart-lightbox" class="lightbox">
-          <div class="lightbox-content">
-            <span class="close" onclick="closeLightbox()">×</span>
-            <div class="lightbox-images">
-              @foreach(explode(',', $product->size_chart) as $chartImage)
-                <img class="lightbox-image" src="{{ asset('uploads/products/' . $chartImage) }}" alt="Size Chart">
-              @endforeach
-            </div>
-          </div>
-        </div>
-      @endif
+      <!-- Size chart lightbox removed as not in database schema -->
   </section>
   <section class="products-carousel container">
     <h2 class="h3 text-uppercase mb-4 pb-xl-2 mb-xl-4">Related <strong>Products</strong></h2>
@@ -533,9 +580,9 @@
             <div class="swiper-slide product-card" style="position: relative;">
               <div class="pc__img-wrapper">
                 <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">
-                  <img loading="lazy" src="{{ asset('uploads/products/' . $rproduct->image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
+                  <img loading="lazy" src="{{ asset('uploads/products/thumbnails/' . $rproduct->main_image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
                 </a>
-                @if($rproduct->quantity <= 0)
+                @if($rproduct->stock_status === 'out_of_stock')
                   <div class="sold-out-label">Sold Out</div>
                 @endif
               </div>
@@ -627,6 +674,7 @@ $(document).ready(function() {
     const $addToCartBtn = $('.btn-addtocart');
     const $buyNowBtn = $('.btn-buynow');
     let selectedSize = null;
+    let selectedColor = null;
     let cartItems = [];
 
     // Catalog ID mapping for products
@@ -699,24 +747,42 @@ $(document).ready(function() {
         }
     });
 
-    $('.size-btn').on('click', function() {
+    // Color selection handler
+    $('.color-btn').on('click', function() {
         const $btn = $(this);
         if ($btn.hasClass('sold-out') || $btn.prop('disabled')) return;
-        $('.size-btn').removeClass('active');
+        $('.color-btn').removeClass('active');
         $btn.addClass('active');
-        selectedSize = {
-            id: $btn.data('size-id'),
-            quantity: $btn.data('quantity')
+        selectedColor = {
+            id: $btn.data('color-id'),
+            name: $btn.data('color-name'),
+            code: $btn.data('color-code'),
+            totalStock: $btn.data('total-stock')
         };
-        $('#selected_size').val(selectedSize.id);
-        $quantityInput.attr('max', selectedSize.quantity);
-        if (parseInt($quantityInput.val()) > selectedSize.quantity) {
-            $quantityInput.val(1);
-            $qtyError.text('');
-        }
+        $('#selected_color').val(selectedColor.id);
+        
+        // Update available sizes based on selected color
+        updateAvailableSizes();
     });
 
+    // Size selection removed - using colors only
+    // Default size is set to 1 (Medium)
+    selectedSize = { id: 1, quantity: 999 };
+
+    // Function to update available sizes based on selected color
+    function updateAvailableSizes() {
+        if (!selectedColor) return;
+        // Since we're only using colors, we don't need to update sizes
+        // Just ensure we have a valid size selected
+        selectedSize = { id: 1, quantity: 999 };
+    }
+
     $('.qty-control__increase').on('click', function() {
+        const hasColors = $('.color-btn').length > 0;
+        if (hasColors && !selectedColor) {
+            $qtyError.text('Please select a color first');
+            return;
+        }
         if (!selectedSize) {
             $qtyError.text('Please select a size first');
             return;
@@ -739,6 +805,12 @@ $(document).ready(function() {
     });
 
     $quantityInput.on('input', function() {
+        const hasColors = $('.color-btn').length > 0;
+        if (hasColors && !selectedColor) {
+            $qtyError.text('Please select a color first');
+            $quantityInput.val(1);
+            return;
+        }
         if (!selectedSize) {
             $qtyError.text('Please select a size first');
             $quantityInput.val(1);
@@ -759,6 +831,14 @@ $(document).ready(function() {
 
     $('#add-to-cart-form').on('submit', function(e) {
         e.preventDefault();
+        
+        // Check if colors are available and selected
+        const hasColors = $('.color-btn').length > 0;
+        if (hasColors && !selectedColor) {
+            $qtyError.text('Please select a color');
+            return;
+        }
+        
         if (!selectedSize) {
             $qtyError.text('Please select a size');
             return;

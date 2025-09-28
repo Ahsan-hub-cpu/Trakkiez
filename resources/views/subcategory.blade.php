@@ -153,12 +153,12 @@
   <div class="container mb-4">
     <div class="filter-section">
       <div class="row">
-        <!-- Size Filter -->
+        <!-- Color Filter -->
         <div class="col-md-3 col-sm-6 mb-3">
-          <select id="size-filter" class="form-select">
-            <option value="">Filter by Size</option>
-            @foreach($sizes as $size)
-              <option value="{{ $size->id }}" {{ request('size') == $size->id ? 'selected' : '' }}>{{ $size->name }}</option>
+          <select id="color-filter" class="form-select">
+            <option value="">Filter by Color</option>
+            @foreach(\App\Models\Colour::all() as $color)
+              <option value="{{ $color->id }}" {{ request('color') == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
             @endforeach
           </select>
         </div>
@@ -189,7 +189,7 @@
   </div>
 
   <!-- Clear Filter Button -->
-  @if(request()->has('size') || request()->has('sort'))
+  @if(request()->has('color') || request()->has('sort'))
     <div class="text-center mt-3">
       <a href="{{ route('home.subcategory', ['category_slug' => $category->slug, 'subcategory_id' => $subcategory->id]) }}" class="btn btn-outline-dark">Clear Filter</a>
     </div>
@@ -224,11 +224,11 @@
    data-product-price="{{ $product->sale_price ?? $product->regular_price }}"
    data-product-category="{{ $subcategory->name ?? 'unknown category' }}"
    aria-label="View details for {{ $product->name }}">
-    <img loading="lazy" src="{{ asset('uploads/products/' . $product->image) }}" 
+    <img loading="lazy" src="{{ asset('uploads/products/' . $product->main_image) }}" 
          width="200" height="auto" alt="{{ $product->name }}" 
          class="pc__img pc__img-primary">
 </a>
-              @if($product->quantity <= 0)
+              @if($product->stock_status === 'out_of_stock')
                 <div class="sold-out-badge">Sold Out</div>
               @endif
             </div>
@@ -254,7 +254,7 @@
     </div>
 
     <!-- Pagination -->
-    @if(!request()->has('size') && !request()->has('price_from') && !request()->has('price_to') && !request()->has('sort'))
+    @if(!request()->has('color') && !request()->has('price_from') && !request()->has('price_to') && !request()->has('sort'))
       <div class="pagination">
         {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
       </div>
@@ -271,10 +271,10 @@
 $(function(){
   console.log('Filter script initialized');
 
-  // Size filter
-  $('#size-filter').on('change', function() {
-    console.log('Size filter changed:', $(this).val());
-    updateUrl('size', $(this).val());
+  // Color filter
+  $('#color-filter').on('change', function() {
+    console.log('Color filter changed:', $(this).val());
+    updateUrl('color', $(this).val());
   });
 
   // Sort filter

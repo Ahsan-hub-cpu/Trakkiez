@@ -29,7 +29,7 @@
   </div>
 
   <!-- Summer Collection -->
-  <section class="summer-collection container mt-5">
+  <!-- <section class="summer-collection container mt-5">
     <div class="image-gallery">
         <picture class="img1">
             <source srcset="assets/images/main/h.avif 300w, assets/images/main/h_small.avif 150w" sizes="(max-width: 576px) 150px, 300px" type="image/avif">
@@ -58,7 +58,7 @@
         <p>Hurry up! Don’t miss the opportunity to get amazing designs and premium quality stuff for this latest summer collection.</p>
         <a href="{{ route('shop.index', ['filter' => 'summer-collection']) }}" class="btn">NEW SUMMER COLLECTION</a>
     </div>
-</section>
+</section> -->
 
   <section class="new-arrivals container mt-3">
       <div class="text-center mb-3">
@@ -101,9 +101,9 @@
                     <div class="pc__img-wrapper">
                         <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
                             <img class="swiper-lazy pc__img" 
-                                 data-srcset="{{ asset('uploads/products/' . $product->image) }} 400w, {{ asset('uploads/products/small/' . $product->image) }} 200w"
+                                 data-srcset="{{asset('uploads/products/thumbnails/' . $product->main_image) }} 400w, {{ asset('uploads/products/thumbnails' . $product->main_image) }} 200w"
                                  data-sizes="(max-width: 576px) 200px, 400px"
-                                 data-src="{{ asset('uploads/products/' . $product->image) }}" 
+                                 data-src="{{asset('uploads/products/thumbnails/' . $product->main_image) }}" 
                                  alt="{{ $product->name }} in {{ $product->category->name ?? 'unknown category' }}"
                                  width="400" height="600">
                             <div class="swiper-lazy-preloader"></div>
@@ -114,7 +114,7 @@
                             @endphp
                             <div class="discount-badge">SAVE {{ $discount }}%</div>
                         @endif
-                        @if($product->quantity <= 0)
+                        @if($product->stock_status === 'out_of_stock')
                             <div class="sold-out-badge">Sold Out</div>
                         @endif
                     </div>
@@ -141,7 +141,7 @@
       </div>
   </section>
 
-  <section class="man-category container mt-3">
+  <!-- <section class="man-category container mt-3">
       <div class="text-center mb-3">
           <h2 class="section-title">Men's Collection <a href="{{ route('home.category', ['category_slug' => 'men']) }}">(View All)</a></h2>
       </div>
@@ -183,9 +183,9 @@
                     <div class="pc__img-wrapper">
                         <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
                             <img class="swiper-lazy pc__img" 
-                                 data-srcset="{{ asset('uploads/products/' . $product->image) }} 400w, {{ asset('uploads/products/small/' . $product->image) }} 200w"
+                                 data-srcset="{{ asset('uploads/products/thumbnails/' . $product->main_image) }} 400w, {{ asset('uploads/products/thumbnails/thumbnails/' . $product->main_image) }} 200w"
                                  data-sizes="(max-width: 576px) 200px, 400px"
-                                 data-src="{{ asset('uploads/products/' . $product->image) }}" 
+                                 data-src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" 
                                  alt="{{ $product->name }} in men's collection"
                                  width="400" height="600">
                             <div class="swiper-lazy-preloader"></div>
@@ -196,7 +196,7 @@
                             @endphp
                             <div class="discount-badge">SAVE {{ $discount }}%</div>
                         @endif
-                        @if($product->quantity <= 0)
+                        @if($product->stock_status === 'out_of_stock')
                             <div class="sold-out-badge">Sold Out</div>
                         @endif
                     </div>
@@ -268,9 +268,9 @@
                     <div class="pc__img-wrapper">
                         <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
                             <img class="swiper-lazy pc__img" 
-                                 data-srcset="{{ asset('uploads/products/' . $product->image) }} 400w, {{ asset('uploads/products/small/' . $product->image) }} 200w"
+                                 data-srcset="{{ asset('uploads/products/thumbnails/' . $product->main_image) }} 400w, {{ asset('uploads/products/thumbnails/thumbnails/' . $product->main_image) }} 200w"
                                  data-sizes="(max-width: 576px) 200px, 400px"
-                                 data-src="{{ asset('uploads/products/' . $product->image) }}" 
+                                 data-src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" 
                                  alt="{{ $product->name }} in women's collection"
                                  width="400" height="600">
                             <div class="swiper-lazy-preloader"></div>
@@ -281,7 +281,7 @@
                             @endphp
                             <div class="discount-badge">SAVE {{ $discount }}%</div>
                         @endif
-                        @if ($product->quantity <= 0)
+                        @if ($product->stock_status === 'out_of_stock')
                             <div class="sold-out-badge">Sold Out</div>
                         @endif
                     </div>
@@ -309,48 +309,108 @@
 </div>
           </div>
       </div>
-  </section>
+  </section> -->
 
-  <section class="all-subcategories-section container mt-5">
+  <!-- Featured Brands Section -->
+  <section class="featured-brands-section container mt-5">
       <div class="text-center mb-4">
-          <h2 class="section-title">Featured</h2>
+          <h2 class="section-title">Featured Brands <a href="{{ route('shop.index') }}">(View All)</a></h2>
       </div>
       <div class="row">
-    @if($allSubcategories->isNotEmpty())
-        @foreach($allSubcategories as $subcategory)
-            @if($subcategory && $subcategory->id && $subcategory->category && $subcategory->category->slug)
-                @php
-                    $categorySlug = strtolower($subcategory->category->slug ?? 'unknown-category');
-                    $subcategoryName = strtolower(str_replace(' ', '-', $subcategory->name ?? 'unnamed-subcategory'));
-                    $imageName = "{$categorySlug}-{$subcategoryName}.avif";
-                    $finalImage = asset('assets/images/subcategories/' . $imageName);
-                @endphp
-                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                    <a href="{{ route('home.subcategory', ['category_slug' => $subcategory->category->slug, 'subcategory_id' => $subcategory->id]) }}" class="subcategory-card">
-                    <div class="subcategory-card-image" style="background-image: url('{{ $finalImage }}'), url('{{ asset('assets/images/subcategories/default-subcategory.jpg') }}');">
-                            <div class="subcategory-card-overlay">
-                                <h2 class="subcategory-card-title">
-                                    {{ $subcategory->category->name ?? 'Unknown Category' }} {{ $subcategory->name ?? 'Unnamed Subcategory' }}
-                                </h2>
-                                <p class="subcategory-card-subtitle">
-                                    Explore {{ $subcategory->category->name ?? 'Unknown Category' }} {{ $subcategory->name ?? 'Unnamed Subcategory' }}
-                                </p>
-                            </div>
+          @if($brands->isNotEmpty())
+              @foreach($brands->take(6) as $brand)
+                  <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                      <a href="{{ route('shop.index', ['brand' => $brand->id]) }}" class="featured-brand-card">
+                          <div class="featured-brand-card-image">
+                              @if($brand->image && file_exists(base_path('uploads/brands/' . $brand->image)))
+                                  <img src="{{ asset('uploads/brands/' . $brand->image) }}" 
+                                       alt="{{ $brand->name }}" 
+                                       class="featured-brand-logo">
+                              @else
+                                  <div class="featured-brand-placeholder">
+                                      <span>{{ $brand->name }}</span>
+                                  </div>
+                              @endif
+                          </div>
+                          <div class="featured-brand-card-overlay">
+                              <h3 class="featured-brand-card-title">{{ $brand->name }}</h3>
+                              <p class="featured-brand-card-subtitle">Explore {{ $brand->name }} Collection</p>
+                          </div>
+                      </a>
+                  </div>
+              @endforeach
+          @else
+              <div class="col-12">
+                  <p class="text-center text-muted">No Brands Available</p>
+              </div>
+          @endif
+      </div>
+  </section>
+
+  <!-- Brands Section -->
+  <section class="brands-section container mt-3">
+      <div class="text-center mb-3">
+          <h2 class="section-title">Our Brands <a href="{{ route('shop.index') }}">(View All)</a></h2>
+      </div>
+      <div class="row justify-content-center">
+          <div class="col-12">
+          <div class="position-relative">
+    <div class="swiper-container js-swiper-slider" data-settings='{
+        "autoplay": false,
+        "slidesPerView": 4,
+        "slidesPerGroup": 1,
+        "effect": "none",
+        "loop": false,
+        "preloadImages": false,
+        "lazy": {
+            "loadPrevNext": true,
+            "loadPrevNextAmount": 1,
+            "loadOnTransitionStart": true,
+            "elementClass": "swiper-lazy",
+            "loadingClass": "swiper-lazy-loading",
+            "loadedClass": "swiper-lazy-loaded",
+            "preloaderClass": "swiper-lazy-preloader"
+        },
+        "breakpoints": {
+            "320": { "slidesPerView": 2, "slidesPerGroup": 1, "spaceBetween": 10 },
+            "576": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 15 },
+            "992": { "slidesPerView": 4, "slidesPerGroup": 1, "spaceBetween": 30 }
+        },
+        "watchSlidesVisibility": true,
+        "watchSlidesProgress": true,
+        "slidesOffsetBefore": 0,
+        "slidesOffsetAfter": 0,
+        "centerInsufficientSlides": true,
+        "centeredSlides": false
+    }'>
+        <div class="swiper-wrapper">
+            @foreach($brands as $brand)
+                <div class="swiper-slide brand-card">
+                    <a href="{{ route('shop.index', ['brand' => $brand->id]) }}" class="brand-link">
+                        <div class="brand-card-image">
+                            @if($brand->image && file_exists(public_path('uploads/brands/' . $brand->image)))
+                                <img class="swiper-lazy brand-logo" 
+                                     data-src="{{ asset('uploads/brands/' . $brand->image) }}" 
+                                     alt="{{ $brand->name }}"
+                                     width="200" height="150">
+                                <div class="swiper-lazy-preloader"></div>
+                            @else
+                                <div class="brand-placeholder">
+                                    <span>{{ $brand->name }}</span>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="brand-card-info">
+                            <h6 class="brand-card-title">{{ $brand->name }}</h6>
                         </div>
                     </a>
                 </div>
-            @else
-                <div class="col-12">
-                    <p class="text-center text-muted">Invalid subcategory data.</p>
-                </div>
-            @endif
-        @endforeach
-    @else
-        <div class="col-12">
-            <p class="text-center text-muted">No Subcategory Available</p>
+            @endforeach
         </div>
-    @endif
     </div>
+</div>
+          </div>
+      </div>
   </section>
 </main>
 <script defer src="{{ asset('assets/js/banner-slider.js') }}"></script>
@@ -991,6 +1051,168 @@
 
     .subcategory-card-overlay {
         padding: 15px;
+    }
+
+    .brands-section {
+        padding: 30px 0;
+        background: none;
+    }
+
+    .brand-card {
+        position: relative;
+        text-align: center;
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    .brand-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .brand-card-image {
+        position: relative;
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+        border-radius: 8px;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .brand-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    .brand-card:hover .brand-logo {
+        transform: scale(1.05);
+    }
+
+    .brand-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: center;
+        border-radius: 8px;
+    }
+
+    .brand-card-info {
+        padding: 5px 0;
+        text-align: center;
+    }
+
+    .brand-card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2d3436;
+        margin-bottom: 0;
+        font-family: 'Lora', serif;
+        text-transform: capitalize;
+    }
+
+    .brand-link:hover .brand-card-title {
+        color: #e91e63;
+    }
+
+    .featured-brands-section {
+        padding: 60px 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .featured-brand-card {
+        display: block;
+        text-decoration: none;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        background: #fff;
+        margin-bottom: 30px;
+        height: 250px;
+    }
+
+    .featured-brand-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+    }
+
+    .featured-brand-card-image {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        position: relative;
+    }
+
+    .featured-brand-logo {
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: contain;
+        filter: grayscale(100%);
+        transition: filter 0.3s ease;
+    }
+
+    .featured-brand-card:hover .featured-brand-logo {
+        filter: grayscale(0%);
+    }
+
+    .featured-brand-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .featured-brand-card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        color: white;
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .featured-brand-card:hover .featured-brand-card-overlay {
+        transform: translateY(0);
+    }
+
+    .featured-brand-card-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: white;
+    }
+
+    .featured-brand-card-subtitle {
+        font-size: 1rem;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.9);
     }
 
     .new-arrivals .section-title,
