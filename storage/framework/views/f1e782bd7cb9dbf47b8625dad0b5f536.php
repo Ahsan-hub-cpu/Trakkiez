@@ -1,5 +1,4 @@
-@extends('layouts.app')
-@section('content')
+<?php $__env->startSection('content'); ?>
 <style>
   /* Global Image Quality Improvements */
   img {
@@ -104,27 +103,27 @@
     <div class="col-md-3 col-sm-6 mb-3">
       <select id="category-filter" class="form-select">
         <option value="">Filter by Category</option>
-        @foreach($categories as $category)
-          <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-        @endforeach
+        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <option value="<?php echo e($category->id); ?>" <?php echo e(request('category') == $category->id ? 'selected' : ''); ?>><?php echo e($category->name); ?></option>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </select>
     </div>
 
     <div class="col-md-3 col-sm-6 mb-3">
       <select id="brand-filter" class="form-select">
         <option value="">Filter by Brand</option>
-        @foreach($brands as $brand)
-          <option value="{{ $brand->id }}" {{ request('brand') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
-        @endforeach
+        <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <option value="<?php echo e($brand->id); ?>" <?php echo e(request('brand') == $brand->id ? 'selected' : ''); ?>><?php echo e($brand->name); ?></option>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </select>
     </div>
 
     <div class="col-md-3 col-sm-6 mb-3">
       <select id="color-filter" class="form-select">
         <option value="">Filter by Color</option>
-        @foreach(\App\Models\Colour::all() as $color)
-          <option value="{{ $color->id }}" {{ request('color') == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
-        @endforeach
+        <?php $__currentLoopData = \App\Models\Colour::all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <option value="<?php echo e($color->id); ?>" <?php echo e(request('color') == $color->id ? 'selected' : ''); ?>><?php echo e($color->name); ?></option>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </select>
     </div>
 
@@ -139,32 +138,32 @@
     <div class="col-md-3 col-sm-6 mb-3">
       <select id="sort-by" class="form-select">
         <option value="">Sort By</option>
-        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest to Oldest</option>
-        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest to Newest</option>
-        <option value="a-z" {{ request('sort') == 'a-z' ? 'selected' : '' }}>Alphabetically A to Z</option>
-        <option value="z-a" {{ request('sort') == 'z-a' ? 'selected' : '' }}>Alphabetically Z to A</option>
-        <option value="price-low-high" {{ request('sort') == 'price-low-high' ? 'selected' : '' }}>Price Low to High</option>
-        <option value="price-high-low" {{ request('sort') == 'price-high-low' ? 'selected' : '' }}>Price High to Low</option>
+        <option value="newest" <?php echo e(request('sort') == 'newest' ? 'selected' : ''); ?>>Newest to Oldest</option>
+        <option value="oldest" <?php echo e(request('sort') == 'oldest' ? 'selected' : ''); ?>>Oldest to Newest</option>
+        <option value="a-z" <?php echo e(request('sort') == 'a-z' ? 'selected' : ''); ?>>Alphabetically A to Z</option>
+        <option value="z-a" <?php echo e(request('sort') == 'z-a' ? 'selected' : ''); ?>>Alphabetically Z to A</option>
+        <option value="price-low-high" <?php echo e(request('sort') == 'price-low-high' ? 'selected' : ''); ?>>Price Low to High</option>
+        <option value="price-high-low" <?php echo e(request('sort') == 'price-high-low' ? 'selected' : ''); ?>>Price High to Low</option>
       </select>
     </div>
   </div>
 </div>
 
-@if(request()->has('category') || request()->has('brand') || request()->has('color') || request()->has('price_from') || request()->has('price_to') || request()->has('sort'))
+<?php if(request()->has('category') || request()->has('brand') || request()->has('color') || request()->has('price_from') || request()->has('price_to') || request()->has('sort')): ?>
   <div class="text-center mt-3">
-    <a href="{{ route('shop.index') }}" class="btn btn-outline-dark">Clear Filter</a>
+    <a href="<?php echo e(route('shop.index')); ?>" class="btn btn-outline-dark">Clear Filter</a>
   </div>
-@endif
+<?php endif; ?>
 
 <div class="container mb-3">
   <div class="row">
     <div class="col">
       <p class="lead">
-        @if($products instanceof \Illuminate\Pagination\LengthAwarePaginator)
-             {{ $products->total() }} products
-        @else
-            {{ count($products) }} products
-        @endif
+        <?php if($products instanceof \Illuminate\Pagination\LengthAwarePaginator): ?>
+             <?php echo e($products->total()); ?> products
+        <?php else: ?>
+            <?php echo e(count($products)); ?> products
+        <?php endif; ?>
       </p>
     </div>
   </div>
@@ -172,73 +171,77 @@
 
 <div class="container">
   <div class="products-grid row row-cols-1 row-cols-md-3 g-4 mt-4">
-  @foreach($products as $product)
+  <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <div class="col">
         <div class="product-card card h-100 border-0 bg-transparent">
             <div class="pc__img-wrapper position-relative">
-                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                    <img loading="lazy" src="{{ asset('uploads/products/' . $product->main_image) }}" 
-                        alt="{{ $product->name }}" 
+                <a href="<?php echo e(route('shop.product.details', ['product_slug' => $product->slug])); ?>">
+                    <img loading="lazy" src="<?php echo e(asset('uploads/products/' . $product->main_image)); ?>" 
+                        alt="<?php echo e($product->name); ?>" 
                         class="pc__img primary-img card-img-top rounded"
                         width="400" height="400">
                 </a>
-                @if($product->stock_status === 'out_of_stock')
+                <?php if($product->stock_status === 'out_of_stock'): ?>
                   <div class="sold-out-badge">Sold Out</div>
-                @endif
+                <?php endif; ?>
             </div>
             <div class="card-body px-0 pb-0">
-              <p class="pc__category text-muted small mb-1">{{ $product->category ? $product->category->name : 'N/A' }}</p>
+              <p class="pc__category text-muted small mb-1"><?php echo e($product->category ? $product->category->name : 'N/A'); ?></p>
               <h6 class="pc__title card-title mb-2">
-                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" class="text-dark text-decoration-none">
-                  {{ $product->name }}
+                <a href="<?php echo e(route('shop.product.details', ['product_slug' => $product->slug])); ?>" class="text-dark text-decoration-none">
+                  <?php echo e($product->name); ?>
+
                 </a>
               </h6>
               <div class="product-card__price d-flex align-items-center mb-2">
                 <span class="money price fw-bold">
-                  @if($product->sale_price)
-                    <s class="text-muted me-2">PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
-                  @else
-                    PKR {{ $product->regular_price }}
-                  @endif
+                  <?php if($product->sale_price): ?>
+                    <s class="text-muted me-2">PKR <?php echo e($product->regular_price); ?></s> PKR <?php echo e($product->sale_price); ?>
+
+                  <?php else: ?>
+                    PKR <?php echo e($product->regular_price); ?>
+
+                  <?php endif; ?>
                 </span>
               </div>
-              @if(Cart::instance("wishlist")->content()->where('id', $product->id)->count() > 0)
-                <form method="POST" action="{{ route('wishlist.remove', ['rowId' => Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId]) }}">
-                  @csrf
-                  @method('DELETE')
+              <?php if(Cart::instance("wishlist")->content()->where('id', $product->id)->count() > 0): ?>
+                <form method="POST" action="<?php echo e(route('wishlist.remove', ['rowId' => Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId])); ?>">
+                  <?php echo csrf_field(); ?>
+                  <?php echo method_field('DELETE'); ?>
                   <button type="submit" class="pc__btn-wl btn btn-link p-0 position-absolute top-0 end-0 mt-2 me-2" title="Remove from Wishlist">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="orange" xmlns="http://www.w3.org/2000/svg">
                       <use href="#icon_heart" />
                     </svg>
                   </button>
                 </form>
-              @else
-                <form method="POST" action="{{ route('wishlist.add') }}">
-                  @csrf
-                  <input type="hidden" name="id" value="{{ $product->id }}" />
-                  <input type="hidden" name="name" value="{{ $product->name }}" />
+              <?php else: ?>
+                <form method="POST" action="<?php echo e(route('wishlist.add')); ?>">
+                  <?php echo csrf_field(); ?>
+                  <input type="hidden" name="id" value="<?php echo e($product->id); ?>" />
+                  <input type="hidden" name="name" value="<?php echo e($product->name); ?>" />
                   <input type="hidden" name="quantity" value="1" />
-                  <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}" />
+                  <input type="hidden" name="price" value="<?php echo e($product->sale_price == '' ? $product->regular_price : $product->sale_price); ?>" />
                   <button type="submit" class="pc__btn-wl btn btn-link p-0 position-absolute top-0 end-0 mt-2 me-2" title="Add To Wishlist">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                       <use href="#icon_heart" />
                     </svg>
                   </button>
                 </form>
-              @endif
+              <?php endif; ?>
             </div>
         </div>
       </div>
-    @endforeach
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
   </div>
 </div>
 
-@if(!request()->has('color') && !request()->has('price_from') && !request()->has('price_to') && !request()->has('sort') && !request()->has('category') && !request()->has('brand'))
+<?php if(!request()->has('color') && !request()->has('price_from') && !request()->has('price_to') && !request()->has('sort') && !request()->has('category') && !request()->has('brand')): ?>
   <div class="divider"></div>
   <div class="flex items-center justify-between flex-wrap gap10 wgp pagination">
-    {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
+    <?php echo e($products->withQueryString()->links('pagination::bootstrap-5')); ?>
+
   </div>
-@endif
+<?php endif; ?>
 
 <div class="modal fade" id="priceFilterModal" tabindex="-1" aria-labelledby="priceFilterModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -250,14 +253,14 @@
       <div class="modal-body">
         <div class="mb-3">
           <label for="price-from-modal" class="form-label">Price From</label>
-          <input type="number" class="form-control" id="price-from-modal" placeholder="Enter minimum price" value="{{ request('price_from') }}">
+          <input type="number" class="form-control" id="price-from-modal" placeholder="Enter minimum price" value="<?php echo e(request('price_from')); ?>">
         </div>
         <div class="mb-3">
           <label for="price-to-modal" class="form-label">Price To</label>
-          <input type="number" class="form-control" id="price-to-modal" placeholder="Enter maximum price" value="{{ request('price_to') }}">
+          <input type="number" class="form-control" id="price-to-modal" placeholder="Enter maximum price" value="<?php echo e(request('price_to')); ?>">
         </div>
         <div class="mb-3">
-          <small class="text-muted">Highest price is PKR {{ $maxPrice }}</small>
+          <small class="text-muted">Highest price is PKR <?php echo e($maxPrice); ?></small>
         </div>
       </div>
       <div class="modal-footer">
@@ -267,9 +270,9 @@
     </div>
   </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 $(function(){
     const categoryLinks = document.querySelectorAll('.trakkiez-category-link[data-has-dropdown]');
@@ -406,4 +409,6 @@ $(function(){
     });
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\trakkiez\resources\views/shop.blade.php ENDPATH**/ ?>

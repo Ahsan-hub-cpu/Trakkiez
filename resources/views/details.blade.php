@@ -255,12 +255,42 @@
   }
 
   .text-success { color: black !important; }
-  .gap-2 { gap: 0.5rem !important; margin-bottom: 1rem; margin-top: 1rem; }
+  .gap-2 { gap: 0.5rem !important; margin-bottom: 0.5rem; margin-top: 0.5rem; }
   .btn-addtocart.loading { opacity: 0.7; cursor: not-allowed; }
+  
+  /* Improved spacing for mobile case details page */
+  .product-single { padding: 20px 0; }
+  .product-single__media { margin-bottom: 20px; }
+  .product-single__name { margin-bottom: 15px; font-size: 1.8rem; }
+  .product-single__price { margin-bottom: 15px; }
+  .product-single__short-desc { margin-bottom: 20px; }
+  .product-single__options { margin-bottom: 20px; }
+  .product-single__addtocart { margin-bottom: 20px; }
+  .product-single__addtolinks { margin-bottom: 20px; }
+  .product-single__details-tab { margin-top: 20px; }
+  .reviews-section { margin-top: 20px; padding-top: 20px; }
+  .review-summary { margin-bottom: 15px; }
+  .review-item { padding: 10px 0; }
+  .products-carousel { margin-top: 30px; }
+  .qty-control { margin-bottom: 10px; }
+  .mb-3 { margin-bottom: 15px !important; }
+  .mb-4 { margin-bottom: 20px !important; }
+  .mb-5 { margin-bottom: 25px !important; }
+  .py-5 { padding-top: 25px !important; padding-bottom: 25px !important; }
+  
+  /* Global Image Quality Improvements */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
 </style>
 
-<main class="pt-90">
-  <div class="mb-md-1 pb-md-3"></div>
+<main class="pt-60">
+  <div class="mb-md-1 pb-md-2"></div>
   <section class="product-single container">
     <div class="row">
       <div class="col-lg-7">
@@ -269,7 +299,8 @@
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 <div class="swiper-slide product-single__image-item">
-                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" width="674" height="674" alt="{{ $product->name }}" />
+                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $product->main_image) }}" width="674" height="674" alt="{{ $product->name }}" 
+                       style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);" />
                   <a data-fancybox="gallery" href="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <use href="#icon_zoom" />
@@ -284,7 +315,8 @@
                   @endphp
                   @foreach($galleryImages as $gimg)
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $gimg) }}" width="674" height="674" alt="{{ $product->name }}" />
+                    <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $gimg) }}" width="674" height="674" alt="{{ $product->name }}" 
+                         style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);" />
                     <a data-fancybox="gallery" href="{{ asset('uploads/products/thumbnails/' . $gimg) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <use href="#icon_zoom" />
@@ -310,7 +342,8 @@
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 <div class="swiper-slide product-single__image-item">
-                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" width="104" height="104" alt="{{ $product->name }}" />
+                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" width="104" height="104" alt="{{ $product->name }}" 
+                       style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);" />
                 </div>
                 @if($product->gallery_images)
                   @php
@@ -328,7 +361,8 @@
                   @if(!empty($galleryImages))
                     @foreach($galleryImages as $gimg)
                   <div class="swiper-slide product-single__image-item">
-                        <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $gimg) }}" width="104" height="104" alt="{{ $product->name }}" />
+                        <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $gimg) }}" width="104" height="104" alt="{{ $product->name }}" 
+                             style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);" />
                   </div>
                 @endforeach
                   @endif
@@ -340,7 +374,7 @@
       </div>
 
       <div class="col-lg-5">
-        <div class="d-flex justify-content-between mb-4 pb-md-2">
+        <div class="d-flex justify-content-between mb-3 pb-md-1">
           <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
             <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium">Home</a>
             <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
@@ -580,7 +614,8 @@
             <div class="swiper-slide product-card" style="position: relative;">
               <div class="pc__img-wrapper">
                 <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">
-                  <img loading="lazy" src="{{ asset('uploads/products/thumbnails/' . $rproduct->main_image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
+                  <img loading="lazy" src="{{ asset('uploads/products/thumbnails/' . $rproduct->main_image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img"
+                       style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);">
                 </a>
                 @if($rproduct->stock_status === 'out_of_stock')
                   <div class="sold-out-label">Sold Out</div>

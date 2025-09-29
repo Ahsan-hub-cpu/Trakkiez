@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\SubCategory;
 use App\Models\Brand;
+use App\Models\Review;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ class HomeController extends Controller
                       ->inRandomOrder()
                       ->take(8);
             }
-        ])->orderBy('name')->get();
+        ])->withCount('products')->orderBy('name')->get();
 
         $manCategory = Category::where('slug', 'men')->with([
             'products' => function ($query) {
@@ -56,6 +57,15 @@ class HomeController extends Controller
 
         $brands = Brand::orderBy('name')->get();
 
+        // Get top 5 reviews for testimonials section
+        $topReviews = Review::with('product')
+            ->where('is_approved', true)
+            ->where('rating', '>=', 4)
+            ->orderBy('rating', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->take(5)
+            ->get();
+
         return view('index', compact(
             'slides',
             'categories',
@@ -63,7 +73,8 @@ class HomeController extends Controller
             'womenCategory',
             'newArrivals',
             'allSubcategories',
-            'brands'
+            'brands',
+            'topReviews'
         ));
     }
 
@@ -76,7 +87,10 @@ class HomeController extends Controller
 
         $products = $productsQuery->paginate(12);
 
-        return view('shop.category', compact('category', 'products'));
+        // Get brands for filtering
+        $brands = Brand::orderBy('name')->get();
+
+        return view('category', compact('category', 'products', 'brands'));
     }
 
     public function subcategory($slug, $subcategory_id)

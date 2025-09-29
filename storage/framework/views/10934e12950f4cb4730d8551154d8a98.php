@@ -1,12 +1,11 @@
-@extends("layouts.app")
-@section("content")
+<?php $__env->startSection("content"); ?>
 <main>
   <!-- Hero Section -->
   <section class="hero-section">
       <div class="hero-slider">
-              @foreach($slides as $index => $slide)
-              <div class="hero-slide {{ $index === 0 ? 'active' : '' }}">
-                  <div class="hero-background" style="background-image: url('{{ asset('uploads/slides/' . $slide->image) }}')"></div>
+              <?php $__currentLoopData = $slides; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $slide): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+              <div class="hero-slide <?php echo e($index === 0 ? 'active' : ''); ?>">
+                  <div class="hero-background" style="background-image: url('<?php echo e(asset('uploads/slides/' . $slide->image)); ?>')"></div>
                   <div class="hero-overlay"></div>
                   <div class="hero-content">
                       <div class="container">
@@ -17,29 +16,29 @@
                                       <h2 class="hero-subtitle">Protect Your Device in Style</h2>
                                       <p class="hero-description">Discover our collection of high-quality, stylish mobile cases designed to provide maximum protection while maintaining the sleek look of your device.</p>
                                       <div class="hero-buttons">
-                                          <a href="{{ route('shop.index') }}" class="btn btn-primary btn-lg">Shop Now</a>
+                                          <a href="<?php echo e(route('shop.index')); ?>" class="btn btn-primary btn-lg">Shop Now</a>
                                           <a href="#featured-products" class="btn btn-outline-light btn-lg">View Collection</a>
                                       </div>
                                   </div>
                               </div>
                               <div class="col-lg-6">
                                   <div class="hero-image">
-                                      <img src="{{ asset('uploads/slides/' . $slide->image) }}" alt="Premium Mobile Cases" class="img-fluid">
+                                      <img src="<?php echo e(asset('uploads/slides/' . $slide->image)); ?>" alt="Premium Mobile Cases" class="img-fluid">
                                   </div>
                               </div>
                           </div>
                       </div>
                   </div>
                   </div>
-              @endforeach
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </div>
 
       <!-- Slider Navigation -->
       <div class="slider-navigation">
               <div class="slider-dots">
-                  @foreach($slides as $index => $slide)
-                  <button class="slider-dot {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}"></button>
-                  @endforeach
+                  <?php $__currentLoopData = $slides; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $slide): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                  <button class="slider-dot <?php echo e($index === 0 ? 'active' : ''); ?>" data-slide="<?php echo e($index); ?>"></button>
+                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               </div>
           </div>
   </section>
@@ -94,7 +93,7 @@
           <div class="text-center mb-5">
               <h2 class="section-title">Featured Mobile Cases</h2>
               <p class="section-subtitle">Discover our most popular and trending mobile case designs</p>
-              <a href="{{ route('shop.index', ['filter' => 'new-arrivals']) }}" class="btn btn-outline-primary">View All Products</a>
+              <a href="<?php echo e(route('shop.index', ['filter' => 'new-arrivals'])); ?>" class="btn btn-outline-primary">View All Products</a>
       </div>
       <div class="row justify-content-center">
           <div class="col-12">
@@ -128,38 +127,39 @@
         "centeredSlides": false
     }'>
         <div class="swiper-wrapper">
-            @foreach($newArrivals as $product)
+            <?php $__currentLoopData = $newArrivals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="swiper-slide product-card">
                     <div class="product-card-inner">
                     <div class="pc__img-wrapper">
-                        <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
+                        <a href="<?php echo e(route('shop.product.details', ['product_slug' => $product->slug])); ?>">
                             <img class="swiper-lazy pc__img" 
-                                     data-srcset="{{asset('uploads/products/' . $product->main_image) }} 600w, {{ asset('uploads/products/thumbnails/' . $product->main_image) }} 300w"
+                                     data-srcset="<?php echo e(asset('uploads/products/' . $product->main_image)); ?> 600w, <?php echo e(asset('uploads/products/thumbnails/' . $product->main_image)); ?> 300w"
                                      data-sizes="(max-width: 576px) 300px, 600px"
-                                 data-src="{{asset('uploads/products/thumbnails/' . $product->main_image) }}" 
-                                     alt="{{ $product->name }} mobile case"
+                                 data-src="<?php echo e(asset('uploads/products/thumbnails/' . $product->main_image)); ?>" 
+                                     alt="<?php echo e($product->name); ?> mobile case"
                                      width="600" height="600"
                                      loading="lazy">
                             <div class="swiper-lazy-preloader"></div>
                         </a>
-                        @if($product->sale_price && $product->regular_price)
-                            @php
+                        <?php if($product->sale_price && $product->regular_price): ?>
+                            <?php
                                 $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
-                            @endphp
-                            <div class="discount-badge">SAVE {{ $discount }}%</div>
-                        @endif
-                        @if($product->stock_status === 'out_of_stock')
+                            ?>
+                            <div class="discount-badge">SAVE <?php echo e($discount); ?>%</div>
+                        <?php endif; ?>
+                        <?php if($product->stock_status === 'out_of_stock'): ?>
                             <div class="sold-out-badge">Sold Out</div>
-                        @endif
+                        <?php endif; ?>
                             <div class="product-overlay">
-                                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" class="btn btn-primary btn-sm">View Details</a>
+                                <a href="<?php echo e(route('shop.product.details', ['product_slug' => $product->slug])); ?>" class="btn btn-primary btn-sm">View Details</a>
                             </div>
                     </div>
                     <div class="pc__info">
-                            <div class="product-category">{{ $product->category->name ?? 'Mobile Case' }}</div>
+                            <div class="product-category"><?php echo e($product->category->name ?? 'Mobile Case'); ?></div>
                         <h6 class="pc__title">
-                            <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                                {{ $product->name }}
+                            <a href="<?php echo e(route('shop.product.details', ['product_slug' => $product->slug])); ?>">
+                                <?php echo e($product->name); ?>
+
                             </a>
                         </h6>
                             <div class="product-features">
@@ -167,17 +167,17 @@
                                 <span class="feature-tag">Scratch Resistant</span>
                             </div>
                         <div class="product-card__price">
-                            @if($product->sale_price)
-                                    <span class="price-old">PKR {{ $product->regular_price }}</span>
-                                    <span class="price-new">PKR {{ $product->sale_price }}</span>
-                            @else
-                                    <span class="price-current">PKR {{ $product->regular_price }}</span>
-                            @endif
+                            <?php if($product->sale_price): ?>
+                                    <span class="price-old">PKR <?php echo e($product->regular_price); ?></span>
+                                    <span class="price-new">PKR <?php echo e($product->sale_price); ?></span>
+                            <?php else: ?>
+                                    <span class="price-current">PKR <?php echo e($product->regular_price); ?></span>
+                            <?php endif; ?>
                             </div>
                         </div>
                     </div>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
 </div>
@@ -193,32 +193,32 @@
               <p class="section-subtitle">Find the perfect case for your device</p>
       </div>
           <div class="row">
-              @if(isset($categories) && $categories->isNotEmpty())
-                  @foreach($categories->take(6) as $category)
+              <?php if(isset($categories) && $categories->isNotEmpty()): ?>
+                  <?php $__currentLoopData = $categories->take(6); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                       <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
-                          <a href="{{ route('home.category', ['category_slug' => $category->slug]) }}" class="category-card">
+                          <a href="<?php echo e(route('home.category', ['category_slug' => $category->slug])); ?>" class="category-card">
                               <div class="category-image">
-                                  @if($category->image && file_exists(public_path('uploads/categories/' . $category->image)))
-                                      <img src="{{ asset('uploads/categories/' . $category->image) }}" alt="{{ $category->name }}" class="img-fluid"
+                                  <?php if($category->image && file_exists(public_path('uploads/categories/' . $category->image))): ?>
+                                      <img src="<?php echo e(asset('uploads/categories/' . $category->image)); ?>" alt="<?php echo e($category->name); ?>" class="img-fluid"
                                            style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);">
-                                  @elseif($category->products->count() > 0)
-                                      <img src="{{ asset('uploads/products/thumbnails/' . $category->products->first()->main_image) }}" 
-                                           alt="{{ $category->name }}" class="img-fluid"
+                                  <?php elseif($category->products->count() > 0): ?>
+                                      <img src="<?php echo e(asset('uploads/products/thumbnails/' . $category->products->first()->main_image)); ?>" 
+                                           alt="<?php echo e($category->name); ?>" class="img-fluid"
                                            style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);">
-                                  @else
+                                  <?php else: ?>
                                       <div class="category-placeholder">
                                           <i class="fas fa-mobile-alt"></i>
                                       </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                               <div class="category-info">
-                                  <h5>{{ $category->name }}</h5>
-                                  <span class="product-count">{{ $category->products_count ?? $category->products->count() }} Products</span>
+                                  <h5><?php echo e($category->name); ?></h5>
+                                  <span class="product-count"><?php echo e($category->products_count ?? $category->products->count()); ?> Products</span>
                               </div>
                           </a>
                       </div>
-                  @endforeach
-                            @endif
+                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php endif; ?>
           </div>
       </div>
   </section>
@@ -231,28 +231,28 @@
               <p class="section-subtitle">Real reviews from satisfied customers</p>
           </div>
           <div class="row">
-              @if($topReviews->count() > 0)
-                  @foreach($topReviews->take(3) as $review)
+              <?php if($topReviews->count() > 0): ?>
+                  <?php $__currentLoopData = $topReviews->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $review): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                       <div class="col-lg-4 mb-4">
                           <div class="testimonial-card">
                               <div class="testimonial-content">
                                   <div class="stars">
-                                      @for($i = 1; $i <= 5; $i++)
-                                          <i class="fas fa-star {{ $i <= $review->rating ? 'active' : '' }}"></i>
-                                      @endfor
+                                      <?php for($i = 1; $i <= 5; $i++): ?>
+                                          <i class="fas fa-star <?php echo e($i <= $review->rating ? 'active' : ''); ?>"></i>
+                                      <?php endfor; ?>
                                   </div>
-                                  <p>"{{ $review->review }}"</p>
+                                  <p>"<?php echo e($review->review); ?>"</p>
                               </div>
                               <div class="testimonial-author">
                                   <div class="author-info">
-                                      <h6>{{ $review->reviewer_name ?? 'Anonymous' }}</h6>
+                                      <h6><?php echo e($review->reviewer_name ?? 'Anonymous'); ?></h6>
                                       <span>Verified Buyer</span>
                                   </div>
                         </div>
                     </div>
                 </div>
-            @endforeach
-            @else
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php else: ?>
                   <!-- Fallback testimonials if no reviews in database -->
                   <div class="col-lg-4 mb-4">
                       <div class="testimonial-card">
@@ -314,7 +314,7 @@
                           </div>
                       </div>
                   </div>
-              @endif
+              <?php endif; ?>
           </div>
       </div>
   </section>
@@ -327,33 +327,33 @@
               <p class="section-subtitle">Premium mobile case manufacturers</p>
       </div>
       <div class="row">
-          @if($brands->isNotEmpty())
-              @foreach($brands->take(6) as $brand)
+          <?php if($brands->isNotEmpty()): ?>
+              <?php $__currentLoopData = $brands->take(6); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                      <a href="{{ route('shop.index', ['brand' => $brand->id]) }}" class="featured-brand-card">
+                      <a href="<?php echo e(route('shop.index', ['brand' => $brand->id])); ?>" class="featured-brand-card">
                           <div class="featured-brand-card-image">
-                              @if($brand->image && file_exists(base_path('uploads/brands/' . $brand->image)))
-                                  <img src="{{ asset('uploads/brands/' . $brand->image) }}" 
-                                       alt="{{ $brand->name }}" 
+                              <?php if($brand->image && file_exists(base_path('uploads/brands/' . $brand->image))): ?>
+                                  <img src="<?php echo e(asset('uploads/brands/' . $brand->image)); ?>" 
+                                       alt="<?php echo e($brand->name); ?>" 
                                        class="featured-brand-logo">
-                              @else
+                              <?php else: ?>
                                   <div class="featured-brand-placeholder">
-                                      <span>{{ $brand->name }}</span>
+                                      <span><?php echo e($brand->name); ?></span>
                                   </div>
-                              @endif
+                              <?php endif; ?>
                           </div>
                           <div class="featured-brand-card-overlay">
-                              <h3 class="featured-brand-card-title">{{ $brand->name }}</h3>
-                              <p class="featured-brand-card-subtitle">Explore {{ $brand->name }} Collection</p>
+                              <h3 class="featured-brand-card-title"><?php echo e($brand->name); ?></h3>
+                              <p class="featured-brand-card-subtitle">Explore <?php echo e($brand->name); ?> Collection</p>
                           </div>
                       </a>
                   </div>
-              @endforeach
-          @else
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+          <?php else: ?>
               <div class="col-12">
                   <p class="text-center text-muted">No Brands Available</p>
               </div>
-          @endif
+          <?php endif; ?>
       </div>
   </section>
 
@@ -366,13 +366,13 @@
                   <p class="cta-description">Join thousands of satisfied customers who trust our premium mobile cases for their device protection needs.</p>
       </div>
               <div class="col-lg-4 text-lg-end">
-                  <a href="{{ route('shop.index') }}" class="btn btn-light btn-lg">Shop Now</a>
+                  <a href="<?php echo e(route('shop.index')); ?>" class="btn btn-light btn-lg">Shop Now</a>
                                 </div>
           </div>
       </div>
   </section>
 </main>
-<script defer src="{{ asset('assets/js/banner-slider.js') }}"></script>
+<script defer src="<?php echo e(asset('assets/js/banner-slider.js')); ?>"></script>
 
 <style>
 /* Modern Mobile Case Website Styles */
@@ -982,9 +982,9 @@ img {
     }
 }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.hero-slide');
@@ -1013,4 +1013,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 5000);
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make("layouts.app", \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\trakkiez\resources\views/index.blade.php ENDPATH**/ ?>

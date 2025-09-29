@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <style>
   .section-title {
       font-size: 2rem;
@@ -147,7 +145,7 @@
 </style>
 
 <main class="container mt-5">
-  <h2 class="section-title">{{ $category->name }} Products</h2>
+  <h2 class="section-title"><?php echo e($category->name); ?> Products</h2>
 
   <!-- Filter Section -->
   <div class="container mb-4">
@@ -157,11 +155,11 @@
         <div class="col-md-3 col-sm-6 mb-3">
           <select id="brand-filter" class="form-select">
             <option value="">Filter by Brand</option>
-            @if(isset($brands) && $brands->count() > 0)
-              @foreach($brands as $brand)
-                <option value="{{ $brand->id }}" {{ request('brand') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
-              @endforeach
-            @endif
+            <?php if(isset($brands) && $brands->count() > 0): ?>
+              <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <option value="<?php echo e($brand->id); ?>" <?php echo e(request('brand') == $brand->id ? 'selected' : ''); ?>><?php echo e($brand->name); ?></option>
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php endif; ?>
           </select>
         </div>
         <!-- Price Filter -->
@@ -174,12 +172,12 @@
         <div class="col-md-3 col-sm-6 mb-3">
           <select id="sort-by" class="form-select">
             <option value="">Sort By</option>
-            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest to Oldest</option>
-            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest to Newest</option>
-            <option value="a-z" {{ request('sort') == 'a-z' ? 'selected' : '' }}>Alphabetically A to Z</option>
-            <option value="z-a" {{ request('sort') == 'z-a' ? 'selected' : '' }}>Alphabetically Z to A</option>
-            <option value="price-low-high" {{ request('sort') == 'price-low-high' ? 'selected' : '' }}>Price Low to High</option>
-            <option value="price-high-low" {{ request('sort') == 'price-high-low' ? 'selected' : '' }}>Price High to Low</option>
+            <option value="newest" <?php echo e(request('sort') == 'newest' ? 'selected' : ''); ?>>Newest to Oldest</option>
+            <option value="oldest" <?php echo e(request('sort') == 'oldest' ? 'selected' : ''); ?>>Oldest to Newest</option>
+            <option value="a-z" <?php echo e(request('sort') == 'a-z' ? 'selected' : ''); ?>>Alphabetically A to Z</option>
+            <option value="z-a" <?php echo e(request('sort') == 'z-a' ? 'selected' : ''); ?>>Alphabetically Z to A</option>
+            <option value="price-low-high" <?php echo e(request('sort') == 'price-low-high' ? 'selected' : ''); ?>>Price Low to High</option>
+            <option value="price-high-low" <?php echo e(request('sort') == 'price-high-low' ? 'selected' : ''); ?>>Price High to Low</option>
           </select>
         </div>
       </div>
@@ -187,86 +185,90 @@
   </div>
 
   <!-- Clear Filter Button -->
-  @if(request()->has('size') || request()->has('sort'))
+  <?php if(request()->has('size') || request()->has('sort')): ?>
     <div class="text-center mt-3">
-      <a href="{{ route('home.category', $category->slug) }}" class="btn btn-outline-dark">Clear Filter</a>
+      <a href="<?php echo e(route('home.category', $category->slug)); ?>" class="btn btn-outline-dark">Clear Filter</a>
     </div>
-  @endif
+  <?php endif; ?>
 
   <!-- Product Count -->
   <div class="container mb-3">
     <div class="row">
       <div class="col">
         <p class="lead">
-          @if($products instanceof \Illuminate\Pagination\LengthAwarePaginator)
-            {{ $products->total() }} products
-          @else
-            {{ count($products) }} products
-          @endif
+          <?php if($products instanceof \Illuminate\Pagination\LengthAwarePaginator): ?>
+            <?php echo e($products->total()); ?> products
+          <?php else: ?>
+            <?php echo e(count($products)); ?> products
+          <?php endif; ?>
         </p>
       </div>
     </div>
   </div>
 
   <!-- Product Grid -->
-  @if($products->isNotEmpty())
+  <?php if($products->isNotEmpty()): ?>
     <div class="row">
-      @foreach($products as $product)
+      <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <div class="col-lg-3 col-md-4 col-sm-6">
           <div class="product-card product-card_style3" style="position: relative;">
             <div class="pc__img-wrapper">
-           <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}" 
+           <a href="<?php echo e(route('shop.product.details', ['product_slug' => $product->slug])); ?>" 
    class="product-link" 
-   data-product-id="{{ $product->id }}"
-   data-product-name="{{ $product->name }}"
-   data-product-price="{{ $product->sale_price ?? $product->regular_price }}"
-   data-product-category="{{ $category->name ?? 'unknown category' }}"
-$GLOBALS["__SELF__"]->wrapFunction(array(null,'aria-label'))="View details for {{ $product->name }}">
-    <img loading="lazy" src="{{ asset('uploads/products/' . $product->main_image) }}" 
-         width="200" height="auto" alt="{{ $product->name }}" 
+   data-product-id="<?php echo e($product->id); ?>"
+   data-product-name="<?php echo e($product->name); ?>"
+   data-product-price="<?php echo e($product->sale_price ?? $product->regular_price); ?>"
+   data-product-category="<?php echo e($category->name ?? 'unknown category'); ?>"
+$GLOBALS["__SELF__"]->wrapFunction(array(null,'aria-label'))="View details for <?php echo e($product->name); ?>">
+    <img loading="lazy" src="<?php echo e(asset('uploads/products/' . $product->main_image)); ?>" 
+         width="200" height="auto" alt="<?php echo e($product->name); ?>" 
          class="pc__img pc__img-primary">
 </a>
-              @if($product->stock_status === 'out_of_stock')
+              <?php if($product->stock_status === 'out_of_stock'): ?>
                 <div class="sold-out-badge">Sold Out</div>
-              @endif
+              <?php endif; ?>
             </div>
             <div class="pc__info position-relative">
               <h6 class="pc__title">
-                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">
-                  {{ $product->name }}
+                <a href="<?php echo e(route('shop.product.details', ['product_slug' => $product->slug])); ?>">
+                  <?php echo e($product->name); ?>
+
                 </a>
               </h6>
               <div class="product-card__price d-flex">
                 <span class="money price text-secondary">
-                  @if($product->sale_price)
-                    <s>PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
-                  @else
-                    PKR {{ $product->regular_price }}
-                  @endif
+                  <?php if($product->sale_price): ?>
+                    <s>PKR <?php echo e($product->regular_price); ?></s> PKR <?php echo e($product->sale_price); ?>
+
+                  <?php else: ?>
+                    PKR <?php echo e($product->regular_price); ?>
+
+                  <?php endif; ?>
                 </span>
               </div>
             </div>
           </div>
         </div>
-      @endforeach
+      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 
    
     <!-- Pagination -->
-    @if(!request()->has('size') && !request()->has('sort') && !request()->has('subcategory'))
+    <?php if(!request()->has('size') && !request()->has('sort') && !request()->has('subcategory')): ?>
       <div class="divider"></div>
       <div class="flex items-center justify-between flex-wrap gap10 wgp pagination">
-        {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
-      </div>
-    @endif
-  @else
-    <p>No products available in this category.</p>
-  @endif
-</main>
-<script defer src="{{ asset('assets/js/facebook-pixel.js') }}"></script>
-@endsection
+        <?php echo e($products->withQueryString()->links('pagination::bootstrap-5')); ?>
 
-@push('scripts')
+      </div>
+    <?php endif; ?>
+  <?php else: ?>
+    <p>No products available in this category.</p>
+  <?php endif; ?>
+</main>
+<script defer src="<?php echo e(asset('assets/js/facebook-pixel.js')); ?>"></script>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
 <script>
 $(function(){
   console.log('Filter script initialized');
@@ -337,4 +339,6 @@ $(function(){
   }
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\trakkiez\resources\views/category.blade.php ENDPATH**/ ?>
