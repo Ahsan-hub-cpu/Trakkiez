@@ -129,6 +129,277 @@
         font-size: 16px;
     }
 } */
+
+/* Mobile Case Menu Styling */
+.mobile-case-menu {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+}
+
+/* Category and Subcategory Styling */
+.subcategories {
+    border-left: 2px solid #f0f0f0;
+    margin-left: 10px;
+}
+
+/* Desktop Dropdown Styling */
+.mobile-case-dropdown {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 0;
+    padding: 0.5rem 0;
+    min-width: 300px;
+}
+
+.mobile-case-dropdown .dropdown-item-text {
+    padding: 0;
+    border-bottom: none;
+}
+
+.category-title-link {
+    color: #333 !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.category-title-link:hover {
+    background-color: #f8f9fa;
+    color: #333 !important;
+    text-decoration: none;
+}
+
+.mobile-case-dropdown .category-title {
+    color: #333 !important;
+    font-weight: 500;
+    margin: 0;
+}
+
+.mobile-case-dropdown .category-title:hover {
+    color: #333 !important;
+}
+
+/* Dropdown Icon Animation */
+.category-dropdown-icon {
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.category-dropdown-icon.rotated {
+    transform: rotate(180deg);
+}
+
+/* Beautiful Mobile View Improvements */
+@media (max-width: 768px) {
+    .mobile-case-btn {
+        font-size: 1rem;
+        padding: 12px 0;
+        font-weight: 500;
+    }
+    
+    .category-title {
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+    
+    .subcategory-link {
+        font-size: 0.85rem;
+        padding: 8px 0;
+        font-weight: 400;
+    }
+    
+    .mobile-case-menu {
+        padding: 0 15px;
+    }
+    
+    .subcategories {
+        border-left: 3px solid #667eea;
+        margin-left: 15px;
+        padding-left: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .mobile-case-btn {
+        font-size: 0.95rem;
+        padding: 10px 0;
+    }
+    
+    .category-title {
+        font-size: 0.9rem;
+    }
+    
+    .subcategory-link {
+        font-size: 0.8rem;
+        padding: 6px 0;
+    }
+    
+    .mobile-case-menu {
+        padding: 0 10px;
+    }
+    
+    .subcategories {
+        margin-left: 12px;
+        padding-left: 8px;
+    }
+}
+
+/* Brand and Category Card Improvements for Mobile */
+@media (max-width: 768px) {
+    .featured-brand-card {
+        height: 150px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .featured-brand-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .featured-brand-card-image {
+        background: #f8f9fa;
+        padding: 1rem;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .featured-brand-logo {
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: contain;
+        object-position: center;
+    }
+    
+    .featured-brand-placeholder {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+    
+    .featured-brand-card-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .featured-brand-card-subtitle {
+        font-size: 0.8rem;
+    }
+    
+    /* Category Cards Mobile */
+    .category-card {
+        height: 160px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .category-image {
+        height: 110px;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+    }
+    
+    .category-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    
+    .category-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 1.5rem;
+    }
+    
+    .category-info {
+        padding: 10px;
+        background: white;
+        height: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .category-info h5 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0 0 5px 0;
+        color: #333;
+    }
+    
+    .product-count {
+        font-size: 0.8rem;
+        color: #666;
+    }
+}
+
+@media (max-width: 576px) {
+    .featured-brand-card {
+        height: 140px;
+    }
+    
+    .featured-brand-card-image {
+        padding: 0.75rem;
+    }
+    
+    .featured-brand-logo {
+        max-width: 75%;
+        max-height: 75%;
+    }
+    
+    .featured-brand-placeholder {
+        font-size: 0.9rem;
+    }
+    
+    .category-card {
+        height: 140px;
+    }
+    
+    .category-image {
+        height: 90px;
+    }
+    
+    .category-info {
+        padding: 8px;
+        height: 50px;
+    }
+    
+    .category-info h5 {
+        font-size: 0.85rem;
+    }
+    
+    .product-count {
+        font-size: 0.75rem;
+    }
+}
 </style>
 
 <body class="gradient-bg" >
@@ -411,26 +682,38 @@
                     <ul class="list-unstyled mb-4">
                         <li class="mb-2"><a href="<?php echo e(route('home.index')); ?>" class="nav-link">Home</a></li>
                         <li class="mb-2"><a href="<?php echo e(route('shop.index')); ?>" class="nav-link">Shop</a></li>
-                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <li class="mb-2">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#<?php echo e($category->slug); ?>" aria-expanded="false" aria-controls="<?php echo e($category->slug); ?>">
-                                    <?php echo e($category->name); ?>
+                        
+                        <!-- Mobile Case Button -->
+                        <li class="mb-2">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#mobileCaseMenu" aria-expanded="false" aria-controls="mobileCaseMenu">
+                                Mobile Case
+                            </a>
+                            <div class="collapse" id="mobileCaseMenu">
+                                <div class="mobile-case-menu ps-3">
+                                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <div class="category-section mb-2">
+                                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#subcategories-<?php echo e($category->id); ?>" aria-expanded="false">
+                                                <?php echo e($category->name); ?>
 
-                                </a>
-                                <div class="collapse" id="<?php echo e($category->slug); ?>">
-                                    <ul class="list-unstyled ps-3">
-                                        <?php $__currentLoopData = $category->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <li class="mb-2">
-                                                <a href="<?php echo e(route('home.subcategory', ['category_slug' => $category->slug, 'subcategory_id' => $subcategory->id])); ?>" class="nav-link">
-                                                    <?php echo e($subcategory->name); ?>
+                                            </a>
+                                            <?php if($category->subcategories->count() > 0): ?>
+                                                <div class="collapse subcategories-collapse" id="subcategories-<?php echo e($category->id); ?>">
+                                                    <div class="subcategories ps-3">
+                                                        <?php $__currentLoopData = $category->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <a href="<?php echo e(route('home.subcategory', ['category_slug' => $category->slug, 'subcategory_id' => $subcategory->id])); ?>" 
+                                                               class="nav-link">
+                                                                <?php echo e($subcategory->name); ?>
 
-                                                </a>
-                                            </li>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                    </ul>
+                                                            </a>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
-                            </li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </div>
+                        </li>
 
                         <li class="mb-2"><a href="<?php echo e(route('home.contact')); ?>" class="nav-link">Contact</a></li>
                     </ul>
@@ -480,24 +763,49 @@
                         <li class="navigation__item">
                             <a href="<?php echo e(route('shop.index')); ?>" class="navigation__link">Shop</a>
                         </li>
-                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <li class="navigation__item dropdown">
-                                <a href="#" class="navigation__link dropdown-toggle" id="<?php echo e($category->slug); ?>Dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <?php echo e($category->name); ?>
+                        
+                        <!-- Mobile Case Dropdown -->
+                        <li class="navigation__item dropdown">
+                            <a href="#" class="navigation__link dropdown-toggle" id="mobileCaseDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Mobile Case
+                            </a>
+                            <ul class="dropdown-menu mobile-case-dropdown" aria-labelledby="mobileCaseDropdown">
+                                <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <li class="dropdown-item-text">
+                                        <a href="#" class="category-title-link w-100 text-start d-block p-2 text-decoration-none" 
+                                           data-category="<?php echo e($category->id); ?>" 
+                                           data-bs-toggle="collapse" 
+                                           data-bs-target="#desktop-subcategories-<?php echo e($category->id); ?>" 
+                                           aria-expanded="false">
+                                            <h6 class="category-title fw-bold mb-0 d-flex align-items-center">
+                                                <?php echo e($category->name); ?>
 
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="<?php echo e($category->slug); ?>Dropdown">
-                                    <?php $__currentLoopData = $category->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <li>
-                                            <a class="dropdown-item" href="<?php echo e(route('home.subcategory', ['category_slug' => $category->slug, 'subcategory_id' => $subcategory->id])); ?>">
-                                                <?php echo e($subcategory->name); ?>
+                                                <?php if($category->subcategories->count() > 0): ?>
+                                                    <i class="fas fa-chevron-down ms-auto category-dropdown-icon"></i>
+                                                <?php endif; ?>
+                                            </h6>
+                                        </a>
+                                        <?php if($category->subcategories->count() > 0): ?>
+                                            <div class="collapse subcategories-collapse" id="desktop-subcategories-<?php echo e($category->id); ?>">
+                                                <div class="subcategories ms-3 mt-2">
+                                                    <?php $__currentLoopData = $category->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <a href="<?php echo e(route('home.subcategory', ['category_slug' => $category->slug, 'subcategory_id' => $subcategory->id])); ?>" 
+                                                           class="subcategory-link d-block py-1 text-decoration-none text-dark mb-1">
+                                                            <?php echo e($subcategory->name); ?>
 
-                                            </a>
-                                        </li>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                </ul>
-                            </li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                        </a>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
+                                    </li>
+                                    <?php if(!$loop->last): ?>
+                                        <li><hr class="dropdown-divider"></li>
+                                    <?php endif; ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </ul>
+                        </li>
+                        
                         <li class="navigation__item">
                             <a href="<?php echo e(route('home.contact')); ?>" class="navigation__link">Contact</a>
                         </li>
@@ -1175,6 +1483,35 @@
                 }
             });
         });
+
+        // Desktop Mobile Case Dropdown Functionality
+        const mobileCaseDropdown = document.getElementById('mobileCaseDropdown');
+        const categoryTitleLinks = document.querySelectorAll('.category-title-link');
+        
+        // Prevent dropdown from closing when clicking on category titles
+        categoryTitleLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const targetId = this.getAttribute('data-bs-target');
+                const target = document.querySelector(targetId);
+                const icon = this.querySelector('.category-dropdown-icon');
+                
+                if (target && icon) {
+                    const isExpanded = target.classList.contains('show');
+                    icon.classList.toggle('rotated', !isExpanded);
+                }
+            });
+        });
+
+        // Prevent dropdown from closing when clicking inside the dropdown menu
+        const dropdownMenu = document.querySelector('.mobile-case-dropdown');
+        if (dropdownMenu) {
+            dropdownMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
 
         // Close notification banner
         // $('#closeBanner').on('click', function() {

@@ -192,25 +192,23 @@
               <h2 class="section-title">Shop by Category</h2>
               <p class="section-subtitle">Find the perfect case for your device</p>
       </div>
-          <div class="row">
+          <div class="row g-3">
               <?php if(isset($categories) && $categories->isNotEmpty()): ?>
                   <?php $__currentLoopData = $categories->take(6); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                      <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+                      <div class="col-lg-2 col-md-4 col-sm-6 col-6">
                           <a href="<?php echo e(route('home.category', ['category_slug' => $category->slug])); ?>" class="category-card">
                               <div class="category-image">
                                   <?php if($category->image && file_exists(public_path('uploads/categories/' . $category->image))): ?>
-                                      <img src="<?php echo e(asset('uploads/categories/' . $category->image)); ?>" alt="<?php echo e($category->name); ?>" class="img-fluid"
-                                           style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);">
+                                      <img src="<?php echo e(asset('uploads/categories/' . $category->image)); ?>" alt="<?php echo e($category->name); ?>" class="img-fluid">
                                   <?php elseif($category->products->count() > 0): ?>
                                       <img src="<?php echo e(asset('uploads/products/thumbnails/' . $category->products->first()->main_image)); ?>" 
-                                           alt="<?php echo e($category->name); ?>" class="img-fluid"
-                                           style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);">
+                                           alt="<?php echo e($category->name); ?>" class="img-fluid">
                                   <?php else: ?>
                                       <div class="category-placeholder">
                                           <i class="fas fa-mobile-alt"></i>
                                       </div>
-                        <?php endif; ?>
-                    </div>
+                                  <?php endif; ?>
+                              </div>
                               <div class="category-info">
                                   <h5><?php echo e($category->name); ?></h5>
                                   <span class="product-count"><?php echo e($category->products_count ?? $category->products->count()); ?> Products</span>
@@ -218,10 +216,532 @@
                           </a>
                       </div>
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            <?php endif; ?>
+              <?php else: ?>
+                  <div class="col-12">
+                      <div class="text-center py-5">
+                          <i class="fas fa-th-large text-muted" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                          <p class="text-muted fs-5">No Categories Available</p>
+                      </div>
+                  </div>
+              <?php endif; ?>
           </div>
       </div>
   </section>
+
+  <style>
+  /* Beautiful Category Cards - Enhanced Design */
+  .category-card {
+      height: 280px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      background: #fff;
+      border: 3px solid transparent;
+  }
+
+  .category-card:hover {
+      transform: translateY(-15px) scale(1.03);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+      color: inherit;
+      border-color: #667eea;
+  }
+
+  .category-image {
+      height: 200px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+
+  .category-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      z-index: 1;
+      transition: opacity 0.5s ease;
+  }
+
+  .category-card:hover .category-image::before {
+      opacity: 0.3;
+  }
+
+  .category-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s ease;
+      position: relative;
+      z-index: 2;
+      filter: brightness(1.05) contrast(1.05);
+      min-height: 100%;
+      min-width: 100%;
+  }
+
+  .category-card:hover .category-image img {
+      transform: scale(1.1);
+      filter: brightness(1.15) contrast(1.15);
+  }
+
+  .category-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 3rem;
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .category-info {
+      padding: 25px;
+      background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+      height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+  }
+
+  .category-info::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 25px;
+      right: 25px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #667eea 50%, transparent 100%);
+      border-radius: 1px;
+  }
+
+  .category-info h5 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+      color: #2c3e50;
+      line-height: 1.3;
+      letter-spacing: 0.5px;
+  }
+
+  .product-count {
+      font-size: 1rem;
+      color: #6c757d;
+      font-weight: 600;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+  }
+
+  /* Beautiful Brand Cards - Full Coverage */
+  .featured-brand-card {
+      height: 250px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      background: #fff;
+      border: 2px solid transparent;
+  }
+
+  .featured-brand-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+      color: inherit;
+      border-color: #667eea;
+  }
+
+  .featured-brand-card-image {
+      height: 100%;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+
+  .featured-brand-card-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      z-index: 1;
+      transition: opacity 0.5s ease;
+  }
+
+  .featured-brand-card:hover .featured-brand-card-image::before {
+      opacity: 0.3;
+  }
+
+  .featured-brand-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s ease;
+      position: relative;
+      z-index: 2;
+      filter: brightness(1.1) contrast(1.1);
+      min-height: 100%;
+      min-width: 100%;
+  }
+
+  .featured-brand-card:hover .featured-brand-logo {
+      transform: scale(1.1);
+      filter: brightness(1.2) contrast(1.2);
+  }
+
+  .featured-brand-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 2rem;
+      font-weight: 800;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .featured-brand-card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
+      color: white;
+      padding: 25px;
+      transform: translateY(100%);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 3;
+  }
+
+  .featured-brand-card:hover .featured-brand-card-overlay {
+      transform: translateY(0);
+  }
+
+  .featured-brand-card-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin: 0 0 10px 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      letter-spacing: 0.5px;
+  }
+
+  .featured-brand-card-subtitle {
+      font-size: 1rem;
+      margin: 0;
+      opacity: 0.95;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  /* Section Styling */
+  .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      position: relative;
+  }
+
+  .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      border-radius: 2px;
+  }
+
+  .section-subtitle {
+      font-size: 1.1rem;
+      color: #6c757d;
+      margin-bottom: 0;
+      font-weight: 400;
+  }
+
+  /* Beautiful Mobile Responsive Design - Fixed */
+  @media (max-width: 768px) {
+      /* Section Headers */
+      .section-title {
+          font-size: 2rem;
+          margin-bottom: 1.5rem;
+      }
+      
+      .section-subtitle {
+          font-size: 1rem;
+          margin-bottom: 2rem;
+      }
+      
+      /* Category Cards - Tablet - Fixed Layout */
+      .category-card {
+          height: 200px;
+          border-radius: 12px;
+          margin-bottom: 1rem;
+      }
+      
+      .category-image {
+          height: 130px;
+      }
+      
+      .category-info {
+          padding: 15px;
+          height: 70px;
+      }
+      
+      .category-info h5 {
+          font-size: 1rem;
+          margin-bottom: 5px;
+      }
+      
+      .product-count {
+          font-size: 0.85rem;
+      }
+      
+      /* Brand Cards - Tablet - Fixed Layout */
+      .featured-brand-card {
+          height: 180px;
+          border-radius: 12px;
+          margin-bottom: 1rem;
+      }
+      
+      .featured-brand-placeholder {
+          font-size: 1.5rem;
+      }
+      
+      .featured-brand-card-title {
+          font-size: 1rem;
+      }
+      
+      .featured-brand-card-subtitle {
+          font-size: 0.85rem;
+      }
+      
+      /* Grid Adjustments */
+      .row.g-3 {
+          --bs-gutter-x: 1rem;
+          --bs-gutter-y: 1rem;
+      }
+  }
+
+  @media (max-width: 576px) {
+      /* Section Headers - Mobile */
+      .section-title {
+          font-size: 1.8rem;
+          margin-bottom: 1rem;
+      }
+      
+      .section-subtitle {
+          font-size: 0.95rem;
+          margin-bottom: 1.5rem;
+      }
+      
+      /* Category Cards - Mobile - Better Layout */
+      .category-card {
+          height: 180px;
+          border-radius: 10px;
+          margin-bottom: 0.8rem;
+      }
+      
+      .category-image {
+          height: 110px;
+      }
+      
+      .category-info {
+          padding: 12px;
+          height: 70px;
+      }
+      
+      .category-info h5 {
+          font-size: 0.95rem;
+          margin-bottom: 4px;
+      }
+      
+      .product-count {
+          font-size: 0.8rem;
+      }
+      
+      /* Brand Cards - Mobile - Better Layout */
+      .featured-brand-card {
+          height: 160px;
+          border-radius: 10px;
+          margin-bottom: 0.8rem;
+      }
+      
+      .featured-brand-placeholder {
+          font-size: 1.3rem;
+      }
+      
+      .featured-brand-card-title {
+          font-size: 0.95rem;
+      }
+      
+      .featured-brand-card-subtitle {
+          font-size: 0.8rem;
+      }
+      
+      /* Grid Adjustments */
+      .row.g-3 {
+          --bs-gutter-x: 0.8rem;
+          --bs-gutter-y: 0.8rem;
+      }
+  }
+
+  /* Extra Small Mobile Devices */
+  @media (max-width: 480px) {
+      /* Section Headers */
+      .section-title {
+          font-size: 1.6rem;
+          margin-bottom: 0.8rem;
+      }
+      
+      .section-subtitle {
+          font-size: 0.9rem;
+          margin-bottom: 1rem;
+      }
+      
+      /* Category Cards - Extra Small - Compact */
+      .category-card {
+          height: 160px;
+          border-radius: 8px;
+      }
+      
+      .category-image {
+          height: 100px;
+      }
+      
+      .category-info {
+          padding: 10px;
+          height: 60px;
+      }
+      
+      .category-info h5 {
+          font-size: 0.9rem;
+          margin-bottom: 3px;
+      }
+      
+      .product-count {
+          font-size: 0.75rem;
+      }
+      
+      /* Brand Cards - Extra Small - Compact */
+      .featured-brand-card {
+          height: 140px;
+          border-radius: 8px;
+      }
+      
+      .featured-brand-placeholder {
+          font-size: 1.1rem;
+      }
+      
+      .featured-brand-card-title {
+          font-size: 0.9rem;
+      }
+      
+      .featured-brand-card-subtitle {
+          font-size: 0.75rem;
+      }
+      
+      /* Container Padding */
+      .container {
+          padding-left: 10px;
+          padding-right: 10px;
+      }
+  }
+
+  /* Landscape Mobile */
+  @media (max-width: 768px) and (orientation: landscape) {
+      .category-card {
+          height: 160px;
+      }
+      
+      .category-image {
+          height: 100px;
+      }
+      
+      .featured-brand-card {
+          height: 140px;
+      }
+  }
+
+  /* Touch Device Optimizations */
+  @media (hover: none) and (pointer: coarse) {
+      .category-card:hover {
+          transform: none;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+      
+      .featured-brand-card:hover {
+          transform: none;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+      
+      .category-card:active {
+          transform: scale(0.95);
+      }
+      
+      .featured-brand-card:active {
+          transform: scale(0.95);
+      }
+  }
+
+  /* Animation for cards on scroll */
+  .category-card, .featured-brand-card {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.6s ease forwards;
+  }
+
+  .category-card:nth-child(1) { animation-delay: 0.1s; }
+  .category-card:nth-child(2) { animation-delay: 0.2s; }
+  .category-card:nth-child(3) { animation-delay: 0.3s; }
+  .category-card:nth-child(4) { animation-delay: 0.4s; }
+  .category-card:nth-child(5) { animation-delay: 0.5s; }
+  .category-card:nth-child(6) { animation-delay: 0.6s; }
+
+  .featured-brand-card:nth-child(1) { animation-delay: 0.1s; }
+  .featured-brand-card:nth-child(2) { animation-delay: 0.2s; }
+  .featured-brand-card:nth-child(3) { animation-delay: 0.3s; }
+  .featured-brand-card:nth-child(4) { animation-delay: 0.4s; }
+  .featured-brand-card:nth-child(5) { animation-delay: 0.5s; }
+  .featured-brand-card:nth-child(6) { animation-delay: 0.6s; }
+
+  @keyframes fadeInUp {
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+  </style>
 
   <!-- Testimonials Section -->
   <section class="testimonials-section py-5">
@@ -326,10 +846,10 @@
               <h2 class="section-title">Trusted Brands</h2>
               <p class="section-subtitle">Premium mobile case manufacturers</p>
       </div>
-      <div class="row">
+      <div class="row g-3">
           <?php if($brands->isNotEmpty()): ?>
               <?php $__currentLoopData = $brands->take(6); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                  <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                  <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                       <a href="<?php echo e(route('shop.index', ['brand' => $brand->id])); ?>" class="featured-brand-card">
                           <div class="featured-brand-card-image">
                               <?php if($brand->image && file_exists(base_path('uploads/brands/' . $brand->image))): ?>
@@ -351,7 +871,10 @@
               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
           <?php else: ?>
               <div class="col-12">
-                  <p class="text-center text-muted">No Brands Available</p>
+                  <div class="text-center py-5">
+                      <i class="fas fa-store-alt text-muted" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                      <p class="text-muted fs-5">No Brands Available</p>
+                  </div>
               </div>
           <?php endif; ?>
       </div>
