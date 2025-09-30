@@ -1,447 +1,7 @@
-@extends('layouts.app')
-@section('content')
+<?php $__env->startSection('content'); ?>
 <style>
-  /* Product Details Color Scheme */
-  .product-details-header {
-      background: var(--bg-gradient-dark);
-      color: white;
-      padding: 40px 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-  }
-
-  .product-details-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="detailsGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="%23ff6b6b" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23detailsGrid)"/></svg>');
-      opacity: 0.1;
-      z-index: 1;
-  }
-
-  .product-details-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      position: relative;
-      z-index: 2;
-  }
-
-  .product-details-subtitle {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      position: relative;
-      z-index: 2;
-  }
-
-  .product-gallery {
-      background: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-light);
-      overflow: hidden;
-      margin-bottom: 30px;
-  }
-
-  .main-image {
-      width: 100%;
-      height: 500px;
-      object-fit: cover;
-      transition: var(--transition);
-  }
-
-  .thumbnail {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: var(--border-radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
-      border: 2px solid transparent;
-  }
-
-  .thumbnail:hover,
-  .thumbnail.active {
-      border-color: var(--primary-color);
-      transform: scale(1.05);
-  }
-
-  .product-info {
-      background: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-light);
-      padding: 30px;
-      margin-bottom: 30px;
-  }
-
-  .product-title {
-      color: var(--text-primary);
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 15px;
-  }
-
-  .product-price {
-      color: var(--primary-color);
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-  }
-
-  .product-description {
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 25px;
-  }
-
-  .variation-section {
-      margin-bottom: 25px;
-  }
-
-  .variation-title {
-      color: var(--text-primary);
-      font-weight: 600;
-      margin-bottom: 15px;
-      font-size: 1.1rem;
-  }
-
-  .variation-options {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-  }
-
-  .size-btn {
-      min-width: 60px;
-      position: relative;
-      transition: var(--transition);
-      border-radius: var(--border-radius-sm);
-      padding: 10px 15px;
-      border: 2px solid #e9ecef;
-      background: white;
-      color: var(--text-primary);
-      font-weight: 600;
-  }
-
-  .size-btn:hover {
-      border-color: var(--primary-color);
-      color: var(--primary-color);
-      transform: translateY(-2px);
-  }
-
-  .size-btn.active {
-      background: var(--bg-gradient);
-      color: white;
-      border-color: var(--primary-color);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-light);
-  }
-
-  .color-btn {
-      min-width: 80px;
-      position: relative;
-      transition: var(--transition);
-      border-radius: var(--border-radius-sm);
-      padding: 10px 15px;
-      border: 2px solid #e9ecef;
-      background: white;
-      color: var(--text-primary);
-      font-weight: 600;
-  }
-
-  .color-btn:hover {
-      border-color: var(--primary-color);
-      color: var(--primary-color);
-      transform: translateY(-2px);
-  }
-
-  .color-btn.active {
-      border-color: var(--primary-color);
-      border-width: 3px;
-      transform: scale(1.05);
-      box-shadow: var(--shadow-light);
-  }
-
-  .color-btn.sold-out {
-      opacity: 0.6;
-      cursor: not-allowed;
-      position: relative;
-  }
-
-  .color-btn.sold-out::after {
-      content: "______";
-      position: absolute;
-      top: 30%;
-      left: 30%;
-      transform: translate(-50%, -50%);
-      font-size: 1.2em;
-      color: var(--danger-color);
-  }
-
-  .quantity-section {
-      margin-bottom: 25px;
-  }
-
-  .quantity-controls {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-  }
-
-  .quantity-btn {
-      background: var(--bg-gradient);
-      border: none;
-      color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      transition: var(--transition);
-  }
-
-  .quantity-btn:hover {
-      transform: scale(1.1);
-      box-shadow: var(--shadow-light);
-  }
-
-  .quantity-input {
-      width: 60px;
-      text-align: center;
-      border: 2px solid #e9ecef;
-      border-radius: var(--border-radius-sm);
-      padding: 8px;
-      font-weight: 600;
-      color: var(--text-primary);
-  }
-
-  .quantity-input:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
-      outline: none;
-  }
-
-  .action-buttons {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 30px;
-  }
-
-  .add-to-cart-btn {
-      background: var(--bg-gradient);
-      border: none;
-      color: white;
-      padding: 15px 30px;
-      border-radius: var(--border-radius-sm);
-      font-weight: 600;
-      font-size: 1.1rem;
-      transition: var(--transition);
-      flex: 1;
-  }
-
-  .add-to-cart-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-medium);
-  }
-
-  .wishlist-btn {
-      background: transparent;
-      border: 2px solid var(--primary-color);
-      color: var(--primary-color);
-      padding: 15px 20px;
-      border-radius: var(--border-radius-sm);
-      font-weight: 600;
-      transition: var(--transition);
-      min-width: 60px;
-  }
-
-  .wishlist-btn:hover {
-      background: var(--primary-color);
-      color: white;
-      transform: translateY(-2px);
-  }
-
   .filled-heart {
-      color: var(--primary-color);
-  }
-
-  .product-tabs {
-      background: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-light);
-      margin-bottom: 30px;
-  }
-
-  .tab-nav {
-      display: flex;
-      border-bottom: 2px solid #e9ecef;
-  }
-
-  .tab-link {
-      padding: 15px 25px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-weight: 600;
-      transition: var(--transition);
-      border-bottom: 3px solid transparent;
-  }
-
-  .tab-link:hover,
-  .tab-link.active {
-      color: var(--primary-color);
-      border-bottom-color: var(--primary-color);
-  }
-
-  .tab-content {
-      padding: 30px;
-  }
-
-  .reviews-section {
-      margin-top: 30px;
-  }
-
-  .review-item {
-      background: #f8f9fa;
-      border-radius: var(--border-radius-sm);
-      padding: 20px;
-      margin-bottom: 20px;
-      border-left: 4px solid var(--primary-color);
-  }
-
-  .review-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-  }
-
-  .reviewer-name {
-      font-weight: 600;
-      color: var(--text-primary);
-  }
-
-  .review-rating {
-      color: var(--warning-color);
-  }
-
-  .review-text {
-      color: var(--text-secondary);
-      line-height: 1.6;
-  }
-
-  .related-products {
-      margin-top: 50px;
-  }
-
-  .related-title {
-      color: var(--text-primary);
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 30px;
-      text-align: center;
-  }
-
-  .related-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 25px;
-  }
-
-  .related-card {
-      background: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-      overflow: hidden;
-  }
-
-  .related-card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-medium);
-  }
-
-  .related-image {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-  }
-
-  .related-info {
-      padding: 20px;
-  }
-
-  .related-name {
-      color: var(--text-primary);
-      font-weight: 600;
-      margin-bottom: 10px;
-  }
-
-  .related-price {
-      color: var(--primary-color);
-      font-weight: 700;
-      font-size: 1.1rem;
-  }
-
-  /* Mobile Responsive */
-  @media (max-width: 768px) {
-      .product-details-header {
-          padding: 30px 0;
-      }
-      
-      .product-details-title {
-          font-size: 2rem;
-      }
-      
-      .product-info {
-          padding: 20px;
-      }
-      
-      .product-title {
-          font-size: 1.5rem;
-      }
-      
-      .product-price {
-          font-size: 1.5rem;
-      }
-      
-      .action-buttons {
-          flex-direction: column;
-      }
-      
-      .related-grid {
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-          gap: 20px;
-      }
-  }
-
-  @media (max-width: 576px) {
-      .variation-options {
-          justify-content: center;
-      }
-      
-      .quantity-controls {
-          justify-content: center;
-      }
-      
-      .tab-nav {
-          flex-direction: column;
-      }
-      
-      .tab-link {
-          text-align: center;
-          border-bottom: none;
-          border-right: 3px solid transparent;
-      }
-      
-      .tab-link.active {
-          border-bottom-color: transparent;
-          border-right-color: var(--primary-color);
-      }
+    color: orange;
   }
 
   .size-btn {
@@ -738,32 +298,32 @@
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 <div class="swiper-slide product-single__image-item">
-                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $product->main_image) }}" width="674" height="674" alt="{{ $product->name }}" 
+                  <img loading="lazy" class="h-auto" src="<?php echo e(asset('uploads/products/' . $product->main_image)); ?>" width="674" height="674" alt="<?php echo e($product->name); ?>" 
                        style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);" />
-                  <a data-fancybox="gallery" href="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
+                  <a data-fancybox="gallery" href="<?php echo e(asset('uploads/products/thumbnails/' . $product->main_image)); ?>" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <use href="#icon_zoom" />
                     </svg>
                   </a>
                 </div>
-                @if($product->gallery_images)
-                  @php
+                <?php if($product->gallery_images): ?>
+                  <?php
                     $galleryImages = is_array($product->gallery_images) 
                         ? $product->gallery_images 
                         : json_decode($product->gallery_images, true) ?? [];
-                  @endphp
-                  @foreach($galleryImages as $gimg)
+                  ?>
+                  <?php $__currentLoopData = $galleryImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gimg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/' . $gimg) }}" width="674" height="674" alt="{{ $product->name }}" 
+                    <img loading="lazy" class="h-auto" src="<?php echo e(asset('uploads/products/' . $gimg)); ?>" width="674" height="674" alt="<?php echo e($product->name); ?>" 
                          style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);" />
-                    <a data-fancybox="gallery" href="{{ asset('uploads/products/thumbnails/' . $gimg) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
+                    <a data-fancybox="gallery" href="<?php echo e(asset('uploads/products/thumbnails/' . $gimg)); ?>" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <use href="#icon_zoom" />
                       </svg>
                     </a>
                   </div>
-                @endforeach
-                @endif
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endif; ?>
               </div>
               <div class="swiper-button-prev">
                 <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg">
@@ -781,11 +341,11 @@
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 <div class="swiper-slide product-single__image-item">
-                  <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $product->main_image) }}" width="104" height="104" alt="{{ $product->name }}" 
+                  <img loading="lazy" class="h-auto" src="<?php echo e(asset('uploads/products/thumbnails/' . $product->main_image)); ?>" width="104" height="104" alt="<?php echo e($product->name); ?>" 
                        style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);" />
                 </div>
-                @if($product->gallery_images)
-                  @php
+                <?php if($product->gallery_images): ?>
+                  <?php
                     $galleryImages = is_array($product->gallery_images) 
                       ? $product->gallery_images 
                       : json_decode($product->gallery_images, true) ?? [];
@@ -796,16 +356,16 @@
                       'gallery_images_parsed' => $galleryImages,
                       'count' => count($galleryImages)
                     ]);
-                  @endphp
-                  @if(!empty($galleryImages))
-                    @foreach($galleryImages as $gimg)
+                  ?>
+                  <?php if(!empty($galleryImages)): ?>
+                    <?php $__currentLoopData = $galleryImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gimg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <div class="swiper-slide product-single__image-item">
-                        <img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails/' . $gimg) }}" width="104" height="104" alt="{{ $product->name }}" 
+                        <img loading="lazy" class="h-auto" src="<?php echo e(asset('uploads/products/thumbnails/' . $gimg)); ?>" width="104" height="104" alt="<?php echo e($product->name); ?>" 
                              style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);" />
                   </div>
-                @endforeach
-                  @endif
-                @endif
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                  <?php endif; ?>
+                <?php endif; ?>
               </div>
             </div>
           </div>
@@ -822,59 +382,63 @@
           <div class="product-single__prev-next d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">
           </div>
         </div>
-        <h1 class="product-single__name">{{ $product->name }}</h1>
+        <h1 class="product-single__name"><?php echo e($product->name); ?></h1>
         <div class="product-single__rating">
           <!-- Rating will be displayed in the reviews section below -->
         </div>
         <div class="product-single__price">
           <span class="current-price">
-            @if($product->sale_price)
-              <s>PKR {{ $product->regular_price }}</s> PKR {{ $product->sale_price }}
-            @else
-              PKR {{ $product->regular_price }}
-            @endif
+            <?php if($product->sale_price): ?>
+              <s>PKR <?php echo e($product->regular_price); ?></s> PKR <?php echo e($product->sale_price); ?>
+
+            <?php else: ?>
+              PKR <?php echo e($product->regular_price); ?>
+
+            <?php endif; ?>
           </span>
         </div>
         <div class="product-single__short-desc">
-          <p>{{ \Illuminate\Support\Str::limit($product->description, 150) }}</p>
+          <p><?php echo e(\Illuminate\Support\Str::limit($product->description, 150)); ?></p>
         </div>
-        @if($product->stock_status === 'out_of_stock')
+        <?php if($product->stock_status === 'out_of_stock'): ?>
           <span class="btn btn-secondary mb-3">Sold Out</span>
-        @else
-          <form id="add-to-cart-form" method="POST" action="{{ route('cart.add') }}">
-            @csrf
+        <?php else: ?>
+          <form id="add-to-cart-form" method="POST" action="<?php echo e(route('cart.add')); ?>">
+            <?php echo csrf_field(); ?>
             <div class="product-single__options">
               <!-- Color Selection -->
-              @if($product->productVariations && $product->productVariations->where('colour_id', '!=', null)->count() > 0)
+              <?php if($product->productVariations && $product->productVariations->where('colour_id', '!=', null)->count() > 0): ?>
                 <div class="mb-3">
                   <label class="mb-2">Color:</label>
                   <div class="color-selector d-flex flex-wrap gap-2">
-                    @php
+                    <?php
                       $availableColors = $product->productVariations->where('colour_id', '!=', null)->groupBy('colour_id');
-                  @endphp
-                    @foreach($availableColors as $colorId => $variations)
-                      @php
+                  ?>
+                    <?php $__currentLoopData = $availableColors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $colorId => $variations): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                      <?php
                         $color = $variations->first()->colour;
                         $totalStock = $variations->sum('quantity');
-                      @endphp
+                      ?>
                     <button type="button" 
-                        class="color-btn btn btn-outline-secondary {{ $totalStock <= 0 ? 'sold-out' : '' }}"
-                        data-color-id="{{ $color->id }}"
-                        data-color-name="{{ $color->name }}"
-                        data-color-code="{{ $color->code }}"
-                        data-total-stock="{{ $totalStock }}"
-                        {{ $totalStock <= 0 ? 'disabled' : '' }}
-                        style="{{ $color->code ? 'background-color: ' . $color->code . '; color: ' . (strlen($color->code) > 4 ? 'white' : 'black') . ';' : '' }}">
-                        {{ $color->name }}
-                        @if($totalStock <= 0)
+                        class="color-btn btn btn-outline-secondary <?php echo e($totalStock <= 0 ? 'sold-out' : ''); ?>"
+                        data-color-id="<?php echo e($color->id); ?>"
+                        data-color-name="<?php echo e($color->name); ?>"
+                        data-color-code="<?php echo e($color->code); ?>"
+                        data-total-stock="<?php echo e($totalStock); ?>"
+                        <?php echo e($totalStock <= 0 ? 'disabled' : ''); ?>
+
+                        style="<?php echo e($color->code ? 'background-color: ' . $color->code . '; color: ' . (strlen($color->code) > 4 ? 'white' : 'black') . ';' : ''); ?>">
+                        <?php echo e($color->name); ?>
+
+                        <?php if($totalStock <= 0): ?>
                         <span class="sold-out-text">(Sold Out)</span>
-                      @endif
+                      <?php endif; ?>
                     </button>
-                  @endforeach
+                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                   </div>
                   <input type="hidden" name="colour_id" id="selected_color" value="">
                 </div>
-                @endif
+                <?php endif; ?>
 
               <div class="d-flex align-items-center">
                 <label>Size:</label>
@@ -891,24 +455,31 @@
                 <div class="qty-control__increase">+</div>
               </div>
               <div class="qty-error">
-                @error('quantity')
-                  <span class="text-danger">{{ $message }}</span>
-                @enderror
+                <?php $__errorArgs = ['quantity'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-danger"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
               </div>
-              <input type="hidden" name="id" value="{{ $product->id }}" />
-              <input type="hidden" name="name" value="{{ $product->name }}" />
-              <input type="hidden" name="price" value="{{ $product->sale_price ?: $product->regular_price }}" />
+              <input type="hidden" name="id" value="<?php echo e($product->id); ?>" />
+              <input type="hidden" name="name" value="<?php echo e($product->name); ?>" />
+              <input type="hidden" name="price" value="<?php echo e($product->sale_price ?: $product->regular_price); ?>" />
               <button type="submit" class="btn btn-primary btn-addtocart">Add to Cart</button>
               <button type="button" class="btn btn-buynow" onclick="buyNow()">Buy It Now</button>
               <span class="cart-status text-success ms-2" aria-live="polite"></span>
             </div>
           </form>
-        @endif
+        <?php endif; ?>
         <div class="product-single__addtolinks">
-          @if(Cart::instance("wishlist")->content()->where('id', $product->id)->count() > 0)
-            <form method="POST" action="{{ route('wishlist.remove', ['rowId' => Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId]) }}" id="wishlist-remove-form">
-              @csrf
-              @method('DELETE')
+          <?php if(Cart::instance("wishlist")->content()->where('id', $product->id)->count() > 0): ?>
+            <form method="POST" action="<?php echo e(route('wishlist.remove', ['rowId' => Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId])); ?>" id="wishlist-remove-form">
+              <?php echo csrf_field(); ?>
+              <?php echo method_field('DELETE'); ?>
               <a href="javascript:void(0)" class="menu-link menu-link_us-s add-to-wishlist filled-heart" onclick="document.getElementById('wishlist-remove-form').submit();">
                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <use href="#icon_heart" />
@@ -916,13 +487,13 @@
                 <span>Remove from Wishlist</span>
               </a>
             </form>
-          @else
-            <form method="POST" action="{{ route('wishlist.add') }}" id="wishlist-add-form">
-              @csrf
-              <input type="hidden" name="id" value="{{ $product->id }}" />
-              <input type="hidden" name="name" value="{{ $product->name }}" />
+          <?php else: ?>
+            <form method="POST" action="<?php echo e(route('wishlist.add')); ?>" id="wishlist-add-form">
+              <?php echo csrf_field(); ?>
+              <input type="hidden" name="id" value="<?php echo e($product->id); ?>" />
+              <input type="hidden" name="name" value="<?php echo e($product->name); ?>" />
               <input type="hidden" name="quantity" value="1"/>
-              <input type="hidden" name="price" value="{{ $product->sale_price ?: $product->regular_price }}" />
+              <input type="hidden" name="price" value="<?php echo e($product->sale_price ?: $product->regular_price); ?>" />
               <a href="javascript:void(0)" class="menu-link menu-link_us-s add-to-wishlist" onclick="document.getElementById('wishlist-add-form').submit()">
                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <use href="#icon_heart" />
@@ -930,16 +501,16 @@
                 <span>Add to Wishlist</span>
               </a>
             </form>
-          @endif
+          <?php endif; ?>
           <share-button class="share-button"></share-button>
           <div class="product-single__meta-info">
             <div class="meta-item">
               <label>SKU:</label>
-              <span>{{ $product->SKU }}</span>
+              <span><?php echo e($product->SKU); ?></span>
             </div>
             <div class="meta-item">
               <label>Categories:</label>
-              <span>{{ $product->category->name }}</span>
+              <span><?php echo e($product->category->name); ?></span>
             </div>
             <div class="meta-item">
               <label>Tags:</label>
@@ -956,7 +527,8 @@
           <div class="tab-content">
             <div class="tab-pane fade show active" id="tab-description" role="tabpanel" aria-labelledby="tab-description-tab">
               <div class="product-single__description">
-                {{ $product->description }}
+                <?php echo e($product->description); ?>
+
               </div>
             </div>
           </div>
@@ -964,46 +536,48 @@
           <!-- Reviews Section -->
           <div class="reviews-section">
             <h2 class="h3 text-uppercase mb-4">Customer <strong>Reviews</strong></h2>
-            @if(session('success'))
+            <?php if(session('success')): ?>
               <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
+                <?php echo e(session('success')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
-            @endif
+            <?php endif; ?>
             <div class="review-summary">
               <div class="rating-overview">
-                <span class="average-rating">{{ number_format($averageRating, 1) }}</span>
+                <span class="average-rating"><?php echo e(number_format($averageRating, 1)); ?></span>
                 <div class="star-rating d-inline-block">
-                  @for ($i = 1; $i <= 5; $i++)
-                    <i class="fas fa-star {{ $i <= round($averageRating) ? 'checked' : '' }}"></i>
-                  @endfor
+                  <?php for($i = 1; $i <= 5; $i++): ?>
+                    <i class="fas fa-star <?php echo e($i <= round($averageRating) ? 'checked' : ''); ?>"></i>
+                  <?php endfor; ?>
                 </div>
-                <p class="review-count">({{ $reviewCount }} reviews)</p>
+                <p class="review-count">(<?php echo e($reviewCount); ?> reviews)</p>
               </div>
               <button class="write-review-btn" data-bs-toggle="modal" data-bs-target="#reviewModal">Write a Review</button>
             </div>
             <div class="reviews-list">
-              @if($reviews->count() > 0)
-                @foreach($reviews as $review)
+              <?php if($reviews->count() > 0): ?>
+                <?php $__currentLoopData = $reviews; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $review): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <div class="review-item">
                     <div class="review-meta">
                       <div class="star-rating">
-                        @for ($i = 1; $i <= 5; $i++)
-                          <i class="fas fa-star {{ $i <= $review->rating ? 'checked' : '' }}"></i>
-                        @endfor
+                        <?php for($i = 1; $i <= 5; $i++): ?>
+                          <i class="fas fa-star <?php echo e($i <= $review->rating ? 'checked' : ''); ?>"></i>
+                        <?php endfor; ?>
                       </div>
-                      <span class="reviewer-name">{{ $review->reviewer_name ?? 'Anonymous' }}</span>
-                      <span class="review-date">{{ $review->created_at->format('M d, Y') }}</span>
+                      <span class="reviewer-name"><?php echo e($review->reviewer_name ?? 'Anonymous'); ?></span>
+                      <span class="review-date"><?php echo e($review->created_at->format('M d, Y')); ?></span>
                     </div>
-                    <p class="review-text">{{ $review->review }}</p>
+                    <p class="review-text"><?php echo e($review->review); ?></p>
                   </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <nav aria-label="Reviews pagination">
-                  {{ $reviews->links('pagination::bootstrap-5') }}
+                  <?php echo e($reviews->links('pagination::bootstrap-5')); ?>
+
                 </nav>
-              @else
+              <?php else: ?>
                 <p>No reviews yet. Be the first to write a review!</p>
-              @endif
+              <?php endif; ?>
             </div>
           </div>
           <!-- End Reviews Section -->
@@ -1049,29 +623,31 @@
             }
           }'>
         <div class="swiper-wrapper">
-          @foreach($rproducts as $rproduct)
+          <?php $__currentLoopData = $rproducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rproduct): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="swiper-slide product-card" style="position: relative;">
               <div class="pc__img-wrapper">
-                <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">
-                  <img loading="lazy" src="{{ asset('uploads/products/thumbnails/' . $rproduct->main_image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img"
+                <a href="<?php echo e(route('shop.product.details', ['product_slug' => $rproduct->slug])); ?>">
+                  <img loading="lazy" src="<?php echo e(asset('uploads/products/thumbnails/' . $rproduct->main_image)); ?>" width="330" height="400" alt="<?php echo e($rproduct->name); ?>" class="pc__img"
                        style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);">
                 </a>
-                @if($rproduct->stock_status === 'out_of_stock')
+                <?php if($rproduct->stock_status === 'out_of_stock'): ?>
                   <div class="sold-out-label">Sold Out</div>
-                @endif
+                <?php endif; ?>
               </div>
               <div class="pc__info position-relative">
-                <p class="pc__category">{{ $rproduct->category->name }}</p>
+                <p class="pc__category"><?php echo e($rproduct->category->name); ?></p>
                 <h6 class="pc__title">
-                  <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">{{ $rproduct->name }}</a>
+                  <a href="<?php echo e(route('shop.product.details', ['product_slug' => $rproduct->slug])); ?>"><?php echo e($rproduct->name); ?></a>
                 </h6>
                 <div class="product-card__price d-flex">
                   <span class="money price">
-                    @if($rproduct->sale_price)
-                      <s>PKR {{ $rproduct->regular_price }}</s> PKR {{ $rproduct->sale_price }}
-                    @else
-                      PKR {{ $rproduct->regular_price }}
-                    @endif
+                    <?php if($rproduct->sale_price): ?>
+                      <s>PKR <?php echo e($rproduct->regular_price); ?></s> PKR <?php echo e($rproduct->sale_price); ?>
+
+                    <?php else: ?>
+                      PKR <?php echo e($rproduct->regular_price); ?>
+
+                    <?php endif; ?>
                   </span>
                 </div>
                 <button class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist" title="Add To Wishlist">
@@ -1081,7 +657,7 @@
                 </button>
               </div>
             </div>
-          @endforeach
+          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
       </div>
 
@@ -1109,14 +685,14 @@
         </div>
         <div class="modal-body">
           <form id="review-form" method="POST">
-            @csrf
-            <input type="hidden" name="product_id" value="{{ $product->id }}">
+            <?php echo csrf_field(); ?>
+            <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
             <div class="mb-3">
               <label for="rating" class="form-label">Your Rating</label>
               <div class="star-rating-input" id="rating-input">
-                @for ($i = 1; $i <= 5; $i++)
-                  <i class="fas fa-star" data-value="{{ $i }}"></i>
-                @endfor
+                <?php for($i = 1; $i <= 5; $i++): ?>
+                  <i class="fas fa-star" data-value="<?php echo e($i); ?>"></i>
+                <?php endfor; ?>
               </div>
               <input type="hidden" name="rating" id="rating" value="0">
               <div class="error-message" id="rating-error"></div>
@@ -1137,9 +713,9 @@
     </div>
   </div>
 </main>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 $(document).ready(function() {
     const $quantityInput = $('input.qty-control__number');
@@ -1188,7 +764,7 @@ $(document).ready(function() {
 
     // Fetch initial cart items on page load
     $.ajax({
-        url: '{{ route('cart.partial') }}',
+        url: '<?php echo e(route('cart.partial')); ?>',
         method: 'GET',
         success: function(response) {
             const $cartContent = $(response);
@@ -1338,10 +914,10 @@ $(document).ready(function() {
 
                     cartItems = response.cartItems || cartItems;
                     if (cartItems.length > 0 && typeof fbq !== 'undefined') {
-                        const productId = '{{ $product->id }}';
+                        const productId = '<?php echo e($product->id); ?>';
                         const catalogId = catalogIdMapping[productId] || productId;
-                        const productName = '{{ addslashes($product->name) }}';
-                        const productPrice = parseFloat('{{ $product->sale_price ?: $product->regular_price }}');
+                        const productName = '<?php echo e(addslashes($product->name)); ?>';
+                        const productPrice = parseFloat('<?php echo e($product->sale_price ?: $product->regular_price); ?>');
                         const quantity = parseInt($quantityInput.val()) || 1;
 
                         fbq('track', 'AddToCart', {
@@ -1365,7 +941,7 @@ $(document).ready(function() {
                 $addToCartBtn.removeClass('loading').prop('disabled', false).text('Add to Cart');
                 $qtyError.text(xhr.responseJSON?.message || 'An error occurred while adding to cart');
                 $.ajax({
-                    url: '{{ route('cart.partial') }}',
+                    url: '<?php echo e(route('cart.partial')); ?>',
                     method: 'GET',
                     success: function(cartContent) {
                         $('#cart-modal-content').html(cartContent);
@@ -1389,7 +965,7 @@ $(document).ready(function() {
         const $form = $('#add-to-cart-form');
         $buyNowBtn.addClass('loading').prop('disabled', true).text('Processing...');
         $.ajax({
-            url: '{{ route('cart.add') }}',
+            url: '<?php echo e(route('cart.add')); ?>',
             method: 'POST',
             data: $form.serialize(),
             success: function(response) {
@@ -1400,7 +976,7 @@ $(document).ready(function() {
                     $('.size-btn').removeClass('active');
                     $('#selected_size').val('');
                     selectedSize = null;
-                    window.location.href = '{{ route('cart.checkout') }}';
+                    window.location.href = '<?php echo e(route('cart.checkout')); ?>';
                 } else {
                     $qtyError.text(response.message || 'Failed to add to cart');
                 }
@@ -1470,7 +1046,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '{{ route('reviews.store', $product->id) }}',
+            url: '<?php echo e(route('reviews.store', $product->id)); ?>',
             method: 'POST',
             data: $form.serialize(),
             success: function(response) {
@@ -1544,4 +1120,5 @@ $(document).ready(function() {
     });
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\trakkiez\resources\views/details.blade.php ENDPATH**/ ?>

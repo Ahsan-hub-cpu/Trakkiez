@@ -44,50 +44,6 @@
           </div>
   </section>
 
-  <!-- Features Section -->
-  <!-- <section class="features-section py-5">
-      <div class="container">
-          <div class="row">
-              <div class="col-lg-3 col-md-6 mb-4">
-                  <div class="feature-card text-center">
-                      <div class="feature-icon">
-                          <i class="fas fa-shield-alt"></i>
-          </div>
-                      <h4>Maximum Protection</h4>
-                      <p>Military-grade protection against drops, scratches, and daily wear</p>
-      </div>
-  </div>
-              <div class="col-lg-3 col-md-6 mb-4">
-                  <div class="feature-card text-center">
-                      <div class="feature-icon">
-                          <i class="fas fa-mobile-alt"></i>
-    </div>
-                      <h4>Perfect Fit</h4>
-                      <p>Precisely designed for your specific phone model with easy access to all ports</p>
-    </div>
-              </div>
-              <div class="col-lg-3 col-md-6 mb-4">
-                  <div class="feature-card text-center">
-                      <div class="feature-icon">
-                          <i class="fas fa-palette"></i>
-                      </div>
-                      <h4>Stylish Design</h4>
-                      <p>Choose from a wide variety of colors and patterns to match your style</p>
-                  </div>
-              </div>
-              <div class="col-lg-3 col-md-6 mb-4">
-                  <div class="feature-card text-center">
-                      <div class="feature-icon">
-                          <i class="fas fa-shipping-fast"></i>
-                      </div>
-                      <h4>Fast Shipping</h4>
-                      <p>Free shipping on orders over $50 with delivery in 2-3 business days</p>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section> -->
-
   <!-- Featured Products Section -->
   <section id="featured-products" class="featured-products-section py-5">
       <div class="container">
@@ -185,94 +141,36 @@
       </div>
   </section>
 
-  <!-- Categories Section -->
-  <section class="categories-section py-5 bg-light">
-      <div class="container">
-          <div class="text-center mb-5">
-              <h2 class="section-title">Shop by Category</h2>
-              <p class="section-subtitle">Find the perfect case for your device</p>
-      </div>
-          <div class="row g-3">
-              @if(isset($categories) && $categories->isNotEmpty())
-                  @foreach($categories->take(6) as $category)
-                      <div class="col-lg-2 col-md-4 col-sm-6 col-6">
-                          <a href="{{ route('home.category', ['category_slug' => $category->slug]) }}" class="category-card">
-                              <div class="category-image">
-                                  @if($category->image && file_exists(public_path('uploads/categories/' . $category->image)))
-                                      <img src="{{ asset('uploads/categories/' . $category->image) }}" alt="{{ $category->name }}" class="img-fluid">
-                                  @elseif($category->products->count() > 0)
-                                      <img src="{{ asset('uploads/products/thumbnails/' . $category->products->first()->main_image) }}" 
-                                           alt="{{ $category->name }}" class="img-fluid">
-                                  @else
-                                      <div class="category-placeholder">
-                                          <i class="fas fa-mobile-alt"></i>
-                                      </div>
-                                  @endif
-                              </div>
-                              <div class="category-info">
-                                  <h5>{{ $category->name }}</h5>
-                                  <span class="product-count">{{ $category->products_count ?? $category->products->count() }} Products</span>
-                              </div>
-                          </a>
-                      </div>
-                  @endforeach
-              @else
-                  <div class="col-12">
-                      <div class="text-center py-5">
-                          <i class="fas fa-th-large text-muted" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                          <p class="text-muted fs-5">No Categories Available</p>
-                      </div>
-                  </div>
-              @endif
-          </div>
-      </div>
-  </section>
 
   <style>
-  /* Beautiful Category Cards - Enhanced Design */
+  /* Simple Category Cards */
   .category-card {
-      height: 280px;
-      border-radius: 20px;
+      height: 250px;
+      border-radius: var(--border-radius);
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-light);
+      transition: var(--transition);
       text-decoration: none;
       color: inherit;
       position: relative;
       background: #fff;
-      border: 3px solid transparent;
+      border: 2px solid transparent;
   }
 
   .category-card:hover {
-      transform: translateY(-15px) scale(1.03);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-medium);
       text-decoration: none;
       color: inherit;
-      border-color: #667eea;
+      border-color: var(--primary-color);
   }
 
   .category-image {
-      height: 200px;
+      height: 180px;
       width: 100%;
       overflow: hidden;
       position: relative;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  }
-
-  .category-image::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-      z-index: 1;
-      transition: opacity 0.5s ease;
-  }
-
-  .category-card:hover .category-image::before {
-      opacity: 0.3;
+      background: var(--bg-light);
   }
 
   .category-image img {
@@ -280,17 +178,11 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
-      transition: transform 0.5s ease;
-      position: relative;
-      z-index: 2;
-      filter: brightness(1.05) contrast(1.05);
-      min-height: 100%;
-      min-width: 100%;
+      transition: var(--transition);
   }
 
   .category-card:hover .category-image img {
-      transform: scale(1.1);
-      filter: brightness(1.15) contrast(1.15);
+      transform: scale(1.05);
   }
 
   .category-placeholder {
@@ -299,175 +191,295 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--bg-gradient);
       color: white;
-      font-size: 3rem;
-      position: relative;
-      z-index: 2;
+      font-size: 2.5rem;
       text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   }
 
   .category-info {
-      padding: 25px;
-      background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-      height: 80px;
+      padding: 20px;
+      background: white;
+      height: 70px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       position: relative;
   }
 
-  .category-info::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 25px;
-      right: 25px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent 0%, #667eea 50%, transparent 100%);
-      border-radius: 1px;
-  }
-
   .category-info h5 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin: 0 0 10px 0;
-      color: #2c3e50;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+      color: var(--text-primary);
       line-height: 1.3;
-      letter-spacing: 0.5px;
   }
 
   .product-count {
-      font-size: 1rem;
-      color: #6c757d;
-      font-weight: 600;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
   }
 
-  /* Beautiful Brand Cards - Full Coverage */
-  .featured-brand-card {
-      height: 250px;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      text-decoration: none;
-      color: inherit;
-      position: relative;
-      background: #fff;
-      border: 2px solid transparent;
-  }
-
-  .featured-brand-card:hover {
-      transform: translateY(-12px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      text-decoration: none;
-      color: inherit;
-      border-color: #667eea;
-  }
-
-  .featured-brand-card-image {
-      height: 100%;
-      width: 100%;
+  /* Simple Brand Section */
+  .choose-model-section {
+      background: var(--bg-light);
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
   }
 
-  .featured-brand-card-image::before {
+  .choose-model-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      position: relative;
+      text-align: center;
+  }
+
+  .choose-model-title::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-      z-index: 1;
-      transition: opacity 0.5s ease;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--bg-gradient);
+      border-radius: 2px;
   }
 
-  .featured-brand-card:hover .featured-brand-card-image::before {
-      opacity: 0.3;
+  .choose-model-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2.5rem;
+      text-align: center;
+      font-weight: 400;
   }
 
-  .featured-brand-logo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      transition: transform 0.5s ease;
+  .brands-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
       position: relative;
       z-index: 2;
-      filter: brightness(1.1) contrast(1.1);
-      min-height: 100%;
-      min-width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      justify-items: center;
   }
 
-  .featured-brand-card:hover .featured-brand-logo {
-      transform: scale(1.1);
-      filter: brightness(1.2) contrast(1.2);
+  .brand-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-light);
+      transition: var(--transition);
+      overflow: hidden;
+      width: 250px;
+      height: 180px;
+      position: relative;
   }
 
-  .featured-brand-placeholder {
-      width: 100%;
+  .brand-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-medium);
+  }
+
+  .brand-card-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       height: 100%;
+      text-decoration: none;
+      color: inherit;
+      padding: 30px 20px;
+      position: relative;
+  }
+
+  .brand-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--bg-gradient);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      margin-bottom: 15px;
+      box-shadow: var(--shadow-light);
+      transition: var(--transition);
+  }
+
+  .brand-card:hover .brand-icon {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-medium);
+  }
+
+  .brand-icon-image {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+  }
+
+  .brand-icon-letter {
       font-size: 2rem;
-      font-weight: 800;
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 2rem;
+      font-weight: 700;
+      color: white;
       text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   }
 
-  .featured-brand-card-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
-      color: white;
-      padding: 25px;
-      transform: translateY(100%);
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 3;
-  }
-
-  .featured-brand-card:hover .featured-brand-card-overlay {
-      transform: translateY(0);
-  }
-
-  .featured-brand-card-title {
-      font-size: 1.3rem;
-      font-weight: 800;
-      margin: 0 0 10px 0;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-      letter-spacing: 0.5px;
-  }
-
-  .featured-brand-card-subtitle {
-      font-size: 1rem;
-      margin: 0;
-      opacity: 0.95;
+  .brand-label {
+      font-size: 1.1rem;
       font-weight: 600;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+      color: var(--text-primary);
+      text-align: center;
+      margin: 0;
+      transition: var(--transition);
   }
 
-  /* Section Styling */
+  .brand-card:hover .brand-label {
+      color: var(--primary-color);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+      .brands-container {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 25px;
+      }
+  }
+
+  @media (max-width: 768px) {
+      .choose-model-title {
+          font-size: 2rem;
+      }
+      
+      .choose-model-subtitle {
+          font-size: 1rem;
+          margin-bottom: 2rem;
+      }
+      
+      .brands-container {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+          max-width: 100%;
+          padding: 0 15px;
+      }
+      
+      .brand-card {
+      width: 100%;
+          max-width: 200px;
+          height: 160px;
+      }
+      
+      .brand-card-link {
+          padding: 25px 15px;
+      }
+      
+      .brand-icon {
+          width: 60px;
+          height: 60px;
+          margin-bottom: 12px;
+      }
+      
+      .brand-icon-letter {
+          font-size: 1.8rem;
+      }
+      
+      .brand-label {
+      font-size: 1rem;
+      }
+  }
+
+  @media (max-width: 576px) {
+      .choose-model-section {
+          min-height: 50vh;
+          padding: 40px 0;
+      }
+      
+      .choose-model-title {
+          font-size: 1.8rem;
+      }
+      
+      .choose-model-subtitle {
+          font-size: 0.95rem;
+          margin-bottom: 1.5rem;
+      }
+      
+      .brands-container {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 15px;
+          padding: 0 10px;
+      }
+      
+      .brand-card {
+          width: 100%;
+          max-width: 180px;
+          height: 140px;
+      }
+      
+      .brand-card-link {
+          padding: 20px 10px;
+      }
+      
+      .brand-icon {
+          width: 50px;
+          height: 50px;
+          margin-bottom: 10px;
+      }
+      
+      .brand-icon-letter {
+          font-size: 1.5rem;
+      }
+      
+      .brand-label {
+          font-size: 0.9rem;
+      }
+  }
+
+  @media (max-width: 480px) {
+      .brands-container {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          padding: 0 5px;
+      }
+      
+      .brand-card {
+          width: 100%;
+          max-width: 160px;
+          height: 130px;
+      }
+      
+      .brand-card-link {
+          padding: 15px 8px;
+      }
+      
+      .brand-icon {
+          width: 45px;
+          height: 45px;
+          margin-bottom: 8px;
+      }
+      
+      .brand-icon-letter {
+          font-size: 1.3rem;
+      }
+      
+      .brand-label {
+          font-size: 0.8rem;
+      }
+  }
+
+  /* Section Styling - Updated to use CSS variables */
   .section-title {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #2c3e50;
+      color: var(--text-primary);
       margin-bottom: 1rem;
       position: relative;
+      text-align: center;
   }
 
   .section-title::after {
@@ -478,14 +490,15 @@
       transform: translateX(-50%);
       width: 60px;
       height: 4px;
-      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      background: var(--bg-gradient);
       border-radius: 2px;
   }
 
   .section-subtitle {
       font-size: 1.1rem;
-      color: #6c757d;
-      margin-bottom: 0;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      text-align: center;
       font-weight: 400;
   }
 
@@ -714,31 +727,35 @@
       }
   }
 
-  /* Animation for cards on scroll */
-  .category-card, .featured-brand-card {
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeInUp 0.6s ease forwards;
-  }
-
-  .category-card:nth-child(1) { animation-delay: 0.1s; }
-  .category-card:nth-child(2) { animation-delay: 0.2s; }
-  .category-card:nth-child(3) { animation-delay: 0.3s; }
-  .category-card:nth-child(4) { animation-delay: 0.4s; }
-  .category-card:nth-child(5) { animation-delay: 0.5s; }
-  .category-card:nth-child(6) { animation-delay: 0.6s; }
-
-  .featured-brand-card:nth-child(1) { animation-delay: 0.1s; }
-  .featured-brand-card:nth-child(2) { animation-delay: 0.2s; }
-  .featured-brand-card:nth-child(3) { animation-delay: 0.3s; }
-  .featured-brand-card:nth-child(4) { animation-delay: 0.4s; }
-  .featured-brand-card:nth-child(5) { animation-delay: 0.5s; }
-  .featured-brand-card:nth-child(6) { animation-delay: 0.6s; }
-
-  @keyframes fadeInUp {
-      to {
-          opacity: 1;
-          transform: translateY(0);
+  /* Simple Mobile Responsive */
+  @media (max-width: 768px) {
+      .hero-title {
+          font-size: 2.5rem;
+      }
+      
+      .hero-subtitle {
+          font-size: 1.2rem;
+      }
+      
+      .hero-buttons {
+          flex-direction: column;
+          align-items: flex-start;
+      }
+      
+      .section-title {
+          font-size: 1.8rem;
+      }
+      
+      .cta-title {
+          font-size: 2rem;
+      }
+      
+      .cta-section .row {
+          text-align: center;
+      }
+      
+      .cta-section .col-lg-4 {
+          margin-top: 1rem;
       }
   }
   </style>
@@ -839,44 +856,42 @@
       </div>
   </section>
 
-  <!-- Featured Brands Section -->
-  <section class="featured-brands-section py-5">
+  <!-- Choose Your Model Section -->
+  <section class="choose-model-section py-5">
       <div class="container">
           <div class="text-center mb-5">
-              <h2 class="section-title">Trusted Brands</h2>
-              <p class="section-subtitle">Premium mobile case manufacturers</p>
+              <h2 class="choose-model-title">CHOOSE YOUR MODEL</h2>
+              <p class="choose-model-subtitle">Select your device brand to find the perfect case</p>
       </div>
-      <div class="row g-3">
+          <div class="brands-container">
           @if($brands->isNotEmpty())
-              @foreach($brands->take(6) as $brand)
-                  <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                      <a href="{{ route('shop.index', ['brand' => $brand->id]) }}" class="featured-brand-card">
-                          <div class="featured-brand-card-image">
-                              @if($brand->image && file_exists(base_path('uploads/brands/' . $brand->image)))
+                  @foreach($brands as $brand)
+                      <div class="brand-card">
+                          <a href="{{ route('shop.index', ['brand' => $brand->id]) }}" class="brand-card-link">
+                              <div class="brand-icon">
+                                  @if($brand->image && file_exists(public_path('uploads/brands/' . $brand->image)))
                                   <img src="{{ asset('uploads/brands/' . $brand->image) }}" 
                                        alt="{{ $brand->name }}" 
-                                       class="featured-brand-logo">
+                                           class="brand-icon-image">
                               @else
-                                  <div class="featured-brand-placeholder">
-                                      <span>{{ $brand->name }}</span>
-                                  </div>
+                                      <span class="brand-icon-letter">{{ substr($brand->name, 0, 1) }}</span>
                               @endif
                           </div>
-                          <div class="featured-brand-card-overlay">
-                              <h3 class="featured-brand-card-title">{{ $brand->name }}</h3>
-                              <p class="featured-brand-card-subtitle">Explore {{ $brand->name }} Collection</p>
-                          </div>
+                              <div class="brand-label">{{ $brand->name }}</div>
                       </a>
                   </div>
               @endforeach
           @else
-              <div class="col-12">
-                  <div class="text-center py-5">
-                      <i class="fas fa-store-alt text-muted" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                      <p class="text-muted fs-5">No Brands Available</p>
+                  <div class="brand-card">
+                      <div class="brand-card-link">
+                          <div class="brand-icon">
+                              <span class="brand-icon-letter">📱</span>
+                          </div>
+                          <div class="brand-label">No Brands Available</div>
                   </div>
               </div>
           @endif
+          </div>
       </div>
   </section>
 
@@ -900,6 +915,32 @@
 <style>
 /* Modern Mobile Case Website Styles */
 
+  /* Consistent Color Scheme - Same as Global */
+  :root {
+      --primary-color: #ff6b6b;
+      --primary-dark: #ff5252;
+      --secondary-color: #4ecdc4;
+      --accent-color: #45b7d1;
+      --success-color: #96ceb4;
+      --warning-color: #feca57;
+      --danger-color: #ff9ff3;
+      --dark-color: #2c2c54;
+      --light-color: #f8f9fa;
+      --text-primary: #2c2c54;
+      --text-secondary: #6c757d;
+      --text-muted: #95a5a6;
+      --bg-light: #f8f9fa;
+      --bg-gradient: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+      --bg-gradient-secondary: linear-gradient(135deg, #45b7d1 0%, #96ceb4 100%);
+      --bg-gradient-dark: linear-gradient(135deg, #2c2c54 0%, #40407a 100%);
+      --shadow-light: 0 4px 20px rgba(255, 107, 107, 0.15);
+      --shadow-medium: 0 8px 30px rgba(255, 107, 107, 0.2);
+      --shadow-heavy: 0 15px 40px rgba(255, 107, 107, 0.25);
+      --border-radius: 16px;
+      --border-radius-sm: 8px;
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
 /* Global Image Quality Improvements */
 img {
     image-rendering: -webkit-optimize-contrast;
@@ -910,7 +951,107 @@ img {
     transform: translateZ(0);
 }
 
-/* Hero Section */
+  /* Simple Button Styles */
+  .btn-primary {
+      background: var(--bg-gradient);
+      border: none;
+      border-radius: var(--border-radius-sm);
+      font-weight: 600;
+      padding: 12px 24px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-light);
+  }
+
+  .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+  }
+
+  .btn-outline-primary {
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      background: transparent;
+      border-radius: var(--border-radius-sm);
+      font-weight: 600;
+      padding: 10px 22px;
+      transition: var(--transition);
+  }
+
+  .btn-outline-primary:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-2px);
+  }
+
+  /* Simple Section Styling */
+  .section-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      position: relative;
+      text-align: center;
+  }
+
+  .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background: var(--bg-gradient);
+      border-radius: 2px;
+  }
+
+  .section-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      text-align: center;
+      font-weight: 400;
+  }
+
+  /* Simple Logo Styles - Consistent with Global */
+  .casestudio-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+  }
+
+  .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-gradient);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      transition: var(--transition);
+  }
+
+  .logo-text {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: var(--transition);
+  }
+
+  .casestudio-logo:hover .logo-icon {
+      transform: scale(1.05);
+  }
+
+  .casestudio-logo:hover .logo-text {
+      color: var(--primary-color);
+  }
+
+/* Simple Hero Section */
 .hero-section {
     position: relative;
     min-height: 100vh;
@@ -965,7 +1106,7 @@ img {
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: 3.2rem;
     font-weight: 700;
     color: #fff;
     margin-bottom: 1rem;
@@ -973,14 +1114,14 @@ img {
 }
 
 .hero-subtitle {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: #f8f9fa;
     margin-bottom: 1.5rem;
     font-weight: 300;
 }
 
 .hero-description {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #e9ecef;
     margin-bottom: 2rem;
     line-height: 1.6;
@@ -995,14 +1136,8 @@ img {
 .hero-image img {
     max-width: 100%;
     height: auto;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-heavy);
 }
 
 .slider-navigation {
@@ -1025,75 +1160,14 @@ img {
     border: 2px solid #fff;
     background: transparent;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .slider-dot.active {
     background: #fff;
 }
 
-/* Features Section */
-.features-section {
-    background: #f8f9fa;
-}
-
-.feature-card {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%;
-}
-
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-}
-
-.feature-icon {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    font-size: 2rem;
-    color: #fff;
-}
-
-.feature-card h4 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #2d3436;
-}
-
-.feature-card p {
-    color: #636e72;
-    line-height: 1.6;
-    margin: 0;
-}
-
-/* Section Titles */
-.section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #2d3436;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.section-subtitle {
-    font-size: 1.1rem;
-    color: #636e72;
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-/* Product Cards */
+/* Simple Product Cards */
 .product-card {
     position: relative;
     margin-bottom: 2rem;
@@ -1101,22 +1175,22 @@ img {
 
 .product-card-inner {
     background: #fff;
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
     height: 100%;
 }
 
 .product-card:hover .product-card-inner {
     transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    box-shadow: var(--shadow-medium);
 }
 
 .pc__img-wrapper {
     position: relative;
     overflow: hidden;
-    height: 300px;
+    height: 250px;
 }
 
 .pc__img {
@@ -1124,14 +1198,7 @@ img {
     height: 100%;
     object-fit: cover;
     object-position: center;
-    transition: transform 0.3s ease;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    image-rendering: pixelated;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
+    transition: var(--transition);
 }
 
 .product-card:hover .pc__img {
@@ -1149,7 +1216,7 @@ img {
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: var(--transition);
 }
 
 .product-card:hover .product-overlay {
@@ -1157,315 +1224,217 @@ img {
 }
 
 .pc__info {
-    padding: 1.5rem;
+    padding: 20px;
 }
 
 .product-category {
-    font-size: 0.9rem;
-    color: #636e72;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
 }
 
 .pc__title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 1rem;
-    color: #2d3436;
+    margin-bottom: 12px;
+    color: var(--text-primary);
 }
 
 .pc__title a {
-    color: #2d3436;
+    color: var(--text-primary);
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: var(--transition);
 }
 
 .pc__title a:hover {
-    color: #667eea;
+    color: var(--primary-color);
 }
 
 .product-features {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: 6px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
 }
 
 .feature-tag {
-    background: #e3f2fd;
-    color: #1976d2;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    background: rgba(255, 107, 107, 0.1);
+    color: var(--primary-color);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
 }
 
 .product-card__price {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .price-current {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    color: #2d3436;
+    color: var(--text-primary);
 }
 
 .price-new {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    color: #e74c3c;
+    color: var(--danger-color);
 }
 
 .price-old {
-        font-size: 1rem;
-    color: #95a5a6;
+    font-size: 0.9rem;
+    color: var(--text-muted);
     text-decoration: line-through;
 }
 
 .discount-badge {
     position: absolute;
-    top: 15px;
-    left: 15px;
-    background: #e74c3c;
+    top: 12px;
+    left: 12px;
+    background: var(--danger-color);
     color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    z-index: 2;
-    }
-
-    .sold-out-badge {
-    position: absolute;
-    top: 15px;
-        right: 15px;
-    background: #95a5a6;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-        font-size: 0.9rem;
-    font-weight: 600;
-    z-index: 2;
-}
-
-/* Categories Section */
-.categories-section {
-    background: #f8f9fa;
-}
-
-.category-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.3s ease;
-}
-
-.category-card:hover {
-    text-decoration: none;
-    color: inherit;
-    transform: translateY(-5px);
-}
-
-.category-image {
-    height: 150px;
-    background: #fff;
+    padding: 6px 12px;
     border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    overflow: hidden;
-}
-
-.category-image img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-.category-placeholder {
-    font-size: 3rem;
-    color: #636e72;
-}
-
-.category-info h5 {
-    font-size: 1.1rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #2d3436;
+    z-index: 2;
 }
 
-.product-count {
-        font-size: 0.9rem;
-    color: #636e72;
+.sold-out-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--text-muted);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 2;
 }
 
-/* Testimonials Section */
+/* Simple Categories Section */
+.categories-section {
+    background: var(--bg-light);
+}
+
+/* Simple Testimonials Section */
+.testimonials-section {
+    background: var(--bg-light);
+    padding: 60px 0;
+}
+
 .testimonial-card {
     background: #fff;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
     height: 100%;
-    transition: transform 0.3s ease;
+    transition: var(--transition);
+    border-left: 4px solid var(--primary-color);
 }
 
 .testimonial-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
 }
 
 .testimonial-content {
-    margin-bottom: 1.5rem;
+    margin-bottom: 20px;
 }
 
 .stars {
-    margin-bottom: 1rem;
+    margin-bottom: 15px;
 }
 
 .stars i {
     color: #ddd;
-    margin-right: 2px;
-    transition: color 0.2s ease;
+    margin-right: 3px;
+    transition: var(--transition);
 }
 
 .stars i.active {
-    color: #f39c12;
+    color: var(--warning-color);
 }
 
 .testimonial-content p {
     font-style: italic;
-    color: #636e72;
+    color: var(--text-secondary);
     line-height: 1.6;
     margin: 0;
+    font-size: 0.95rem;
 }
 
 .testimonial-author {
-        display: flex;
-        align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .author-info h6 {
-        font-size: 1rem;
-        font-weight: 600;
-    margin-bottom: 0.25rem;
-        color: #2d3436;
-    }
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
 
 .author-info span {
-    font-size: 0.9rem;
-    color: #636e72;
-    }
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
 
-/* Featured Brands Section */
-    .featured-brands-section {
-    background: #f8f9fa;
-    }
+/* Simple Featured Brands Section */
+.featured-brands-section {
+    background: var(--bg-light);
+}
 
-    .featured-brand-card {
-        display: block;
-        text-decoration: none;
-        border-radius: 15px;
-        overflow: hidden;
-        position: relative;
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        background: #fff;
-        margin-bottom: 30px;
-        height: 250px;
-    }
-
-    .featured-brand-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-    }
-
-    .featured-brand-card-image {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        position: relative;
-    }
-
-    .featured-brand-logo {
-        max-width: 80%;
-        max-height: 80%;
-        object-fit: contain;
-        filter: grayscale(100%);
-        transition: filter 0.3s ease;
-    }
-
-    .featured-brand-card:hover .featured-brand-logo {
-        filter: grayscale(0%);
-    }
-
-    .featured-brand-placeholder {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        font-size: 1.5rem;
-        font-weight: 600;
-        text-align: center;
-    }
-
-    .featured-brand-card-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-        color: white;
-        padding: 20px;
-        transform: translateY(100%);
-        transition: transform 0.3s ease;
-    }
-
-    .featured-brand-card:hover .featured-brand-card-overlay {
-        transform: translateY(0);
-    }
-
-    .featured-brand-card-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-bottom: 5px;
-        color: white;
-    }
-
-    .featured-brand-card-subtitle {
-        font-size: 1rem;
-        margin: 0;
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-/* Call to Action Section */
+/* Simple Call to Action Section */
 .cta-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-gradient);
+    position: relative;
+    overflow: hidden;
 }
 
 .cta-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 1rem;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .cta-description {
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin-bottom: 0;
-    opacity: 0.9;
+    opacity: 0.95;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
-/* Responsive Design */
+.cta-section .btn-light {
+    background: white;
+    color: var(--primary-color);
+    border: none;
+    font-weight: 600;
+    padding: 12px 30px;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition);
+    box-shadow: var(--shadow-light);
+}
+
+.cta-section .btn-light:hover {
+    background: var(--light-color);
+    color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* Simple Mobile Responsive */
 @media (max-width: 768px) {
     .hero-title {
         font-size: 2.5rem;
@@ -1481,15 +1450,7 @@ img {
     }
     
     .section-title {
-        font-size: 2rem;
-    }
-    
-    .feature-card {
-        padding: 1.5rem;
-    }
-    
-    .product-card-inner {
-        margin-bottom: 1rem;
+        font-size: 1.8rem;
     }
     
     .cta-title {

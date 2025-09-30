@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
-    <title>Trakkiez - <?php echo $__env->yieldContent('title', 'Welcome'); ?></title>
+    <title>CaseStudio - <?php echo $__env->yieldContent('title', 'Welcome'); ?></title>
 
-    <meta name="author" content="Trakkiez">
-    <meta name="description" content="Trakkiez - Your one-stop shop for stylish fashion, premium clothing, and trendy accessories.">
-    <meta name="keywords" content="Trakkiez, online fashion store, stylish clothing, trendy fashion, men fashion, women fashion, accessories">
+    <meta name="author" content="CaseStudio">
+    <meta name="description" content="CaseStudio - Premium mobile cases designed to protect your device in style. Discover our collection of high-quality, stylish mobile cases.">
+    <meta name="keywords" content="CaseStudio, mobile cases, phone cases, smartphone protection, premium cases, stylish cases, device protection">
 
     <link rel="canonical" href="https://trakkiez.com">
 
-    <meta property="og:title" content="Trakkiez - Trendy Fashion Online">
-    <meta property="og:description" content="Shop premium fashion clothing and accessories at Trakkiez.">
+    <meta property="og:title" content="CaseStudio - Premium Mobile Cases">
+    <meta property="og:description" content="Premium mobile cases designed to protect your device in style. Discover our collection of high-quality, stylish mobile cases.">
     <meta property="og:image" content="<?php echo e(asset('assets/images/og-image.jpg')); ?>">
-    <meta property="og:url" content="https://trakkiez.com">
+    <meta property="og:url" content="https://casestudio.com">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Trakkiez - Trendy Fashion Online">
-    <meta name="twitter:description" content="Shop premium fashion clothing and accessories at Trakkiez.">
+    <meta name="twitter:title" content="CaseStudio - Premium Mobile Cases">
+    <meta name="twitter:description" content="Premium mobile cases designed to protect your device in style. Discover our collection of high-quality, stylish mobile cases.">
     <meta name="twitter:image" content="<?php echo e(asset('assets/images/og-image.jpg')); ?>">
 
     <link rel="shortcut icon" href="<?php echo e(asset('assets/images/favicon.ico')); ?>" type="image/x-icon">
@@ -31,9 +31,9 @@
     {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "Trakkiez",
-        "url": "https://trakkiez.com",
-        "logo": "https://trakkiez.com/assets/images/logo.webp"
+        "name": "CaseStudio",
+        "url": "https://casestudio.com",
+        "logo": "https://casestudio.com/assets/images/logo.webp"
     }
     </script>
 
@@ -43,6 +43,191 @@
     <link rel="stylesheet" href="<?php echo e(asset('assets/css/style.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('assets/css/custom.css')); ?>?v=<?php echo e(time()); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Global Color Scheme -->
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --primary-dark: #ff5252;
+            --secondary-color: #4ecdc4;
+            --accent-color: #45b7d1;
+            --success-color: #96ceb4;
+            --warning-color: #feca57;
+            --danger-color: #ff9ff3;
+            --dark-color: #2c2c54;
+            --light-color: #f8f9fa;
+            --text-primary: #2c2c54;
+            --text-secondary: #6c757d;
+            --text-muted: #95a5a6;
+            --bg-light: #f8f9fa;
+            --bg-gradient: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            --bg-gradient-secondary: linear-gradient(135deg, #45b7d1 0%, #96ceb4 100%);
+            --bg-gradient-dark: linear-gradient(135deg, #2c2c54 0%, #40407a 100%);
+            --shadow-light: 0 4px 20px rgba(255, 107, 107, 0.15);
+            --shadow-medium: 0 8px 30px rgba(255, 107, 107, 0.2);
+            --shadow-heavy: 0 15px 40px rgba(255, 107, 107, 0.25);
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Global Button Styles */
+        .btn-primary {
+            background: var(--bg-gradient) !important;
+            border: none !important;
+            border-radius: var(--border-radius-sm) !important;
+            font-weight: 600 !important;
+            padding: 12px 24px !important;
+            transition: var(--transition) !important;
+            box-shadow: var(--shadow-light) !important;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: var(--shadow-medium) !important;
+            background: var(--bg-gradient-secondary) !important;
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color) !important;
+            color: var(--primary-color) !important;
+            background: transparent !important;
+            border-radius: var(--border-radius-sm) !important;
+            font-weight: 600 !important;
+            padding: 10px 22px !important;
+            transition: var(--transition) !important;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color) !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+            box-shadow: var(--shadow-light) !important;
+        }
+
+        /* Global Header Styles */
+        .header {
+            background: var(--bg-gradient-dark) !important;
+            box-shadow: 0 2px 20px rgba(255, 107, 107, 0.2) !important;
+        }
+
+        .header-mobile {
+            background: var(--bg-gradient-dark) !important;
+            box-shadow: 0 2px 15px rgba(255, 107, 107, 0.2) !important;
+        }
+
+        .navigation__link {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            transition: var(--transition) !important;
+        }
+
+        .navigation__link:hover {
+            color: var(--primary-color) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .header-tools__item {
+            color: #ffffff !important;
+            transition: var(--transition) !important;
+        }
+
+        .header-tools__item:hover {
+            color: var(--primary-color) !important;
+            transform: scale(1.1) !important;
+        }
+
+        /* Global Card Styles */
+        .card {
+            border: none !important;
+            border-radius: var(--border-radius) !important;
+            box-shadow: var(--shadow-light) !important;
+            transition: var(--transition) !important;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: var(--shadow-medium) !important;
+        }
+
+        /* Global Form Styles */
+        .form-control:focus {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
+        }
+
+        .form-select:focus {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
+        }
+
+        /* Global Link Styles */
+        a {
+            color: var(--primary-color) !important;
+            transition: var(--transition) !important;
+        }
+
+        a:hover {
+            color: var(--primary-dark) !important;
+            text-decoration: none !important;
+        }
+
+        /* Global Text Colors */
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+
+        .text-secondary {
+            color: var(--secondary-color) !important;
+        }
+
+        .text-accent {
+            color: var(--accent-color) !important;
+        }
+
+        /* Global Background Colors */
+        .bg-primary {
+            background: var(--bg-gradient) !important;
+        }
+
+        .bg-secondary {
+            background: var(--bg-gradient-secondary) !important;
+        }
+
+        .bg-dark {
+            background: var(--bg-gradient-dark) !important;
+        }
+
+        /* Global Border Colors */
+        .border-primary {
+            border-color: var(--primary-color) !important;
+        }
+
+        /* Global Alert Styles */
+        .alert-primary {
+            background: rgba(255, 107, 107, 0.1) !important;
+            border-color: var(--primary-color) !important;
+            color: var(--primary-color) !important;
+        }
+
+        .alert-success {
+            background: rgba(78, 205, 196, 0.1) !important;
+            border-color: var(--success-color) !important;
+            color: var(--success-color) !important;
+        }
+
+        .alert-warning {
+            background: rgba(254, 202, 87, 0.1) !important;
+            border-color: var(--warning-color) !important;
+            color: var(--warning-color) !important;
+        }
+
+        .alert-danger {
+            background: rgba(255, 159, 243, 0.1) !important;
+            border-color: var(--danger-color) !important;
+            color: var(--danger-color) !important;
+        }
+    </style>
 
     <script src="<?php echo e(asset('assets/js/plugins/jquery.min.js')); ?>"></script>
 
@@ -642,7 +827,10 @@
 
             <div class="logo">
                 <a href="<?php echo e(route('home.index')); ?>">
-                    <img src="<?php echo e(asset('assets/images/logo.webp')); ?>" alt="Trakkiez" class="logo__image d-block" />
+                    <div class="casestudio-logo-mobile">
+                        <div class="logo-icon-mobile">CS</div>
+                        <div class="logo-text-mobile">CaseStudio</div>
+                    </div>
                 </a>
             </div>
 
@@ -751,7 +939,10 @@
             <div class="header-desk header-desk_type_1">
                 <div class="logo">
                     <a href="<?php echo e(route('home.index')); ?>">
-                        <img src="<?php echo e(asset('assets/images/logo.webp')); ?>" alt="Trakkiez" class="logo__image d-block" />
+                        <div class="casestudio-logo">
+                            <div class="logo-icon">CS</div>
+                            <div class="logo-text">CaseStudio</div>
+                        </div>
                     </a>
                 </div>
 
@@ -893,58 +1084,90 @@
 
     <footer class="footer footer_type_2">
         <div class="footer-middle container">
-            <div class="row row-cols-lg-5 row-cols-2">
+            <div class="row row-cols-lg-4 row-cols-2">
                 <div class="footer-column footer-store-info col-12 mb-4 mb-lg-0">
                     <div class="logo">
                         <a href="<?php echo e(route('home.index')); ?>">
-                            <img src="<?php echo e(asset('assets/images/logo.webp')); ?>" alt="Trakkiez" class="logo__image d-block" />
+                            <div class="casestudio-logo-footer">
+                                <div class="logo-icon-footer">CS</div>
+                                <div class="logo-text-footer">CaseStudio</div>
+                            </div>
                         </a>
                     </div>
-                    <p class="m-0"><strong class="fw-medium">trakkiezstore@gmail.com</strong></p>
-                    <p><strong class="fw-medium">+923249485029</strong></p>
+                    <p class="footer-description">Premium mobile cases designed to protect your device in style. Discover our collection of high-quality, stylish mobile cases.</p>
+                    <div class="contact-info">
+                        <p class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <strong>casestudio666@gmail.com</strong>
+                        </p>
+                        <p class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <strong>+923249485029</strong>
+                        </p>
+                    </div>
                     <ul class="social-links list-unstyled d-flex flex-wrap mb-0">
                         <li>
                             <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="footer__social-link d-block">
-                                <svg class="svg-icon svg-icon_facebook" width="9" height="15" xmlns="http://www.w3.org/2000/svg">
-                                    <use href="#icon_facebook" />
-                                </svg>
+                                <i class="fab fa-facebook-f"></i>
                             </a>
                         </li>
                         <li>
                             <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="footer__social-link d-block">
-                                <svg class="svg-icon svg-icon_instagram" width="14" height="13" xmlns="http://www.w3.org/2000/svg">
-                                    <use href="#icon_instagram" />
-                                </svg>
+                                <i class="fab fa-instagram"></i>
                             </a>
                         </li>
                         <li>
                             <a href="https://www.tiktok.com/@trakkiezwear?_t=ZS-8t3QFgCyjjE&_r=1" class="footer__social-link d-block">
-                                <i class="fa-brands fa-tiktok"></i>
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://wa.me/923249485029" class="footer__social-link d-block">
+                                <i class="fab fa-whatsapp"></i>
                             </a>
                         </li>
                     </ul>
                 </div>
 
                 <div class="footer-column footer-menu mb-4 mb-lg-0">
-                    <h6 class="sub-menu__title text-uppercase">Company</h6>
+                    <h6 class="sub-menu__title text-uppercase">Quick Links</h6>
                     <ul class="sub-menu__list list-unstyled">
+                        <li class="sub-menu__item"><a href="<?php echo e(route('home.index')); ?>" class="menu-link menu-link_us-s">Home</a></li>
+                        <li class="sub-menu__item"><a href="<?php echo e(route('shop.index')); ?>" class="menu-link menu-link_us-s">Shop All</a></li>
+                        <li class="sub-menu__item"><a href="<?php echo e(route('wishlist.index')); ?>" class="menu-link menu-link_us-s">Wishlist</a></li>
                         <li class="sub-menu__item"><a href="<?php echo e(route('home.contact')); ?>" class="menu-link menu-link_us-s">Contact Us</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-column footer-menu mb-4 mb-lg-0">
-                    <h6 class="sub-menu__title text-uppercase">Shop</h6>
+                    <h6 class="sub-menu__title text-uppercase">Categories</h6>
                     <ul class="sub-menu__list list-unstyled">
-                        <li class="sub-menu__item"><a href="<?php echo e(route('shop.index')); ?>" class="menu-link menu-link_us-s">Shop All</a></li>
+                        <?php if(isset($categories) && $categories->isNotEmpty()): ?>
+                            <?php $__currentLoopData = $categories->take(4); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li class="sub-menu__item"><a href="<?php echo e(route('home.category', ['category_slug' => $category->slug])); ?>" class="menu-link menu-link_us-s"><?php echo e($category->name); ?></a></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php else: ?>
+                            <li class="sub-menu__item"><a href="<?php echo e(route('shop.index')); ?>" class="menu-link menu-link_us-s">All Products</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+
+                <div class="footer-column footer-menu mb-4 mb-lg-0">
+                    <h6 class="sub-menu__title text-uppercase">Support</h6>
+                    <ul class="sub-menu__list list-unstyled">
+                        <li class="sub-menu__item"><a href="<?php echo e(route('privacy.policy')); ?>" class="menu-link menu-link_us-s">Privacy Policy</a></li>
+                        <li class="sub-menu__item"><a href="<?php echo e(route('terms.condition')); ?>" class="menu-link menu-link_us-s">Terms & Conditions</a></li>
+                        <li class="sub-menu__item"><a href="<?php echo e(route('return.policy')); ?>" class="menu-link menu-link_us-s">Return Policy</a></li>
+                        <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Shipping Info</a></li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div class="footer-bottom" style="padding-bottom: 4rem">
+        <div class="footer-bottom">
             <div class="container d-md-flex align-items-center">
                 <span class="me-auto d-flex align-items-center">
-                    ©2025 Trakkiez Store
+                    ©2025 CaseStudio. All rights reserved.
                     <div class="fab-container ms-3">
                         <div id="fabIcons" class="fab-icons">
                             <a href="https://wa.me/923249485029" target="_blank" class="fab-icon whatsapp" title="WhatsApp">
@@ -962,9 +1185,12 @@
                     </div>
                 </span>
                 <div class="footer-settings d-md-flex align-items-center">
-                    <a href="<?php echo e(route('privacy.policy')); ?>">Privacy Policy</a>  | 
-                    <a href="<?php echo e(route('terms.condition')); ?>">Terms & Conditions</a>  | 
-                    <a href="<?php echo e(route('return.policy')); ?>">Return Policy</a>
+                    <span class="payment-methods">
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fab fa-cc-paypal"></i>
+                        <i class="fas fa-credit-card"></i>
+                    </span>
                 </div>
             </div>
         </div>

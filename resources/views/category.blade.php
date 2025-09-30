@@ -2,11 +2,49 @@
 
 @section('content')
 <style>
+  /* Category Page Color Scheme */
+  .category-header {
+      background: var(--bg-gradient-dark);
+      color: white;
+      padding: 60px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+  }
+
+  .category-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="categoryGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="%23ff6b6b" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23categoryGrid)"/></svg>');
+      opacity: 0.1;
+      z-index: 1;
+  }
+
+  .category-title {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 2;
+      text-transform: uppercase;
+  }
+
+  .category-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 2;
+  }
+
   .section-title {
       font-size: 2rem;
       font-weight: 700;
       text-transform: uppercase;
-      color: #333;
+      color: var(--text-primary);
       margin-bottom: 2rem;
       text-align: center;
   }
