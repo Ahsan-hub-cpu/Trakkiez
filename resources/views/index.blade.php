@@ -45,7 +45,7 @@
   </section>
 
   <!-- Features Section -->
-  <section class="features-section py-5">
+  <!-- <section class="features-section py-5">
       <div class="container">
           <div class="row">
               <div class="col-lg-3 col-md-6 mb-4">
@@ -86,7 +86,7 @@
               </div>
           </div>
       </div>
-  </section>
+  </section> -->
 
   <!-- Featured Products Section -->
   <section id="featured-products" class="featured-products-section py-5">
