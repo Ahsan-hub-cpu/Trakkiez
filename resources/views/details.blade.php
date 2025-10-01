@@ -369,6 +369,12 @@
       width: 100%;
       height: 200px;
       object-fit: cover;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
   }
 
   .related-info {
@@ -2393,25 +2399,7 @@
             </div>
           </div>
         </div>
-        <div class="product-single__details-tab">
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <a class="nav-link nav-link_underscore active" id="tab-description-tab" data-bs-toggle="tab" href="#tab-description" role="tab" aria-controls="tab-description" aria-selected="true">Description</a>
-            </li>
-          </ul>
-          <div class="tab-content">
-            <div class="tab-pane fade show active" id="tab-description" role="tabpanel" aria-labelledby="tab-description-tab">
-              <div class="product-single__description">
-                <div class="description-content">
-                  <div class="description-text">
-                    {{ $product->description }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Reviews Section -->
+        <!-- Reviews Section -->
           <div class="reviews-section">
             <div class="reviews-header">
               <h2 class="reviews-title">
@@ -2520,7 +2508,7 @@
             <div class="swiper-slide product-card" style="position: relative;">
               <div class="pc__img-wrapper">
                 <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">
-                  <img loading="lazy" src="{{ asset('uploads/products/thumbnails/' . $rproduct->main_image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img"
+                  <img loading="lazy" src="{{ asset('uploads/products/' . $rproduct->main_image) }}" width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img"
                        style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);">
                 </a>
                 @if($rproduct->stock_status === 'out_of_stock')

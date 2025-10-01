@@ -225,7 +225,7 @@
   </div>
 
   <!-- Clear Filter Button -->
-  @if(request()->has('size') || request()->has('sort'))
+  @if(request()->has('size') || request()->has('sort') || request()->has('brand'))
     <div class="text-center mt-3">
       <a href="{{ route('home.category', $category->slug) }}" class="btn btn-outline-dark">Clear Filter</a>
     </div>
@@ -291,7 +291,7 @@ $GLOBALS["__SELF__"]->wrapFunction(array(null,'aria-label'))="View details for {
 
    
     <!-- Pagination -->
-    @if(!request()->has('size') && !request()->has('sort') && !request()->has('subcategory'))
+    @if(!request()->has('size') && !request()->has('sort') && !request()->has('subcategory') && !request()->has('brand'))
       <div class="divider"></div>
       <div class="flex items-center justify-between flex-wrap gap10 wgp pagination">
         {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
@@ -308,6 +308,12 @@ $GLOBALS["__SELF__"]->wrapFunction(array(null,'aria-label'))="View details for {
 <script>
 $(function(){
   console.log('Filter script initialized');
+
+  // Brand filter
+  $('#brand-filter').on('change', function() {
+    console.log('Brand filter changed:', $(this).val());
+    updateUrl('brand', $(this).val());
+  });
 
   // Size filter
   $('#size-filter').on('change', function() {

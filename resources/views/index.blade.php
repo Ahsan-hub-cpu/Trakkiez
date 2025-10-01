@@ -24,7 +24,8 @@
                               </div>
                               <div class="col-lg-6">
                                   <div class="hero-image">
-                                      <img src="{{ asset('uploads/slides/' . $slide->image) }}" alt="Premium Mobile Cases" class="img-fluid">
+                                      <img src="{{ asset('uploads/slides/' . $slide->image) }}" alt="Premium Mobile Cases" class="img-fluid" 
+                                           style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);">
                                   </div>
                               </div>
                           </div>
@@ -1061,6 +1062,12 @@ img {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .hero-overlay {

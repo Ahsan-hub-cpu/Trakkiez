@@ -78,12 +78,44 @@ class HomeController extends Controller
         ));
     }
 
-    public function category($slug)
+    public function category($slug, Request $request)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
 
         $productsQuery = $category->products()
-            ->select('id', 'category_id', 'name', 'main_image', 'slug', 'regular_price', 'sale_price');
+            ->select('id', 'category_id', 'brand_id', 'name', 'main_image', 'slug', 'regular_price', 'sale_price')
+            ->with('brand');
+
+        // Apply brand filter if provided
+        if ($request->has('brand') && $request->brand) {
+            $productsQuery->where('brand_id', $request->brand);
+        }
+
+        // Apply sorting
+        if ($request->has('sort') && $request->sort) {
+            switch ($request->sort) {
+                case 'newest':
+                    $productsQuery->orderBy('created_at', 'DESC');
+                    break;
+                case 'oldest':
+                    $productsQuery->orderBy('created_at', 'ASC');
+                    break;
+                case 'a-z':
+                    $productsQuery->orderBy('name', 'ASC');
+                    break;
+                case 'z-a':
+                    $productsQuery->orderBy('name', 'DESC');
+                    break;
+                case 'price-low-high':
+                    $productsQuery->orderBy('regular_price', 'ASC');
+                    break;
+                case 'price-high-low':
+                    $productsQuery->orderBy('regular_price', 'DESC');
+                    break;
+            }
+        } else {
+            $productsQuery->orderBy('created_at', 'DESC');
+        }
 
         $products = $productsQuery->paginate(12);
 
@@ -95,7 +127,8 @@ class HomeController extends Controller
 
     public function subcategory($slug, $subcategory_id)
     {
-        $subcategory = SubCategory::findOrFail($subcategory_id);
+        $subcategory = SubCategory::with('category')->findOrFail($subcategory_id);
+        $category = $subcategory->category;
 
         $productsQuery = $subcategory->products()
             ->select('id', 'category_id', 'name', 'main_image', 'slug', 'regular_price', 'sale_price');
@@ -103,7 +136,7 @@ class HomeController extends Controller
         $products = $productsQuery->paginate(12);
         $maxPrice = max(Product::max('regular_price'), Product::whereNotNull('sale_price')->max('sale_price') ?? 0);
 
-        return view('subcategory', compact('subcategory', 'products', 'maxPrice'));
+        return view('subcategory', compact('subcategory', 'category', 'products', 'maxPrice'));
     }
 
     public function search(Request $request)

@@ -29,6 +29,19 @@
 
     <!-- Robots meta tag for better SEO control -->
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <!-- Google Search Console Verification (Replace with your verification code) -->
+    <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE"> -->
+    
+    <!-- Google Analytics (Replace with your GA4 measurement ID) -->
+    <!-- Google tag (gtag.js) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script> -->
 
     <script type="application/ld+json">
     {
@@ -39,11 +52,6 @@
         "logo": "https://casestudio.shop{{ asset('assets/images/logo.webp') }}",
         "description": "Premium mobile cases designed to protect your device in style. Discover our collection of high-quality, stylish mobile cases.",
         "sameAs": [],
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "customer service",
-            "url": "https://casestudio.shop/contact"
-        }
     }
     </script>
 
@@ -1010,11 +1018,6 @@
   </svg>
    
 
-    <div class="top-bar">
-        <div class="container">
-            <p class="top-bar__text">Free shipping on orders more than PKR 5999!</p>
-        </div>
-    </div>
 
     <div class="header-mobile header_sticky">
         <div class="container d-flex align-items-center h-100">
@@ -1100,7 +1103,6 @@
                             </div>
                         </li>
 
-                        <li class="mb-2"><a href="{{ route('home.contact') }}" class="nav-link">Contact</a></li>
                     </ul>
                 </div>
 
@@ -1192,9 +1194,6 @@
                             </ul>
                         </li>
                         
-                        <li class="navigation__item">
-                            <a href="{{ route('home.contact') }}" class="navigation__link">Contact</a>
-                        </li>
                     </ul>
                 </nav>
 
@@ -1330,7 +1329,6 @@
                         <li class="sub-menu__item"><a href="{{ route('home.index') }}" class="menu-link menu-link_us-s">Home</a></li>
                         <li class="sub-menu__item"><a href="{{ route('shop.index') }}" class="menu-link menu-link_us-s">Shop All</a></li>
                         <li class="sub-menu__item"><a href="{{ route('wishlist.index') }}" class="menu-link menu-link_us-s">Wishlist</a></li>
-                        <li class="sub-menu__item"><a href="{{ route('home.contact') }}" class="menu-link menu-link_us-s">Contact Us</a></li>
                     </ul>
                 </div>
 
@@ -1353,7 +1351,6 @@
                         <li class="sub-menu__item"><a href="{{ route('privacy.policy') }}" class="menu-link menu-link_us-s">Privacy Policy</a></li>
                         <li class="sub-menu__item"><a href="{{ route('terms.condition') }}" class="menu-link menu-link_us-s">Terms & Conditions</a></li>
                         <li class="sub-menu__item"><a href="{{ route('return.policy') }}" class="menu-link menu-link_us-s">Return Policy</a></li>
-                        <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Shipping Info</a></li>
                     </ul>
                 </div>
             </div>

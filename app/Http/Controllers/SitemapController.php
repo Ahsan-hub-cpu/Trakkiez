@@ -31,12 +31,28 @@ class SitemapController extends Controller
         $sitemap .= '<priority>0.9</priority>';
         $sitemap .= '</url>';
         
-        // Contact page
+        // Privacy Policy page
         $sitemap .= '<url>';
-        $sitemap .= '<loc>https://casestudio.shop/contact</loc>';
+        $sitemap .= '<loc>https://casestudio.shop/privacy-policy</loc>';
         $sitemap .= '<lastmod>' . date('Y-m-d') . '</lastmod>';
         $sitemap .= '<changefreq>monthly</changefreq>';
-        $sitemap .= '<priority>0.7</priority>';
+        $sitemap .= '<priority>0.5</priority>';
+        $sitemap .= '</url>';
+        
+        // Terms & Conditions page
+        $sitemap .= '<url>';
+        $sitemap .= '<loc>https://casestudio.shop/terms-condition</loc>';
+        $sitemap .= '<lastmod>' . date('Y-m-d') . '</lastmod>';
+        $sitemap .= '<changefreq>monthly</changefreq>';
+        $sitemap .= '<priority>0.5</priority>';
+        $sitemap .= '</url>';
+        
+        // Return Policy page
+        $sitemap .= '<url>';
+        $sitemap .= '<loc>https://casestudio.shop/return-policy</loc>';
+        $sitemap .= '<lastmod>' . date('Y-m-d') . '</lastmod>';
+        $sitemap .= '<changefreq>monthly</changefreq>';
+        $sitemap .= '<priority>0.5</priority>';
         $sitemap .= '</url>';
         
         // Categories
