@@ -24,3 +24,5 @@ yarn-error.log
 .env.production
 .env.example
 .env.save
+ /uploads/*
+ !/uploads/.gitignore
