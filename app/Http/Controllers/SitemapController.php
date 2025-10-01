@@ -62,7 +62,7 @@ class SitemapController extends Controller
         }
         
         // Products
-        $products = Product::where('is_active', true)->get();
+        $products = Product::all();
         foreach ($products as $product) {
             $sitemap .= '<url>';
             $sitemap .= '<loc>https://casestudio.shop/shop/' . $product->slug . '</loc>';

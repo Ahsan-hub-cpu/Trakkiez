@@ -25,14 +25,49 @@ use Intervention\Image\Laravel\Facades\Image;
 class AdminController extends Controller
 {
     
-public function GenerateBrandThumbailImage($img , $imgName){
-
+public function GenerateBrandThumbailImage($img, $imgName)
+{
     $destinationPath = base_path('uploads/brands');
-    $img = Image::read($img->path());
-    $img->cover(124,124,"top");
-    $img->resize(124,124,function($constraint){
-        $constraint->aspectRatio();
-    })->save($destinationPath.'/'.$imgName);
+    $thumbnailPath = base_path('uploads/brands/thumbnails');
+
+    // Ensure directories exist
+    if (!file_exists($destinationPath)) {
+        mkdir($destinationPath, 0755, true);
+    }
+    if (!file_exists($thumbnailPath)) {
+        mkdir($thumbnailPath, 0755, true);
+    }
+
+    try {
+        // Validate image size (e.g., max 5MB)
+        if ($img->getSize() > 5 * 1024 * 1024) {
+            throw new \Exception('Image size exceeds 5MB limit');
+        }
+
+        // Read image once
+        $image = Image::read($img->path());
+
+        // Limit dimensions for large images (max 800x800)
+        $image->scaleDown(800, 800);
+
+        // Save original as WebP with reduced quality
+        $image->toWebp(100)->save($destinationPath . '/' . $imgName);
+
+        // Create thumbnail from the same image instance
+        $image->cover(124, 124, 'center')
+              ->toWebp(100)
+              ->save($thumbnailPath . '/' . $imgName);
+
+    } catch (\Exception $e) {
+        \Log::error('Error in GenerateBrandThumbailImage: ' . $e->getMessage(), [
+            'imgName' => $imgName,
+            'originalName' => $img->getClientOriginalName(),
+            'destinationPath' => $destinationPath,
+            'thumbnailPath' => $thumbnailPath,
+            'fileSize' => $img->getSize(),
+        ]);
+        throw $e; // Rethrow to catch in brand methods
+    }
  }
 
 public function index(){
@@ -88,15 +123,14 @@ public function add_brand_store(Request $request){
      $request->validate([
           'name' => 'required',
           'slug' => 'required|unique:brands,slug',
-          'image' => 'mimes:png,jpg,jpeg,avif|max:2048'
+          'image' => 'required|mimes:png,jpg,jpeg,avif,webp|max:5120'
      ]);
 
      $brand = new Brand();
      $brand->name = $request->name;
      $brand->slug = Str::slug($request->name);
      $image = $request->file('image');
-     $file_extention = $request->file('image')->extension();
-     $file_name = Carbon::now()->timestamp . '.' . $file_extention;        
+     $file_name = time() . '_brand.webp';        
      $this->GenerateBrandThumbailImage($image,$file_name);
      $brand->image = $file_name;        
      $brand->save();
@@ -112,19 +146,23 @@ public function edit_brand($id){
     $request->validate([
         'name' => 'required',
         'slug' => 'required|unique:brands,slug,'.$request->id,
-        'image' => 'mimes:png,jpg,jpeg|max:2048'
+        'image' => 'nullable|mimes:png,jpg,jpeg,avif,webp|max:5120'
     ]);
     $brand = Brand::find($request->id);
     $brand->name = $request->name;
     $brand->slug = $request->slug;
     if($request->hasFile('image'))
     {            
-        if (File::exists(public_path('uploads/brands').'/'.$brand->image)) {
-            File::delete(public_path('uploads/brands').'/'.$brand->image);
+        // Delete old images if they exist
+        if ($brand->image && file_exists(base_path('uploads/brands/' . $brand->image))) {
+            unlink(base_path('uploads/brands/' . $brand->image));
         }
+        if ($brand->image && file_exists(base_path('uploads/brands/thumbnails/' . $brand->image))) {
+            unlink(base_path('uploads/brands/thumbnails/' . $brand->image));
+        }
+        
         $image = $request->file('image');
-        $file_extention = $request->file('image')->extension();
-        $file_name = Carbon::now()->timestamp . '.' . $file_extention;
+        $file_name = time() . '_brand.webp';
         $this->GenerateBrandThumbailImage($image,$file_name);
         $brand->image = $file_name;
     }        
@@ -133,21 +171,62 @@ public function edit_brand($id){
 }
 public function delete_brand($id){
     $brand = Brand::find($id);
-    if (File::exists(public_path('uploads/brands').'/'.$brand->image)) {
-        File::delete(public_path('uploads/brands').'/'.$brand->image);
+    
+    // Delete both original and thumbnail images
+    if ($brand->image && file_exists(base_path('uploads/brands/' . $brand->image))) {
+        unlink(base_path('uploads/brands/' . $brand->image));
     }
+    if ($brand->image && file_exists(base_path('uploads/brands/thumbnails/' . $brand->image))) {
+        unlink(base_path('uploads/brands/thumbnails/' . $brand->image));
+    }
+    
     $brand->delete();
     return redirect()->route('admin.brands')->with('status','Record has been deleted successfully !');
 }
 
-public function GenerateCategoryThumbailImage($img , $imgName){
-
+public function GenerateCategoryThumbailImage($img, $imgName)
+{
     $destinationPath = base_path('uploads/categories');
-    $img = Image::read($img->path());
-    $img->cover(124,124,"top");
-    $img->resize(124,124,function($constraint){
-        $constraint->aspectRatio();
-    })->save($destinationPath.'/'.$imgName);
+    $thumbnailPath = base_path('uploads/categories/thumbnails');
+
+    // Ensure directories exist
+    if (!file_exists($destinationPath)) {
+        mkdir($destinationPath, 0755, true);
+    }
+    if (!file_exists($thumbnailPath)) {
+        mkdir($thumbnailPath, 0755, true);
+    }
+
+    try {
+        // Validate image size (e.g., max 5MB)
+        if ($img->getSize() > 5 * 1024 * 1024) {
+            throw new \Exception('Image size exceeds 5MB limit');
+        }
+
+        // Read image once
+        $image = Image::read($img->path());
+
+        // Limit dimensions for large images (max 800x800)
+        $image->scaleDown(800, 800);
+
+        // Save original as WebP with reduced quality
+        $image->toWebp(100)->save($destinationPath . '/' . $imgName);
+
+        // Create thumbnail from the same image instance
+        $image->cover(124, 124, 'center')
+              ->toWebp(100)
+              ->save($thumbnailPath . '/' . $imgName);
+
+    } catch (\Exception $e) {
+        \Log::error('Error in GenerateCategoryThumbailImage: ' . $e->getMessage(), [
+            'imgName' => $imgName,
+            'originalName' => $img->getClientOriginalName(),
+            'destinationPath' => $destinationPath,
+            'thumbnailPath' => $thumbnailPath,
+            'fileSize' => $img->getSize(),
+        ]);
+        throw $e; // Rethrow to catch in category methods
+    }
  }
 
 
@@ -165,7 +244,7 @@ public function categories()
         $request->validate([
             'name' => 'required',
             'slug' => 'required|unique:categories,slug',
-            'image' => 'mimes:png,jpg,jpeg,avif|max:2048',
+            'image' => 'required|mimes:png,jpg,jpeg,avif,webp|max:5120',
             'subcategories.*.name' => 'required|string|max:255',
         ]);
     
@@ -173,8 +252,7 @@ public function categories()
         $category->name = $request->name;
         $category->slug = Str::slug($request->name);
         $image = $request->file('image');
-        $file_extension = $image->extension();
-        $file_name = Carbon::now()->timestamp . '.' . $file_extension;
+        $file_name = time() . '_category.webp';
         $this->GenerateCategoryThumbailImage($image, $file_name);
         $category->image = $file_name;        
         $category->save();
@@ -204,7 +282,7 @@ public function update_category(Request $request)
     $request->validate([
         'name' => 'required|string|max:255',
         'slug' => 'required|string|max:255|unique:categories,slug,' . $category->id,
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        'image' => 'nullable|mimes:png,jpg,jpeg,avif,webp|max:5120',
         'subcategories.*.id' => 'nullable|integer|exists:subcategories,id',
         'subcategories.*.name' => 'nullable|string|max:255',
     ]);
@@ -216,12 +294,16 @@ public function update_category(Request $request)
 
     if($request->hasFile('image'))
     {            
-        if (File::exists(public_path('uploads/categories').'/'.$category->image)) {
-            File::delete(public_path('uploads/categories').'/'.$category->image);
+        // Delete old images if they exist
+        if ($category->image && file_exists(base_path('uploads/categories/' . $category->image))) {
+            unlink(base_path('uploads/categories/' . $category->image));
         }
+        if ($category->image && file_exists(base_path('uploads/categories/thumbnails/' . $category->image))) {
+            unlink(base_path('uploads/categories/thumbnails/' . $category->image));
+        }
+        
         $image = $request->file('image');
-        $file_extention = $request->file('image')->extension();
-        $file_name = Carbon::now()->timestamp . '.' . $file_extention;
+        $file_name = time() . '_category.webp';
         $this->GenerateCategoryThumbailImage($image,$file_name);
         $category->image = $file_name;
     }        
@@ -260,9 +342,15 @@ public function update_category(Request $request)
 
 public function delete_category($id) {
     $category = Category::find($id);
-    if (File::exists(public_path('uploads/categories').'/'.$category->image)) {
-        File::delete(public_path('uploads/categories').'/'.$category->image);
+    
+    // Delete both original and thumbnail images
+    if ($category->image && file_exists(base_path('uploads/categories/' . $category->image))) {
+        unlink(base_path('uploads/categories/' . $category->image));
     }
+    if ($category->image && file_exists(base_path('uploads/categories/thumbnails/' . $category->image))) {
+        unlink(base_path('uploads/categories/thumbnails/' . $category->image));
+    }
+    
     $category->delete();
     return redirect()->route('admin.categories')->with('status', 'Category has been deleted successfully!');
 }
@@ -723,8 +811,8 @@ public function slide_update(Request $request){
 
      if($request->hasFile('image'))
      {
-        if(File::exists(public_path('uploads/slides'). '/' . $slide->image)){
-            File::delete(public_path('uploads/slides'). '/' . $slide->image);
+        if(File::exists(base_path('uploads/slides'). '/' . $slide->image)){
+            File::delete(base_path('uploads/slides'). '/' . $slide->image);
         }
         $image = $request->file('image');
         $file_extention = $request->file('image')->extension();
@@ -738,8 +826,8 @@ public function slide_update(Request $request){
 
 public function slide_delete($id){
     $slide = Slide::find($id);
-    if(File::exists(public_path('uploads/slides'). '/' . $slide->image)){
-        File::delete(public_path('uploads/slides'). '/' . $slide->image);
+    if(File::exists(base_path('uploads/slides'). '/' . $slide->image)){
+        File::delete(base_path('uploads/slides'). '/' . $slide->image);
     }
     $slide->delete();
     return redirect()->route('admin.slides')->with("status","Slide has been Deleted successfully!");

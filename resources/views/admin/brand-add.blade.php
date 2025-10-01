@@ -1,5 +1,38 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .subcategory-field {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .subcategory-field input {
+        flex: 1;
+    }
+    .remove-subcategory-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .remove-subcategory-btn:hover {
+        background: #c82333;
+    }
+    .text-muted {
+        color: #6c757d;
+    }
+    .image-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border: 1px dashed #dee2e6;
+        border-radius: 4px;
+    }
+</style>
 
 <div class="main-content-inner">
     <!-- main-content-wrap -->
@@ -39,7 +72,7 @@
                 </fieldset>
                 @error("slug") <span class="alert alert-danger text-center">{{$message}}</span> @enderror
                 <fieldset>
-                    <div class="body-title">Upload images <span class="tf-color-1">*</span></div>
+                    <div class="body-title">Upload Brand Image <span class="tf-color-1">*</span></div>
                     <div class="upload-image flex-grow">
                         <div class="item" id="imgpreview" style="display:none">                            
                             <img src="{{asset('images/upload/upload-1.png')}}" class="effect8" alt="">
@@ -49,10 +82,13 @@
                                 <span class="icon">
                                     <i class="icon-upload-cloud"></i>
                                 </span>
-                                <span class="body-text">Drop your images here or select <span class="tf-color">click to browse</span></span>
-                                <input type="file" id="myFile" name="image" accept="image/*">
+                                <span class="body-text">Drop your image here or select <span class="tf-color">click to browse</span></span>
+                                <input type="file" id="myFile" name="image" accept="image/png,image/jpg,image/jpeg,image/avif,image/webp" required>
                             </label>
                         </div>
+                    </div>
+                    <div class="text-tiny text-muted mt-2">
+                        Supported formats: PNG, JPG, JPEG, AVIF, WebP (Max: 5MB)
                     </div>                    
                 </fieldset> 
                 @error("image") <span class="alert alert-danger text-center">{{$message}}</span> @enderror

@@ -61,7 +61,13 @@
                             <td>{{$category->id}}</td>    
                             <td>
                                 <div class="image">
-                                    <img src="{{asset('uploads/categories')}}/{{$category->image}}" alt="{{$category->name}}" class="image">
+                                    @if($category->image && file_exists(base_path('uploads/categories/' . $category->image)))
+                                        <img src="{{asset('uploads/categories')}}/{{$category->image}}" alt="{{$category->name}}" class="image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                    @else
+                                        <div class="image-placeholder" style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #999;">
+                                            <i class="icon-image"></i>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="name">
                                     <a href="#" class="body-title-2">{{$category->name}}</a>                                      

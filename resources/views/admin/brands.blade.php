@@ -57,7 +57,13 @@
                                                         <td>{{$brand->id}}</td>
                                                         <td class="pname">
                                                             <div class="image">
-                                                                <img src="{{asset('uploads/brands')}}/{{$brand->image}}" alt="{{$brand->name}}" class="image">
+                                                                @if($brand->image && file_exists(base_path('uploads/brands/' . $brand->image)))
+                                                                    <img src="{{asset('uploads/brands')}}/{{$brand->image}}" alt="{{$brand->name}}" class="image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                                                @else
+                                                                    <div class="image-placeholder" style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #999;">
+                                                                        <i class="icon-image"></i>
+                                                                    </div>
+                                                                @endif
                                                             </div>
                                                             <div class="name">
                                                                 <a href="#" class="body-title-2">{{$brand->name}}</a>
