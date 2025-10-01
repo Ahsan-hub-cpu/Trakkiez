@@ -11,12 +11,12 @@
     <meta name="description" content="CaseStudio - Premium mobile cases designed to protect your device in style. Discover our collection of high-quality, stylish mobile cases.">
     <meta name="keywords" content="CaseStudio, mobile cases, phone cases, smartphone protection, premium cases, stylish cases, device protection">
 
-    <link rel="canonical" href="https://trakkiez.com">
+    <link rel="canonical" href="https://casestudio.shop{{ request()->getRequestUri() }}">
 
     <meta property="og:title" content="CaseStudio - Premium Mobile Cases">
     <meta property="og:description" content="Premium mobile cases designed to protect your device in style. Discover our collection of high-quality, stylish mobile cases.">
     <meta property="og:image" content="{{ asset('assets/images/og-image.jpg') }}">
-    <meta property="og:url" content="https://casestudio.com">
+    <meta property="og:url" content="https://casestudio.shop{{ request()->getRequestUri() }}">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
@@ -27,13 +27,23 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{{ asset('assets/images/apple-touch-icon.png') }}">
 
+    <!-- Robots meta tag for better SEO control -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "CaseStudio",
-        "url": "https://casestudio.com",
-        "logo": "https://casestudio.com/assets/images/logo.webp"
+        "url": "https://casestudio.shop",
+        "logo": "https://casestudio.shop{{ asset('assets/images/logo.webp') }}",
+        "description": "Premium mobile cases designed to protect your device in style. Discover our collection of high-quality, stylish mobile cases.",
+        "sameAs": [],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "url": "https://casestudio.shop/contact"
+        }
     }
     </script>
 
