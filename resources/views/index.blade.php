@@ -917,28 +917,29 @@
 
   /* Consistent Color Scheme - Same as Global */
   :root {
-      --primary-color: #ff6b6b;
-      --primary-dark: #ff5252;
-      --secondary-color: #4ecdc4;
-      --accent-color: #45b7d1;
-      --success-color: #96ceb4;
-      --warning-color: #feca57;
-      --danger-color: #ff9ff3;
-      --dark-color: #2c2c54;
+      --primary-color: #000000;
+      --primary-dark: #333333;
+      --secondary-color: #6c757d;
+      --accent-color: #007bff;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+      --info-color: #17a2b8;
+      --dark-color: #343a40;
       --light-color: #f8f9fa;
-      --text-primary: #2c2c54;
+      --text-primary: #212529;
       --text-secondary: #6c757d;
-      --text-muted: #95a5a6;
+      --text-muted: #6c757d;
       --bg-light: #f8f9fa;
-      --bg-gradient: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
-      --bg-gradient-secondary: linear-gradient(135deg, #45b7d1 0%, #96ceb4 100%);
-      --bg-gradient-dark: linear-gradient(135deg, #2c2c54 0%, #40407a 100%);
-      --shadow-light: 0 4px 20px rgba(255, 107, 107, 0.15);
-      --shadow-medium: 0 8px 30px rgba(255, 107, 107, 0.2);
-      --shadow-heavy: 0 15px 40px rgba(255, 107, 107, 0.25);
-      --border-radius: 16px;
-      --border-radius-sm: 8px;
-      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      --bg-gradient: #000000;
+      --bg-gradient-secondary: #333333;
+      --bg-gradient-dark: #000000;
+      --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+      --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
+      --shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.2);
+      --border-radius: 8px;
+      --border-radius-sm: 6px;
+      --transition: all 0.3s ease;
   }
 
 /* Global Image Quality Improvements */
@@ -953,18 +954,24 @@ img {
 
   /* Simple Button Styles */
   .btn-primary {
-      background: var(--bg-gradient);
+      background: var(--primary-color);
       border: none;
       border-radius: var(--border-radius-sm);
       font-weight: 600;
       padding: 12px 24px;
       transition: var(--transition);
       box-shadow: var(--shadow-light);
+      color: white;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
   }
 
   .btn-primary:hover {
-      transform: translateY(-2px);
+      background: var(--primary-dark);
+      transform: translateY(-1px);
       box-shadow: var(--shadow-medium);
+      color: white;
   }
 
   .btn-outline-primary {
@@ -975,12 +982,16 @@ img {
       font-weight: 600;
       padding: 10px 22px;
       transition: var(--transition);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
   }
 
   .btn-outline-primary:hover {
       background: var(--primary-color);
       color: white;
-      transform: translateY(-2px);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-light);
   }
 
   /* Simple Section Styling */
@@ -1001,7 +1012,7 @@ img {
       transform: translateX(-50%);
       width: 50px;
       height: 3px;
-      background: var(--bg-gradient);
+      background: var(--primary-color);
       border-radius: 2px;
   }
 
@@ -1013,43 +1024,7 @@ img {
       font-weight: 400;
   }
 
-  /* Simple Logo Styles - Consistent with Global */
-  .casestudio-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: inherit;
-  }
-
-  .logo-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--bg-gradient);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.1rem;
-      font-weight: 700;
-      transition: var(--transition);
-  }
-
-  .logo-text {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      transition: var(--transition);
-  }
-
-  .casestudio-logo:hover .logo-icon {
-      transform: scale(1.05);
-  }
-
-  .casestudio-logo:hover .logo-text {
-      color: var(--primary-color);
-  }
+  /* Logo styling now handled globally in layout */
 
 /* Simple Hero Section */
 .hero-section {

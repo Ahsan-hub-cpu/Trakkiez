@@ -22,6 +22,10 @@ body {
     background-image: none !important;
 }
 
+/* Logo styling moved to global layout for consistency */
+
+/* Header and logo styling moved to global layout for consistency */
+
 
 /* Reset default margins and paddings for parent containers */
 * {
@@ -138,19 +142,23 @@ body, html {
 }
 
 .static-button {
-    background: #333; /* Dark, elegant button */
+    background: #000000;
     color: #fff;
     padding: 12px 30px;
     text-decoration: none;
-    border-radius: 30px;
-    transition: background 0.3s;
-    font-size: 1rem;
-    font-family: 'Roboto', sans-serif;
-    letter-spacing: 1px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .static-button:hover {
-    background: #555; /* Slightly lighter on hover */
+    background: #333333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Slider Dots */
@@ -263,16 +271,48 @@ body, html {
 }
 #cartModal .cart-qty-increase, #cartModal .cart-qty-reduce {
     cursor: pointer;
-    background: #f8f9fa;
+    background: #000000;
     border: none;
     margin-right: 7px;
     margin-left: 6px;
     margin-top:3px;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#cartModal .cart-qty-increase:hover, #cartModal .cart-qty-reduce:hover {
+    background: #333333;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 #cartModal .cart-remove-item {
-    padding: 2px 10px;
+    padding: 6px 12px;
     margin-top: 100px;
     margin-left: -5rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.2);
+}
+
+#cartModal .cart-remove-item:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
 }
 @media (max-width: 576px) {
     #cartModal .cart-table {
@@ -348,27 +388,46 @@ body, html {
 #cartModal .cart-qty-reduce,
 #cartModal .cart-qty-increase {
     cursor: pointer;
-    background: none;
-    border: 1px solid #ccc;
+    background: #000000;
+    border: none;
     padding: 0;
     font-size: 16px;
-    border-radius: 4px;
+    border-radius: 50%;
     width: 30px;
     height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     line-height: 1;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#cartModal .cart-qty-reduce:hover,
+#cartModal .cart-qty-increase:hover {
+    background: #333333;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 #cartModal .cart-qty-input {
     width: 36px;
     height: 30px;
     text-align: center;
-    border: 1px solid #ccc;
+    border: 2px solid #e9ecef;
     border-radius: 4px;
     font-size: 16px;
     padding: 0;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+#cartModal .cart-qty-input:focus {
+    border-color: #000000;
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1);
+    outline: none;
 }
 
 /* Optional responsiveness for mobile screens */
@@ -385,3 +444,4 @@ body, html {
         width: 32px;
     }
 }
+

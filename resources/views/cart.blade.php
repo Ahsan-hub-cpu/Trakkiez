@@ -3,7 +3,7 @@
 <style>
     /* Cart Page Color Scheme */
     .cart-header {
-        background: var(--bg-gradient-dark);
+        background: #000000;
         color: white;
         padding: 60px 0;
         text-align: center;
@@ -18,7 +18,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="cartGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="%23ff6b6b" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23cartGrid)"/></svg>');
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="cartGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="%23ffffff" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23cartGrid)"/></svg>');
         opacity: 0.1;
         z-index: 1;
     }
@@ -86,7 +86,7 @@
 
     .qty-control__decrease,
     .qty-control__increase {
-        background: var(--bg-gradient);
+        background: #000000;
         border: none;
         color: white;
         width: 35px;
@@ -96,13 +96,15 @@
         align-items: center;
         justify-content: center;
         font-weight: 600;
-        transition: var(--transition);
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .qty-control__decrease:hover,
     .qty-control__increase:hover {
-        transform: scale(1.1);
-        box-shadow: var(--shadow-light);
+        background: #333333;
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
     .qty-control__decrease:disabled {
@@ -129,18 +131,23 @@
     }
 
     .remove-item-btn {
-        background: var(--danger-color);
+        background: #dc3545;
         border: none;
         color: white;
         padding: 8px 15px;
-        border-radius: var(--border-radius-sm);
+        border-radius: 6px;
         font-weight: 600;
-        transition: var(--transition);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(220, 53, 69, 0.2);
     }
 
     .remove-item-btn:hover {
-        background: #ff6b9d;
-        transform: translateY(-2px);
+        background: #c82333;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
     }
 
     .cart-totals {
@@ -172,48 +179,56 @@
     }
 
     .cart-total th, .cart-total td {
-        color: var(--primary-color);
+        color: #000000;
         font-weight: bold;
         font-size: 1.3rem !important;
-        border-top: 2px solid var(--primary-color);
+        border-top: 2px solid #000000;
         padding-top: 15px;
     }
 
     .checkout-btn {
-        background: var(--bg-gradient);
+        background: #000000;
         border: none;
         color: white;
         padding: 15px 30px;
-        border-radius: var(--border-radius-sm);
+        border-radius: 6px;
         font-weight: 600;
-        font-size: 1.1rem;
-        transition: var(--transition);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
         width: 100%;
         margin-top: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .checkout-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-medium);
+        background: #333333;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     }
 
     .continue-shopping-btn {
         background: transparent;
-        border: 2px solid var(--primary-color);
-        color: var(--primary-color);
+        border: 2px solid #000000;
+        color: #000000;
         padding: 12px 25px;
-        border-radius: var(--border-radius-sm);
+        border-radius: 6px;
         font-weight: 600;
-        transition: var(--transition);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
         text-decoration: none;
         display: inline-block;
     }
 
     .continue-shopping-btn:hover {
-        background: var(--primary-color);
+        background: #000000;
         color: white;
-        transform: translateY(-2px);
+        transform: translateY(-1px);
         text-decoration: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .empty-cart {
@@ -224,7 +239,7 @@
 
     .empty-cart i {
         font-size: 4rem;
-        color: var(--primary-color);
+        color: #000000;
         margin-bottom: 20px;
     }
 
@@ -489,7 +504,7 @@
                         </div>
                         <div class="mobile_fixed-btn_wrapper">
                             <div class="button-wrapper container">
-                                <button type="button" class="btn btn-primary btn-checkout">PROCEED TO CHECKOUT</button>
+                                <button type="button" class="btn btn-primary btn-checkout checkout-btn">PROCEED TO CHECKOUT</button>
                                 <div id="checkout-error" class="text-danger"></div>
                             </div>
                         </div>
@@ -499,7 +514,7 @@
                 <div class="row">
                     <div class="col-md-12 text-center pt-5 pb-5">
                         <p>No item found in your cart</p>
-                        <a href="{{ route('shop.index') }}" class="btn btn-info">Shop Now</a>
+                        <a href="{{ route('shop.index') }}" class="btn btn-primary">Shop Now</a>
                     </div>
                 </div>
             @endif

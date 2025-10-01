@@ -12550,7 +12550,7 @@ textarea.form-control-lg {
 .header-mobile {
   height: 3.75rem;
   min-height: 3.75rem;
-  background-color: #ffffff;
+  background-color: #000000;
   z-index: 1030; }
   .header-mobile .logo {
     margin: 0 auto; }

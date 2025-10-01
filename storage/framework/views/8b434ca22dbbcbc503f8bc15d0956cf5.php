@@ -47,45 +47,51 @@
     <!-- Global Color Scheme -->
     <style>
         :root {
-            --primary-color: #ff6b6b;
-            --primary-dark: #ff5252;
-            --secondary-color: #4ecdc4;
-            --accent-color: #45b7d1;
-            --success-color: #96ceb4;
-            --warning-color: #feca57;
-            --danger-color: #ff9ff3;
-            --dark-color: #2c2c54;
+            --primary-color: #000000;
+            --primary-dark: #333333;
+            --secondary-color: #6c757d;
+            --accent-color: #007bff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --dark-color: #343a40;
             --light-color: #f8f9fa;
-            --text-primary: #2c2c54;
+            --text-primary: #212529;
             --text-secondary: #6c757d;
-            --text-muted: #95a5a6;
+            --text-muted: #6c757d;
             --bg-light: #f8f9fa;
-            --bg-gradient: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
-            --bg-gradient-secondary: linear-gradient(135deg, #45b7d1 0%, #96ceb4 100%);
-            --bg-gradient-dark: linear-gradient(135deg, #2c2c54 0%, #40407a 100%);
-            --shadow-light: 0 4px 20px rgba(255, 107, 107, 0.15);
-            --shadow-medium: 0 8px 30px rgba(255, 107, 107, 0.2);
-            --shadow-heavy: 0 15px 40px rgba(255, 107, 107, 0.25);
-            --border-radius: 16px;
-            --border-radius-sm: 8px;
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-gradient: linear-gradient(135deg, #000000 0%, #333333 100%);
+            --bg-gradient-secondary: linear-gradient(135deg, #333333 0%, #555555 100%);
+            --bg-gradient-dark: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.2);
+            --border-radius: 8px;
+            --border-radius-sm: 6px;
+            --transition: all 0.3s ease;
         }
 
         /* Global Button Styles */
         .btn-primary {
-            background: var(--bg-gradient) !important;
+            background: var(--primary-color) !important;
             border: none !important;
             border-radius: var(--border-radius-sm) !important;
             font-weight: 600 !important;
             padding: 12px 24px !important;
             transition: var(--transition) !important;
             box-shadow: var(--shadow-light) !important;
+            color: white !important;
+            font-size: 14px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px) !important;
+            background: var(--primary-dark) !important;
+            transform: translateY(-1px) !important;
             box-shadow: var(--shadow-medium) !important;
-            background: var(--bg-gradient-secondary) !important;
+            color: white !important;
         }
 
         .btn-outline-primary {
@@ -96,24 +102,204 @@
             font-weight: 600 !important;
             padding: 10px 22px !important;
             transition: var(--transition) !important;
+            font-size: 14px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
         }
 
         .btn-outline-primary:hover {
             background: var(--primary-color) !important;
             color: white !important;
-            transform: translateY(-2px) !important;
+            transform: translateY(-1px) !important;
             box-shadow: var(--shadow-light) !important;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color) !important;
+            border: none !important;
+            border-radius: var(--border-radius-sm) !important;
+            font-weight: 600 !important;
+            padding: 12px 24px !important;
+            transition: var(--transition) !important;
+            box-shadow: var(--shadow-light) !important;
+            color: white !important;
+            font-size: 14px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: var(--shadow-medium) !important;
+            color: white !important;
         }
 
         /* Global Header Styles */
         .header {
             background: var(--bg-gradient-dark) !important;
-            box-shadow: 0 2px 20px rgba(255, 107, 107, 0.2) !important;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
         }
 
         .header-mobile {
             background: var(--bg-gradient-dark) !important;
-            box-shadow: 0 2px 15px rgba(255, 107, 107, 0.2) !important;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Global Logo Styles - Matching Index Page */
+        .casestudio-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .casestudio-logo:hover .logo-icon {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .casestudio-logo:hover .logo-text {
+            color: var(--primary-color);
+        }
+
+        /* Mobile Logo Styles - Matching Index Page */
+        .casestudio-logo-mobile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon-mobile {
+            width: 35px;
+            height: 35px;
+            background: var(--bg-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+        }
+
+        .logo-text-mobile {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .casestudio-logo-mobile:hover .logo-icon-mobile {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .casestudio-logo-mobile:hover .logo-text-mobile {
+            color: #cccccc;
+        }
+
+        /* Footer Logo Styles - Matching Index Page */
+        .casestudio-logo-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon-footer {
+            width: 45px;
+            height: 45px;
+            background: var(--bg-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+        }
+
+        .logo-text-footer {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .casestudio-logo-footer:hover .logo-icon-footer {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .casestudio-logo-footer:hover .logo-text-footer {
+            color: var(--primary-color);
+        }
+
+        /* Mobile Navigation Styling */
+        .header-mobile .navbar-toggler {
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .header-mobile .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+        }
+
+        .header-mobile .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+
+        .header-mobile__navigation {
+            background: var(--bg-gradient-dark) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .header-mobile__navigation .navigation__link {
+            color: white !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .header-mobile__navigation .navigation__link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white !important;
+        }
+
+        .header-mobile__navigation .navigation__item.active .navigation__link {
+            background: rgba(255, 255, 255, 0.1);
+            color: white !important;
         }
 
         .navigation__link {
@@ -153,12 +339,12 @@
         /* Global Form Styles */
         .form-control:focus {
             border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1) !important;
         }
 
         .form-select:focus {
             border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1) !important;
         }
 
         /* Global Link Styles */
@@ -205,7 +391,7 @@
 
         /* Global Alert Styles */
         .alert-primary {
-            background: rgba(255, 107, 107, 0.1) !important;
+            background: rgba(0, 0, 0, 0.1) !important;
             border-color: var(--primary-color) !important;
             color: var(--primary-color) !important;
         }
@@ -910,14 +1096,14 @@
                 <div class="container pb-4">
                     <ul class="list-unstyled d-flex gap-3">
                         <li>
-                            <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="text-decoration-none">
+                            <a href="https://www.facebook.com/casestudio.ht" class="text-decoration-none" target="_blank">
                                 <svg class="svg-icon" width="9" height="15" viewBox="0 0 9 15" xmlns="http://www.w3.org/2000/svg">
                                     <use href="#icon_facebook" />
                                 </svg>
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="text-decoration-none">
+                            <a href="https://www.instagram.com/casestudio.ht/" class="text-decoration-none" target="_blank">
                                 <svg class="svg-icon" width="14" height="13" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
                                     <use href="#icon_instagram" />
                                 </svg>
@@ -934,7 +1120,7 @@
         </nav>
     </div>
 
-    <header id="header" class="header header-fullwidth header-transparent-bg header-black">
+    <header id="header" class="header header-fullwidth header-black">
         <div class="container">
             <div class="header-desk header-desk_type_1">
                 <div class="logo">
@@ -1102,27 +1288,27 @@
                         </p>
                         <p class="contact-item">
                             <i class="fas fa-phone"></i>
-                            <strong>+923249485029</strong>
+                            <strong>+923398887035</strong>
                         </p>
                     </div>
                     <ul class="social-links list-unstyled d-flex flex-wrap mb-0">
                         <li>
-                            <a href="https://www.facebook.com/share/15TNAxTLLJ/?mibextid=wwXIfr" class="footer__social-link d-block">
+                            <a href="https://www.facebook.com/casestudio.ht" class="footer__social-link d-block" target="_blank">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.instagram.com/trakkiez.wear?igsh=MXNqZG5xYW1qN2xrYQ==" class="footer__social-link d-block">
+                            <a href="https://www.instagram.com/casestudio.ht/" class="footer__social-link d-block" target="_blank">
                                 <i class="fab fa-instagram"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.tiktok.com/@trakkiezwear?_t=ZS-8t3QFgCyjjE&_r=1" class="footer__social-link d-block">
+                            <a href="https://www.tiktok.com/@trakkiezwear?_t=ZS-8t3QFgCyjjE&_r=1" class="footer__social-link d-block" target="_blank">
                                 <i class="fab fa-tiktok"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="https://wa.me/923249485029" class="footer__social-link d-block">
+                            <a href="https://wa.me/923398887035" class="footer__social-link d-block" target="_blank">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
                         </li>
@@ -1170,11 +1356,11 @@
                     ©2025 CaseStudio. All rights reserved.
                     <div class="fab-container ms-3">
                         <div id="fabIcons" class="fab-icons">
-                            <a href="https://wa.me/923249485029" target="_blank" class="fab-icon whatsapp" title="WhatsApp">
+                            <a href="https://wa.me/923398887035" target="_blank" class="fab-icon whatsapp" title="WhatsApp">
                                 <i class="fab fa-whatsapp"></i>
                                 <span class="tooltip">WhatsApp</span>
                             </a>
-                            <a href="tel:923249485029" class="fab-icon phone" title="Call Us">
+                            <a href="tel:923398887035" class="fab-icon phone" title="Call Us">
                                 <i class="fas fa-phone"></i>
                                 <span class="tooltip">Call Us</span>
                             </a>
